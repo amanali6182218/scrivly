@@ -131,6 +131,36 @@ export default function LandingPage() {
           ⭐ Trusted by 500+ Etsy sellers · 10,000+ listings generated · Average listing score: 84/100
         </div>
 
+        {/* Demo video */}
+        <div className="py-20 text-center">
+          <h2 className="text-2xl font-extrabold tracking-tight text-stone-900 sm:text-3xl">
+            See Scrivly in action
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-stone-600 sm:text-base">
+            Watch how an Etsy seller turns a product photo into a complete, SEO-optimized listing in
+            under 60 seconds
+          </p>
+
+          <div
+            className="mx-auto mt-8 overflow-hidden rounded-lg shadow-md sm:rounded-2xl sm:shadow-[0_20px_60px_rgba(0,0,0,0.15)]"
+            style={{ position: "relative", width: "100%", maxWidth: "860px" }}
+          >
+            <div style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}>
+              <iframe
+                src="https://www.youtube.com/embed/GywNKUjlgj0?rel=0&modestbranding=1&color=white"
+                title="Scrivly Demo — AI Listing Generator for Etsy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+              />
+            </div>
+          </div>
+
+          <p className="mt-4 text-xs text-stone-500">
+            No signup required to watch · Takes less than 4 minutes to see everything
+          </p>
+        </div>
+
         {/* Feature grid */}
         <div className="mt-16 grid gap-6 text-left sm:grid-cols-3">
           {FEATURES.map((feature, i) => (
