@@ -1,0 +1,47 @@
+export const PRODUCT_CATEGORIES = [
+  "Jewelry",
+  "Home Decor",
+  "Art Prints",
+  "Clothing",
+  "Digital Downloads",
+  "Stickers",
+  "Candles",
+  "Other",
+] as const;
+
+export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
+
+export interface ListingFormValues {
+  productName: string;
+  category: ProductCategory;
+  keyFeatures: string;
+  targetBuyer: string;
+  price: string;
+}
+
+export interface GeneratedListing {
+  title: string;
+  description: string;
+  tags: string[];
+}
+
+export type MarketDemand = "low" | "medium" | "high";
+
+export interface SpyResult {
+  competitorTitle: string;
+  competitorPrice: string;
+  weaknesses: [string, string, string];
+  improvedTitle: string;
+  improvedDescription: string;
+  improvedTags: string[];
+  estimatedMonthlySearches: string;
+}
+
+export interface PriceResearchResult {
+  suggestedPriceMin: number;
+  suggestedPriceMax: number;
+  averagePrice: number;
+  competitorCount: number;
+  pricingTips: string[];
+  marketDemand: MarketDemand;
+}
