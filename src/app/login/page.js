@@ -102,7 +102,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full rounded-lg bg-brand px-4 py-3.5
-                text-base font-bold text-[var(--text-primary)] shadow-md transition
+                text-base font-bold text-white shadow-md transition
                 hover:opacity-90 hover:shadow-[0_0_30px_rgba(255,61,139,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? 'Signing in…' : 'Sign In'}

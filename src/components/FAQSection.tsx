@@ -59,7 +59,7 @@ export default function FAQSection() {
   return (
     <div className="mt-20 text-left">
       <p className="gradient-text text-center text-xs font-semibold uppercase tracking-wide">FAQ</p>
-      <h2 className="mt-2 text-center text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+      <h2 className="mt-2 text-center text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
         Everything you need to know.
       </h2>
 
@@ -80,9 +80,9 @@ export default function FAQSection() {
               }}
             >
               <div className="flex items-center justify-between gap-4">
-                <p className="text-base font-medium text-white">{item.q}</p>
+                <p className="text-base font-medium text-[var(--text-primary)]">{item.q}</p>
                 <svg
-                  className="h-4 w-4 shrink-0 text-[#A0A0A0]"
+                  className="h-4 w-4 shrink-0 text-[var(--text-secondary)]"
                   style={{ transition: "transform 0.3s ease", transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                   viewBox="0 0 24 24"
                   fill="none"

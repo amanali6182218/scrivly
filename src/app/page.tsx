@@ -68,8 +68,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Nav */}
       <header
-        className="sticky top-0 z-40 border-b border-[var(--border-subtle)]"
-        style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(12px)" }}
+        className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]"
+        style={{ backdropFilter: "blur(12px)" }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <Link href="/" className="flex items-center gap-2 text-base font-bold text-[var(--text-primary)] sm:text-lg">
@@ -88,7 +88,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-[var(--text-primary)] shadow-sm transition
+              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition
                 hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
             >
               Get started free
@@ -117,7 +117,7 @@ export default function LandingPage() {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             href="/signup"
-            className="w-full rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-[var(--text-primary)] shadow-md
+            className="w-full rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-white shadow-md
               transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
           >
             Start for free — 10 credits
@@ -280,7 +280,7 @@ export default function LandingPage() {
                 }
               >
                 {plan.featured && (
-                  <span className="absolute -top-3 right-6 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-[var(--text-primary)] shadow-sm">
+                  <span className="absolute -top-3 right-6 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
                     Most Popular
                   </span>
                 )}
@@ -295,7 +295,7 @@ export default function LandingPage() {
                   href="#"
                   className={`mt-6 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
                     plan.featured
-                      ? "bg-brand text-[var(--text-primary)] shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
+                      ? "bg-brand text-white shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
                       : "border border-[var(--border-default)] text-[var(--text-primary)] hover:border-[var(--text-muted)]"
                   }`}
                 >

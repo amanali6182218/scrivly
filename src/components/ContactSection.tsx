@@ -3,10 +3,10 @@ import { SOCIAL_LINKS, EtsyIcon, EmailIcon } from "@/components/SocialIcons";
 export default function ContactSection() {
   return (
     <div className="mt-20 text-left">
-      <h2 className="text-center text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+      <h2 className="text-center text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
         Get in touch
       </h2>
-      <p className="mx-auto mt-3 max-w-xl text-center text-sm text-[#A0A0A0] sm:text-base">
+      <p className="mx-auto mt-3 max-w-xl text-center text-sm text-[var(--text-secondary)] sm:text-base">
         Have a question or need help? We are here for you.
       </p>
 
@@ -18,7 +18,7 @@ export default function ContactSection() {
         >
           <a
             href="#etsy-shop"
-            className="flex items-center gap-3 text-sm font-medium text-white transition hover:text-brand-pink"
+            className="flex items-center gap-3 text-sm font-medium text-[var(--text-primary)] transition hover:text-brand-pink"
           >
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
@@ -30,7 +30,7 @@ export default function ContactSection() {
           </a>
           <a
             href="mailto:hello@scrivly.ai"
-            className="flex items-center gap-3 text-sm font-medium text-white transition hover:text-brand-pink"
+            className="flex items-center gap-3 text-sm font-medium text-[var(--text-primary)] transition hover:text-brand-pink"
           >
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
@@ -40,7 +40,7 @@ export default function ContactSection() {
             </span>
             Email us
           </a>
-          <p className="mt-2 text-xs text-[#555555]">We reply within 24 hours</p>
+          <p className="mt-2 text-xs text-[var(--text-muted)]">We reply within 24 hours</p>
         </div>
 
         {/* Right — social */}

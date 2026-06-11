@@ -33,7 +33,7 @@ function ScoreArc({ total }: { total: number }) {
           </linearGradient>
         </defs>
         {/* track */}
-        <circle cx="50" cy="50" r={RADIUS} fill="none" stroke="#1A1A1A" strokeWidth="8" />
+        <circle cx="50" cy="50" r={RADIUS} fill="none" stroke="var(--border-subtle)" strokeWidth="8" />
         {/* arc */}
         <circle
           cx="50" cy="50" r={RADIUS}
@@ -45,10 +45,10 @@ function ScoreArc({ total }: { total: number }) {
           transform="rotate(-90 50 50)"
         />
         {/* score text */}
-        <text x="50" y="47" textAnchor="middle" fontSize="22" fontWeight="bold" fill={isHigh ? "url(#healthGradient)" : "#FFFFFF"}>
+        <text x="50" y="47" textAnchor="middle" fontSize="22" fontWeight="bold" fill={isHigh ? "url(#healthGradient)" : "var(--text-primary)"}>
           {total}
         </text>
-        <text x="50" y="62" textAnchor="middle" fontSize="11" fill="#555555">
+        <text x="50" y="62" textAnchor="middle" fontSize="11" fill="var(--text-muted)">
           / 100
         </text>
       </svg>
@@ -65,21 +65,21 @@ function CategoryRow({ cat, color }: { cat: CategoryScore; color: "green" | "amb
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-3 text-xs">
-        <span className={`font-medium ${isFull ? "text-white" : "text-[#A0A0A0]"}`}>
+        <span className={`font-medium ${isFull ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
           {cat.label}
         </span>
-        <span className={`shrink-0 tabular-nums ${isFull ? "text-[#22C55E] font-semibold" : "text-[#A0A0A0]"}`}>
+        <span className={`shrink-0 tabular-nums ${isFull ? "text-[#22C55E] font-semibold" : "text-[var(--text-secondary)]"}`}>
           {cat.score}/{cat.maxScore}
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1A1A1A]">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-elevated)]">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${pct}%` }}
         />
       </div>
       {cat.tip && (
-        <p className="flex gap-1.5 text-xs leading-relaxed text-[#A0A0A0]">
+        <p className="flex gap-1.5 text-xs leading-relaxed text-[var(--text-secondary)]">
           <span className="mt-0.5 shrink-0 text-brand-pink">→</span>
           {cat.tip}
         </p>
@@ -107,13 +107,13 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
     "Needs work";
 
   return (
-    <div className="rounded-xl border border-[#1A1A1A] bg-[#0D0D0D] p-5 shadow-sm">
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-5 shadow-sm">
       <div className="mb-4 flex items-center gap-4">
         <ScoreArc total={score.total} />
         <div>
           <p className="gradient-text text-xs font-semibold uppercase tracking-wide">Listing Health</p>
           <p className={`mt-0.5 text-base font-bold ${COLOR_LABEL[color]}`}>{gradeLabel}</p>
-          <p className="mt-0.5 text-xs text-[#555555]">
+          <p className="mt-0.5 text-xs text-[var(--text-muted)]">
             {weakTips.length === 0
               ? "All categories at full marks — your listing is optimised!"
               : `${weakTips.length} area${weakTips.length !== 1 ? "s" : ""} below full marks`}
@@ -121,7 +121,7 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-[#1A1A1A] pt-4">
+      <div className="space-y-4 border-t border-[var(--border-subtle)] pt-4">
         {score.categories.map((cat) => (
           <CategoryRow key={cat.label} cat={cat} color={color} />
         ))}
@@ -133,8 +133,8 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
           onClick={() => onFix(weakTips)}
           disabled={isGenerating}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg
-            border border-[#333333] bg-transparent px-4 py-2.5 text-sm font-semibold text-white
-            shadow-sm transition hover:border-[#555555] disabled:cursor-not-allowed disabled:opacity-60"
+            border border-[var(--border-default)] bg-transparent px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)]
+            shadow-sm transition hover:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isGenerating ? (
             <>

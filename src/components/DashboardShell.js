@@ -65,7 +65,7 @@ function RedeemForm({ userId, onRedeem, compact = false }) {
           type="submit"
           disabled={loading || !code.trim()}
           className="rounded-lg bg-brand px-4 py-2 text-sm
-            font-semibold text-[var(--text-primary)] shadow-sm transition hover:shadow-[0_0_20px_rgba(255,61,139,0.35)]
+            font-semibold text-white shadow-sm transition hover:shadow-[0_0_20px_rgba(255,61,139,0.35)]
             disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Checking…' : 'Redeem'}
@@ -136,7 +136,7 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-lg font-bold gradient-text">{pack.price}</span>
-                  <span className="flex items-center gap-1 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-[var(--text-primary)] shadow-sm">
+                  <span className="flex items-center gap-1 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
                     Buy
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -315,7 +315,7 @@ export default function DashboardShell({ user, profile }) {
             </div>
           </div>
           <div className="flex flex-1 flex-col justify-center gap-2 px-5 py-5 sm:px-6">
-            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-sm font-bold text-[var(--text-primary)]">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-sm font-bold text-white">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
