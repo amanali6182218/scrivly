@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import ListingGenerator from '@/components/ListingGenerator'
 
@@ -54,23 +53,23 @@ function RedeemForm({ userId, onRedeem, compact = false }) {
           placeholder="Enter redeem code (e.g. ETY-XXXX-XXXX-XX)"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          className={`flex-1 rounded-lg border border-amber-200 bg-white px-3 text-sm
-            text-stone-800 placeholder:text-stone-400 shadow-sm transition
-            focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
+          className={`flex-1 rounded-lg border border-[#222222] bg-[#0A0A0A] px-3 text-sm
+            text-white placeholder:text-[#555555] shadow-sm transition
+            focus:border-brand-pink focus:outline-none focus:ring-2 focus:ring-[rgba(255,61,139,0.15)]
             ${compact ? 'py-2' : 'py-2.5'}`}
         />
         <button
           type="submit"
           disabled={loading || !code.trim()}
-          className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm
-            font-semibold text-white shadow-sm transition hover:from-amber-600 hover:to-orange-600
+          className="rounded-lg bg-brand px-4 py-2 text-sm
+            font-semibold text-white shadow-sm transition hover:shadow-[0_0_20px_rgba(255,61,139,0.35)]
             disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Checking…' : 'Redeem'}
         </button>
       </div>
       {message && (
-        <p className={`text-sm ${message.type === 'success' ? 'text-emerald-600' : 'text-red-600'}`}>
+        <p className={`text-sm ${message.type === 'success' ? 'text-[#22C55E]' : 'text-[#FF3D8B]'}`}>
           {message.text}
         </p>
       )}
@@ -83,16 +82,16 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
     // Backdrop
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-stone-900/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onDismiss}
       />
 
       {/* Modal panel */}
-      <div className="relative w-full max-w-md rounded-2xl border border-amber-100 bg-white shadow-xl">
+      <div className="relative w-full max-w-md rounded-2xl border border-[#222222] bg-[#111111] shadow-xl">
         {/* Dismiss button */}
         <button
           onClick={onDismiss}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-stone-400 transition hover:bg-stone-100 hover:text-stone-600"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#A0A0A0] transition hover:bg-[#1A1A1A] hover:text-white"
           aria-label="Dismiss"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -103,15 +102,15 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
         <div className="p-6 sm:p-8">
           {/* Header */}
           <div className="mb-6 flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-100">
-              <svg className="h-6 w-6 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-subtle">
+              <svg className="h-6 w-6 text-brand-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-bold text-stone-900">You are running low on credits</h2>
-              <p className="mt-0.5 text-sm text-stone-500">
-                You have <span className="font-semibold text-amber-600">{credits} credit{credits !== 1 ? 's' : ''}</span> remaining.
+              <h2 className="text-lg font-bold text-white">You are running low on credits</h2>
+              <p className="mt-0.5 text-sm text-[#A0A0A0]">
+                You have <span className="font-semibold gradient-text">{credits} credit{credits !== 1 ? 's' : ''}</span> remaining.
                 Top up to keep generating listings.
               </p>
             </div>
@@ -125,17 +124,16 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
                 href={pack.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between rounded-xl border border-amber-100 bg-amber-50/60
-                  px-4 py-3.5 transition hover:border-amber-300 hover:bg-amber-50 hover:shadow-sm"
+                className="flex items-center justify-between rounded-xl border border-[#222222] bg-[#0D0D0D]
+                  px-4 py-3.5 transition hover:border-brand-pink"
               >
                 <div>
-                  <p className="font-semibold text-stone-900">{pack.name}</p>
-                  <p className="text-sm text-stone-500">{pack.credits} credits</p>
+                  <p className="font-semibold text-white">{pack.name}</p>
+                  <p className="text-sm text-[#A0A0A0]">{pack.credits} credits</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-lg font-bold text-amber-600">{pack.price}</span>
-                  <span className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-amber-500
-                    to-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
+                  <span className="text-lg font-bold gradient-text">{pack.price}</span>
+                  <span className="flex items-center gap-1 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
                     Buy
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -149,14 +147,14 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
           {/* Divider + redeem section */}
           <div className="relative mb-5">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-stone-100" />
+              <div className="w-full border-t border-[#1A1A1A]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-white px-3 text-xs text-stone-400">After purchase</span>
+              <span className="bg-[#111111] px-3 text-xs text-[#555555]">After purchase</span>
             </div>
           </div>
 
-          <p className="mb-3 text-sm text-stone-600">
+          <p className="mb-3 text-sm text-[#A0A0A0]">
             Return here and enter your redeem code to instantly add credits to your account.
           </p>
 
@@ -199,13 +197,8 @@ export default function DashboardShell({ user, profile }) {
     setCredits((prev) => prev + amount)
   }
 
-  const creditColor =
-    credits > 10 ? 'text-emerald-600' :
-    credits > 0  ? 'text-amber-600'   :
-                   'text-red-600'
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/60 to-orange-50/40">
+    <div className="min-h-screen bg-black">
       {/* Low credits modal */}
       {showLowCreditsModal && (
         <LowCreditsModal
@@ -217,26 +210,33 @@ export default function DashboardShell({ user, profile }) {
       )}
 
       {/* Header */}
-      <header className="border-b border-amber-100 bg-white/80 backdrop-blur-sm">
+      <header className="border-b border-[#1A1A1A] bg-[#0D0D0D]">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <span className="flex items-center gap-2 text-base font-bold text-stone-900 sm:text-lg">
-            <Image src="/logo.png" alt="Scrivly" width={28} height={28} className="h-7 w-7 rounded-lg object-cover" />
+          <span className="flex items-center gap-2 text-base font-bold text-white sm:text-lg">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Scrivly" style={{ height: '40px', width: 'auto' }} />
             Scrivly
           </span>
 
           <div className="flex items-center gap-4 sm:gap-6">
-            <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5">
-              <svg className="h-4 w-4 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div
+              className="flex items-center gap-2 rounded-full px-3 py-1.5"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,184,0,0.15) 0%, rgba(123,47,255,0.15) 100%)',
+                border: '1px solid rgba(255,61,139,0.3)',
+              }}
+            >
+              <svg className="h-4 w-4 text-brand-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
               </svg>
-              <span className={`text-sm font-bold tabular-nums ${creditColor}`}>{credits}</span>
-              <span className="hidden text-xs text-stone-400 sm:inline">credits</span>
+              <span className="gradient-text text-sm font-bold tabular-nums">{credits}</span>
+              <span className="hidden text-xs text-[#A0A0A0] sm:inline">credits</span>
             </div>
 
             <div
               title={user.email}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br
-                from-amber-400 to-orange-500 text-sm font-semibold text-white shadow-sm"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand
+                text-sm font-semibold text-white shadow-sm"
             >
               {initial}
             </div>
@@ -244,8 +244,8 @@ export default function DashboardShell({ user, profile }) {
             <button
               onClick={handleSignOut}
               disabled={signingOut}
-              className="rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium
-                text-stone-600 shadow-sm transition hover:bg-stone-50 disabled:opacity-50"
+              className="rounded-lg border border-[#333333] bg-transparent px-3 py-1.5 text-xs font-medium
+                text-white transition hover:border-[#555555] disabled:opacity-50"
             >
               {signingOut ? 'Signing out…' : 'Sign out'}
             </button>
@@ -255,22 +255,23 @@ export default function DashboardShell({ user, profile }) {
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         {/* Welcome card */}
-        <div className="mb-8 flex flex-col overflow-hidden rounded-2xl border border-amber-100 shadow-sm sm:flex-row">
-          <div className="flex-1 bg-gradient-to-br from-amber-100/80 to-orange-100/60 px-5 py-5 sm:px-6">
-            <p className="text-lg font-bold text-stone-900">Welcome back 👋</p>
-            <p className="mt-0.5 text-sm text-stone-500">{emailPrefix}</p>
+        <div className="relative mb-8 flex flex-col overflow-hidden rounded-2xl border border-[#1A1A1A] bg-[#111111] shadow-sm sm:flex-row">
+          <div className="absolute inset-y-0 left-0 w-[3px] bg-brand" />
+          <div className="flex-1 px-5 py-5 pl-6 sm:px-6 sm:pl-7">
+            <p className="text-lg font-bold text-white">Welcome back 👋</p>
+            <p className="mt-0.5 text-sm text-[#A0A0A0]">{emailPrefix}</p>
           </div>
-          <div className="flex flex-1 flex-col justify-center gap-2 bg-amber-50/40 px-5 py-5 sm:px-6">
-            <span className={`inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold ${creditColor}`}>
+          <div className="flex flex-1 flex-col justify-center gap-2 px-5 py-5 sm:px-6">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-sm font-bold text-white">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               {credits} credits remaining
             </span>
-            <p className="text-xs text-stone-500">Each full generation uses 3 credits</p>
+            <p className="text-xs text-[#A0A0A0]">Each full generation uses 3 credits</p>
             <button
               onClick={() => setModalDismissed(false)}
-              className="w-fit text-sm font-medium text-amber-700 transition hover:text-amber-800"
+              className="w-fit text-sm font-medium text-brand-pink transition hover:text-brand-orange"
             >
               Buy more credits →
             </button>
@@ -280,12 +281,12 @@ export default function DashboardShell({ user, profile }) {
         <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} />
 
         {/* Redeem section */}
-        <div className="mt-8 rounded-xl border border-amber-100 bg-white/70 p-4 shadow-sm">
+        <div className="mt-8 rounded-xl border border-[#222222] bg-[#111111] p-4 shadow-sm">
           <button
             type="button"
             onClick={() => setRedeemExpanded((prev) => !prev)}
-            className="flex w-full items-center justify-between text-sm font-medium text-stone-600
-              transition hover:text-amber-700"
+            className="flex w-full items-center justify-between text-sm font-medium text-[#A0A0A0]
+              transition hover:text-white"
           >
             Have a redeem code? Click to expand
             <svg
@@ -296,14 +297,14 @@ export default function DashboardShell({ user, profile }) {
             </svg>
           </button>
           {redeemExpanded && (
-            <div className="mt-4 border-t border-amber-100 pt-4">
+            <div className="mt-4 border-t border-[#222222] pt-4">
               <RedeemForm userId={user.id} onRedeem={handleCreditsAdded} compact />
             </div>
           )}
         </div>
       </main>
 
-      <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-center text-xs text-stone-400 sm:px-6">
+      <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-center text-xs text-[#555555] sm:px-6">
         Scrivly — built to help independent sellers ship listings faster.
       </footer>
     </div>

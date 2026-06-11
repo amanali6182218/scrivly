@@ -28,15 +28,15 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
   return (
     <div>
       <div className="mb-6 max-w-2xl">
-        <h2 className="text-xl font-bold text-stone-900 sm:text-2xl lg:text-3xl">
+        <h2 className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">
           {TAB_COPY[activeTab].heading}
         </h2>
-        <p className="mt-2 text-sm text-stone-600 sm:text-base">
+        <p className="mt-2 text-sm text-[#A0A0A0] sm:text-base">
           {TAB_COPY[activeTab].subheading}
         </p>
       </div>
 
-      <div className="mb-8 inline-flex rounded-xl border border-amber-100 bg-white/80 p-1 shadow-sm">
+      <div className="mb-8 inline-flex rounded-xl border border-[#222222] bg-[#111111] p-1 shadow-sm">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -44,8 +44,8 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition sm:px-5 ${
               activeTab === tab.id
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm shadow-amber-500/30'
-                : 'text-stone-600 hover:bg-amber-50 hover:text-amber-700'
+                ? 'bg-brand text-white shadow-sm'
+                : 'text-[#A0A0A0] hover:text-white'
             }`}
           >
             {tab.label}
@@ -54,7 +54,10 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
       </div>
 
       {credits < 3 && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div
+          className="mb-6 rounded-xl p-4 text-sm"
+          style={{ background: 'rgba(255,61,139,0.1)', border: '1px solid rgba(255,61,139,0.3)', color: '#FF8FB8' }}
+        >
           {credits === 0
             ? "You have no credits left. Redeem a code above to generate more listings."
             : "You need at least 3 credits to generate a listing, or 4 credits for Spy & Improve."}

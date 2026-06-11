@@ -6,55 +6,49 @@ import { HealthScore, CategoryScore, healthColor, scoreListingHealth } from "@/l
 const RADIUS = 38;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // ≈ 238.76
 
-const COLOR_STROKE: Record<"green" | "amber" | "red", string> = {
-  green: "#10b981",
-  amber: "#f59e0b",
-  red:   "#ef4444",
-};
-
 const COLOR_LABEL: Record<"green" | "amber" | "red", string> = {
-  green: "text-emerald-600",
-  amber: "text-amber-600",
-  red:   "text-red-500",
+  green: "text-[#22C55E]",
+  amber: "text-[#FFB800]",
+  red:   "text-[#FF3D8B]",
 };
 
 const COLOR_BAR: Record<"green" | "amber" | "red", string> = {
-  green: "bg-emerald-500",
-  amber: "bg-amber-400",
-  red:   "bg-red-400",
+  green: "bg-[#22C55E]",
+  amber: "bg-[#FFB800]",
+  red:   "bg-[#FF3D8B]",
 };
 
-const COLOR_BADGE_BG: Record<"green" | "amber" | "red", string> = {
-  green: "bg-emerald-50 ring-emerald-200",
-  amber: "bg-amber-50 ring-amber-200",
-  red:   "bg-red-50 ring-red-200",
-};
-
-function ScoreArc({ total, color }: { total: number; color: "green" | "amber" | "red" }) {
+function ScoreArc({ total }: { total: number }) {
   const arcLen = (total / 100) * CIRCUMFERENCE;
-  const stroke = COLOR_STROKE[color];
-  const labelClass = COLOR_LABEL[color];
+  const isHigh = total >= 80;
 
   return (
     <div className="relative flex items-center justify-center">
       <svg viewBox="0 0 100 100" className="h-24 w-24" aria-hidden="true">
+        <defs>
+          <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFB800" />
+            <stop offset="50%" stopColor="#FF3D8B" />
+            <stop offset="100%" stopColor="#7B2FFF" />
+          </linearGradient>
+        </defs>
         {/* track */}
-        <circle cx="50" cy="50" r={RADIUS} fill="none" stroke="#e2e8f0" strokeWidth="8" />
+        <circle cx="50" cy="50" r={RADIUS} fill="none" stroke="#1A1A1A" strokeWidth="8" />
         {/* arc */}
         <circle
           cx="50" cy="50" r={RADIUS}
           fill="none"
-          stroke={stroke}
+          stroke="url(#healthGradient)"
           strokeWidth="8"
           strokeLinecap="round"
           strokeDasharray={`${arcLen} ${CIRCUMFERENCE}`}
           transform="rotate(-90 50 50)"
         />
         {/* score text */}
-        <text x="50" y="47" textAnchor="middle" fontSize="22" fontWeight="bold" fill={stroke}>
+        <text x="50" y="47" textAnchor="middle" fontSize="22" fontWeight="bold" fill={isHigh ? "url(#healthGradient)" : "#FFFFFF"}>
           {total}
         </text>
-        <text x="50" y="62" textAnchor="middle" fontSize="11" fill="#94a3b8">
+        <text x="50" y="62" textAnchor="middle" fontSize="11" fill="#555555">
           / 100
         </text>
       </svg>
@@ -71,22 +65,22 @@ function CategoryRow({ cat, color }: { cat: CategoryScore; color: "green" | "amb
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-3 text-xs">
-        <span className={`font-medium ${isFull ? "text-stone-700" : "text-stone-600"}`}>
+        <span className={`font-medium ${isFull ? "text-white" : "text-[#A0A0A0]"}`}>
           {cat.label}
         </span>
-        <span className={`shrink-0 tabular-nums ${isFull ? "text-emerald-600 font-semibold" : "text-stone-500"}`}>
+        <span className={`shrink-0 tabular-nums ${isFull ? "text-[#22C55E] font-semibold" : "text-[#A0A0A0]"}`}>
           {cat.score}/{cat.maxScore}
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-stone-100">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1A1A1A]">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${pct}%` }}
         />
       </div>
       {cat.tip && (
-        <p className="flex gap-1.5 text-xs leading-relaxed text-stone-500">
-          <span className="mt-0.5 shrink-0 text-amber-500">→</span>
+        <p className="flex gap-1.5 text-xs leading-relaxed text-[#A0A0A0]">
+          <span className="mt-0.5 shrink-0 text-brand-pink">→</span>
           {cat.tip}
         </p>
       )}
@@ -113,13 +107,13 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
     "Needs work";
 
   return (
-    <div className={`rounded-xl border bg-white p-5 shadow-sm ring-1 ring-inset ${COLOR_BADGE_BG[color]}`}>
+    <div className="rounded-xl border border-[#1A1A1A] bg-[#0D0D0D] p-5 shadow-sm">
       <div className="mb-4 flex items-center gap-4">
-        <ScoreArc total={score.total} color={color} />
+        <ScoreArc total={score.total} />
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Listing Health</p>
+          <p className="gradient-text text-xs font-semibold uppercase tracking-wide">Listing Health</p>
           <p className={`mt-0.5 text-base font-bold ${COLOR_LABEL[color]}`}>{gradeLabel}</p>
-          <p className="mt-0.5 text-xs text-stone-400">
+          <p className="mt-0.5 text-xs text-[#555555]">
             {weakTips.length === 0
               ? "All categories at full marks — your listing is optimised!"
               : `${weakTips.length} area${weakTips.length !== 1 ? "s" : ""} below full marks`}
@@ -127,7 +121,7 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-stone-100 pt-4">
+      <div className="space-y-4 border-t border-[#1A1A1A] pt-4">
         {score.categories.map((cat) => (
           <CategoryRow key={cat.label} cat={cat} color={color} />
         ))}
@@ -139,8 +133,8 @@ export default function ListingHealthScore({ listing, onFix, isGenerating }: Lis
           onClick={() => onFix(weakTips)}
           disabled={isGenerating}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg
-            border border-amber-200 bg-white px-4 py-2.5 text-sm font-semibold text-amber-700
-            shadow-sm transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60"
+            border border-[#333333] bg-transparent px-4 py-2.5 text-sm font-semibold text-white
+            shadow-sm transition hover:border-[#555555] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isGenerating ? (
             <>

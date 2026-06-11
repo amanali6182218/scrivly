@@ -2,12 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Brand gradient — exact colors from logo */
+  --gradient-start:   #FFB800;
+  --gradient-mid:     #FF3D8B;
+  --gradient-end:     #7B2FFF;
+
+  /* Full gradient string — use everywhere */
+  --brand-gradient: linear-gradient(
+    135deg,
+    #FFB800 0%,
+    #FF3D8B 50%,
+    #7B2FFF 100%
+  );
+
+  /* Backgrounds — dark mode */
+  --bg-primary:       #000000;
+  --bg-secondary:     #0D0D0D;
+  --bg-card:          #111111;
+  --bg-card-hover:    #161616;
+  --bg-input:         #0A0A0A;
+  --bg-elevated:      #1A1A1A;
+
+  /* Text */
+  --text-primary:     #FFFFFF;
+  --text-secondary:   #A0A0A0;
+  --text-muted:       #555555;
+  --text-gradient: linear-gradient(
+    135deg, #FFB800, #FF3D8B, #7B2FFF
+  );
+
+  /* Borders */
+  --border-default:   #222222;
+  --border-subtle:    #1A1A1A;
+  --border-active:    #FF3D8B;
+
+  /* Accent solids */
+  --accent-orange:    #FFB800;
+  --accent-pink:      #FF3D8B;
+  --accent-purple:    #7B2FFF;
+
+  /* Status */
+  --success:          #22C55E;
+  --warning:          #FFB800;
+  --error:            #FF3D8B;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: linear-gradient(180deg, #fff8f0 0%, #fef3e7 100%);
+  font-family: var(--font-inter), sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0D0D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF3D8B;
+}
+
+/* Selection */
+::selection {
+  background: rgba(255, 61, 139, 0.3);
+  color: white;
+}
+
+/* Focus outline */
+*:focus-visible {
+  outline: 2px solid #FF3D8B;
+  outline-offset: 2px;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(
+    135deg, #FFB800 0%, #FF3D8B 50%, #7B2FFF 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient border utility */
+.gradient-border {
+  border: 1px solid transparent;
+  background: linear-gradient(#111111, #111111) padding-box,
+    linear-gradient(135deg, #FFB800, #FF3D8B, #7B2FFF) border-box;
 }
 
 @keyframes fade-in {
