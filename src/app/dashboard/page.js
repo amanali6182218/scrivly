@@ -22,13 +22,5 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  const { data: purchase } = await supabase
-    .from('credit_transactions')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('type', 'purchase')
-    .limit(1)
-    .maybeSingle()
-
-  return <DashboardShell user={user} profile={profile} hasRedeemed={!!purchase} />
+  return <DashboardShell user={user} profile={profile} />
 }

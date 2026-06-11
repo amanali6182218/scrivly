@@ -1,38 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-const DISMISS_KEY = 'scrivly_redeem_dismissed'
-const DAY_MS = 24 * 60 * 60 * 1000
-const WEEK_MS = 7 * DAY_MS
+const COLLAPSE_KEY = 'scrivly_redeem_collapsed'
 
-export default function RedeemBanner({ userId, credits, hasRedeemed, createdAt, onRedeem }) {
-  const [dismissed, setDismissed] = useState(false)
-  const [hidden, setHidden] = useState(false)
-  const [collapsed, setCollapsed] = useState(false)
+export default function RedeemBanner({ userId, onRedeem }) {
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(COLLAPSE_KEY) === 'true'
+    }
+    return false
+  })
   const [code, setCode] = useState('')
   const [status, setStatus] = useState('idle') // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('')
   const [creditsAdded, setCreditsAdded] = useState(0)
   const [shake, setShake] = useState(false)
 
-  useEffect(() => {
-    const stored = localStorage.getItem(DISMISS_KEY)
-    if (stored && Date.now() - Number(stored) < DAY_MS) {
-      setDismissed(true)
-    }
-  }, [])
-
-  const accountAgeMs = createdAt ? Date.now() - new Date(createdAt).getTime() : 0
-  const isNewAccount = !createdAt || accountAgeMs < WEEK_MS
-  const shouldShow = !dismissed && (!hasRedeemed || isNewAccount || credits <= 5)
-
-  if (!shouldShow || hidden) return null
-
-  const handleDismiss = () => {
-    localStorage.setItem(DISMISS_KEY, String(Date.now()))
-    setDismissed(true)
+  const setCollapsed = (value) => {
+    setIsCollapsed(value)
+    localStorage.setItem(COLLAPSE_KEY, String(value))
   }
+
+  const toggleCollapse = () => setCollapsed(!isCollapsed)
 
   const triggerShake = () => {
     setShake(true)
@@ -63,7 +53,6 @@ export default function RedeemBanner({ userId, credits, hasRedeemed, createdAt, 
         setCode('')
         onRedeem(data.creditsAdded)
         setTimeout(() => setCollapsed(true), 3000)
-        setTimeout(() => setHidden(true), 3500)
       }
     } catch {
       setErrorMsg('Something went wrong. Please try again.')
@@ -72,16 +61,34 @@ export default function RedeemBanner({ userId, credits, hasRedeemed, createdAt, 
     }
   }
 
+  if (isCollapsed) {
+    return (
+      <button
+        type="button"
+        onClick={toggleCollapse}
+        className="mb-6 flex w-full items-center justify-between rounded-xl px-5 transition hover:bg-[rgba(255,61,139,0.08)]"
+        style={{
+          height: '52px',
+          background: 'rgba(255,61,139,0.05)',
+          border: '1px solid rgba(255,61,139,0.3)',
+        }}
+      >
+        <span className="text-sm font-medium text-[var(--text-primary)]">🎟 Redeem a credit code</span>
+        <span className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+          Click to expand
+          <span style={{ fontSize: '12px' }}>▼</span>
+        </span>
+      </button>
+    )
+  }
+
   return (
     <div
-      className="relative overflow-hidden rounded-2xl transition-all duration-500"
+      className="relative mb-6 overflow-hidden rounded-2xl transition-all duration-300"
       style={{
         background: 'linear-gradient(135deg, rgba(255,184,0,0.12) 0%, rgba(255,61,139,0.12) 50%, rgba(123,47,255,0.12) 100%)',
         border: '1px solid rgba(255,61,139,0.3)',
-        padding: collapsed ? '0px 32px' : '28px 32px',
-        maxHeight: collapsed ? '0px' : '400px',
-        opacity: collapsed ? 0 : 1,
-        marginBottom: collapsed ? '0px' : '24px',
+        padding: '28px 32px',
       }}
     >
       {/* Decorative circle */}
@@ -96,19 +103,18 @@ export default function RedeemBanner({ userId, credits, hasRedeemed, createdAt, 
         }}
       />
 
-      {/* Dismiss button */}
+      {/* Collapse button */}
       {status !== 'success' && (
         <button
           type="button"
-          onClick={handleDismiss}
-          aria-label="Dismiss"
+          onClick={toggleCollapse}
+          aria-label="Collapse"
+          title="Collapse"
           className="absolute right-3 top-3 flex items-center justify-center rounded-lg transition
-            text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
-          style={{ width: '24px', height: '24px', background: 'transparent' }}
+            text-[var(--text-muted)] hover:bg-[rgba(255,255,255,0.1)] hover:text-[var(--text-primary)]"
+          style={{ width: '28px', height: '28px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-default)' }}
         >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          ▲
         </button>
       )}
 

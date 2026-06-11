@@ -171,7 +171,7 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
   )
 }
 
-export default function DashboardShell({ user, profile, hasRedeemed }) {
+export default function DashboardShell({ user, profile }) {
   const router = useRouter()
   const [credits, setCredits] = useState(profile.credits)
   const [signingOut, setSigningOut] = useState(false)
@@ -308,9 +308,6 @@ export default function DashboardShell({ user, profile, hasRedeemed }) {
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <RedeemBanner
           userId={user.id}
-          credits={credits}
-          hasRedeemed={hasRedeemed}
-          createdAt={profile.created_at}
           onRedeem={handleCreditsAdded}
         />
 

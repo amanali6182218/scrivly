@@ -227,6 +227,38 @@ export default function LandingPage() {
               </div>
 
               <div>
+                <p
+                  className="font-semibold uppercase"
+                  style={{ fontSize: "11px", color: "var(--accent-pink)", letterSpacing: "0.08em", marginTop: "16px", marginBottom: "8px" }}
+                >
+                  Listing description
+                </p>
+                <div style={{ position: "relative", maxHeight: "120px", overflow: "hidden" }}>
+                  <div style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.7 }}>
+                    <p style={{ marginBottom: "10px" }}>
+                      This handmade ceramic coffee mug is crafted from speckled stoneware clay, fired to a smooth matte finish that feels as beautiful as it looks. The minimalist silhouette makes it a perfect everyday mug and a thoughtful gift for any coffee lover.
+                    </p>
+                    <p style={{ marginBottom: "10px" }}>
+                      Each mug is individually thrown on the pottery wheel, meaning no two are exactly alike. The ergonomic handle is comfortable to hold, and the generous 12oz capacity is ideal for your morning coffee, tea, or latte.
+                    </p>
+                    <p style={{ marginBottom: "10px" }}>
+                      Dishwasher safe and microwave friendly. Ships carefully wrapped to arrive safely. Makes a wonderful gift for birthdays, housewarmings, or as a treat for yourself.
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: "48px",
+                      background: "linear-gradient(to bottom, transparent, var(--bg-card))",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
                 <p className="gradient-text mb-1.5 text-xs font-semibold uppercase tracking-wide">Tags</p>
                 <div className="flex flex-wrap gap-2">
                   {["ceramic mug", "handmade pottery", "coffee lover gift", "+ 9 more tags"].map((tag) => (
