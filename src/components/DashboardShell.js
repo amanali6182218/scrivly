@@ -8,6 +8,8 @@ import ListingGenerator from '@/components/ListingGenerator'
 import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from '@/components/Avatar'
 import RedeemBanner from '@/components/RedeemBanner'
+import ContactSection from '@/components/ContactSection'
+import Footer from '@/components/Footer'
 
 // TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
@@ -340,11 +342,11 @@ export default function DashboardShell({ user, profile, hasRedeemed }) {
         </div>
 
         <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} />
+
+        <ContactSection />
       </main>
 
-      <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-center text-xs text-[var(--text-muted)] sm:px-6">
-        Scrivly — built to help independent sellers ship listings faster.
-      </footer>
+      <Footer />
     </div>
   )
 }
