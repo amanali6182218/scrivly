@@ -2,22 +2,23 @@ import Link from "next/link";
 import { SOCIAL_LINKS } from "@/components/SocialIcons";
 
 const PRODUCT_LINKS = [
-  { id: "footer-features", label: "Features" },
-  { id: "footer-pricing", label: "Pricing" },
-  { id: "footer-how-it-works", label: "How it works" },
-  { id: "footer-demo", label: "Demo" },
+  { id: "footer-features", label: "Features", href: "/features" },
+  { id: "footer-pricing", label: "Pricing", href: "/pricing" },
+  { id: "footer-how-it-works", label: "How it works", href: "/how-it-works" },
+  { id: "footer-demo", label: "Demo", href: "/demo" },
+  { id: "footer-etsy-shop-product", label: "Etsy Shop", href: "/etsy-shop" },
 ];
 
 const SUPPORT_LINKS = [
-  { id: "footer-faq", label: "FAQ" },
-  { id: "footer-contact", label: "Contact us" },
-  { id: "footer-etsy-shop", label: "Etsy Shop" },
+  { id: "footer-faq", label: "FAQ", href: "/faq" },
+  { id: "footer-contact", label: "Contact us", href: "/contact" },
+  { id: "footer-etsy-shop", label: "Etsy Shop", href: "/etsy-shop" },
 ];
 
 const LEGAL_LINKS = [
-  { id: "footer-privacy", label: "Privacy Policy" },
-  { id: "footer-terms", label: "Terms of Service" },
-  { id: "footer-ai-disclosure", label: "AI Disclosure" },
+  { id: "footer-privacy", label: "Privacy Policy", href: "/privacy" },
+  { id: "footer-terms", label: "Terms of Service", href: "/terms" },
+  { id: "footer-ai-disclosure", label: "AI Disclosure", href: "/ai-disclosure" },
 ];
 
 const linkClasses = "text-sm transition hover:text-brand-pink";
@@ -75,9 +76,9 @@ export default function Footer() {
             <ul className="space-y-3">
               {PRODUCT_LINKS.map((link) => (
                 <li key={link.id}>
-                  <a href="#" id={link.id} className={linkClasses} style={linkStyle}>
+                  <Link href={link.href} id={link.id} className={linkClasses} style={linkStyle}>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -89,9 +90,9 @@ export default function Footer() {
             <ul className="space-y-3">
               {SUPPORT_LINKS.map((link) => (
                 <li key={link.id}>
-                  <a href="#" id={link.id} className={linkClasses} style={linkStyle}>
+                  <Link href={link.href} id={link.id} className={linkClasses} style={linkStyle}>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -103,9 +104,9 @@ export default function Footer() {
             <ul className="space-y-3">
               {LEGAL_LINKS.map((link) => (
                 <li key={link.id}>
-                  <a href="#" id={link.id} className={linkClasses} style={linkStyle}>
+                  <Link href={link.href} id={link.id} className={linkClasses} style={linkStyle}>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ThemeToggle from "@/components/ThemeToggle";
+import Navbar from "@/components/Navbar";
 import FAQSection from "@/components/FAQSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -67,35 +67,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Nav */}
-      <header
-        className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]"
-        style={{ backdropFilter: "blur(12px)" }}
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link href="/" className="flex items-center gap-2 text-base font-bold text-[var(--text-primary)] sm:text-lg">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Scrivly" style={{ height: "40px", width: "auto", cursor: "pointer" }} />
-            Scrivly
-          </Link>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Link
-              href="/login"
-              className="rounded-lg border border-[var(--border-default)] bg-transparent px-4 py-2 text-sm font-medium
-                text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition
-                hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
-            >
-              Get started free
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero */}
       <main className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28">
