@@ -13,6 +13,7 @@ interface ResultsPanelProps {
   onClear?: () => void;
   priceResult?: PriceResearchResult | null;
   isPriceLoading?: boolean;
+  credits?: number;
 }
 
 // ── Price section ─────────────────────────────────────────────────────────────
@@ -254,6 +255,32 @@ function EmptyState() {
   );
 }
 
+function NoCreditsState() {
+  return (
+    <div className="flex h-full flex-col items-center justify-center rounded-2xl border-2 border-dashed
+      border-[var(--border-default)] bg-[var(--bg-input)] p-12 text-center">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full" style={{ background: "rgba(255,61,139,0.1)" }}>
+        <svg className="h-8 w-8" style={{ color: "#FF3D8B" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h3 className="text-base font-semibold text-[var(--text-primary)]">You have no credits</h3>
+      <p className="mt-1.5 max-w-sm text-sm text-[var(--text-secondary)]">
+        Purchase a credit pack on Etsy to generate listings.
+      </p>
+      <a
+        href="https://www.etsy.com/shop/AmanCraftio"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-5 inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-md
+          transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
+      >
+        Buy credits on Etsy →
+      </a>
+    </div>
+  );
+}
+
 function LoadingState() {
   return (
     <div className="space-y-4">
@@ -311,12 +338,12 @@ function titleCounterInfo(length: number): { className: string; label: string } 
   return { className: "text-[#22C55E]", label: "Optimal ✓" };
 }
 
-export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading }: ResultsPanelProps) {
+export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading, credits }: ResultsPanelProps) {
   const [showToast, setShowToast] = useState(false);
 
   if (isGenerating) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
-  if (!listing) return <EmptyState />;
+  if (!listing) return credits === 0 ? <NoCreditsState /> : <EmptyState />;
 
   const titleInfo = titleCounterInfo(listing.title.length);
 

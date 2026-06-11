@@ -385,6 +385,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           type="button"
           onClick={() => generate()}
           disabled={!image || isGenerating || creditsAvailable < 3}
+          title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
           className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-brand
             px-6 py-3 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
             hover:shadow-[0_0_40px_rgba(255,61,139,0.35)]
@@ -442,6 +443,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           onClear={listing ? () => onResultChange?.(null) : undefined}
           priceResult={priceResult}
           isPriceLoading={isPriceLoading}
+          credits={creditsAvailable}
         />
       </div>
     </div>

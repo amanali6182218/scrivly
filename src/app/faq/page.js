@@ -36,7 +36,7 @@ export default function FAQPage() {
           heading="Still have questions?"
           buttons={[
             { label: "Message us", href: "/contact", variant: "secondary" },
-            { label: "Get started free", href: "/signup" },
+            { label: "Get started", href: "/signup" },
           ]}
         />
       </main>

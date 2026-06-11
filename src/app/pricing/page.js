@@ -89,7 +89,7 @@ const PRICING_FAQS = [
   },
   {
     q: "Is there a free trial?",
-    a: "Yes. Every new account receives 10 free credits — no credit card required. Use them to generate up to 3 complete listings before deciding to purchase.",
+    a: "Scrivly does not currently offer a free trial. Purchase any credit pack on Etsy from $9 to get started.",
   },
 ];
 
@@ -105,7 +105,7 @@ export default function PricingPage() {
           subtext="No subscriptions. No monthly fees. Buy credits when you need them. They never expire."
         />
 
-        {/* Free tier banner */}
+        {/* New account banner */}
         <div
           className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl p-6 text-center sm:flex-row sm:justify-between sm:text-left"
           style={{
@@ -114,14 +114,13 @@ export default function PricingPage() {
           }}
         >
           <p className="text-sm font-medium text-[var(--text-primary)] sm:text-base">
-            Every new account gets 10 free credits — enough for 3 complete listings. No credit card
-            required.
+            New account? Get started with our Starter Pack for just $9.
           </p>
           <Link
             href="/signup"
             className="w-full shrink-0 rounded-lg bg-brand px-6 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
           >
-            Start free
+            Get started
           </Link>
         </div>
 

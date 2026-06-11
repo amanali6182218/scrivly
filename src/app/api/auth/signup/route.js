@@ -9,28 +9,6 @@ function getClientIp(request) {
   return request.headers.get('x-real-ip') || null
 }
 
-async function isAbusiveFingerprint(admin, fingerprint) {
-  if (!fingerprint) return false
-  const { data } = await admin
-    .from('profiles')
-    .select('id')
-    .eq('device_fingerprint', fingerprint)
-    .eq('total_credits_purchased', 0)
-    .maybeSingle()
-  return !!data
-}
-
-async function isAbusiveIp(admin, ip) {
-  if (!ip) return false
-  const { data } = await admin
-    .from('profiles')
-    .select('id')
-    .eq('signup_ip', ip)
-    .eq('total_credits_purchased', 0)
-    .maybeSingle()
-  return !!data
-}
-
 export async function POST(request) {
   let body
   try {
@@ -56,13 +34,6 @@ export async function POST(request) {
   const admin = createAdminClient()
   const ip = getClientIp(request)
 
-  // Check both signals — if either matches a free-only account, give 0 credits
-  const [fpAbuse, ipAbuse] = await Promise.all([
-    isAbusiveFingerprint(admin, fingerprint),
-    isAbusiveIp(admin, ip),
-  ])
-  const initialCredits = fpAbuse || ipAbuse ? 0 : 10
-
   // Create the user via the anon client (sends confirmation email)
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -81,14 +52,13 @@ export async function POST(request) {
   }
 
   // The DB trigger creates the profile row immediately on user insert.
-  // Update it with IP, fingerprint, and the correct credit amount.
+  // Update it with IP and fingerprint for abuse tracking.
   if (data.user) {
     await admin
       .from('profiles')
       .update({
         signup_ip: ip,
         device_fingerprint: fingerprint || null,
-        credits: initialCredits,
         updated_at: new Date().toISOString(),
       })
       .eq('id', data.user.id)

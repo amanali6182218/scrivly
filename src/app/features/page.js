@@ -252,7 +252,7 @@ export default function FeaturesPage() {
 
         <CtaBanner
           heading="Ready to try every feature?"
-          buttons={[{ label: "Start free — 10 credits", href: "/signup" }]}
+          buttons={[{ label: "Get started", href: "/signup" }]}
         />
       </main>
 

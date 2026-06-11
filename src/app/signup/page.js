@@ -84,7 +84,7 @@ export default function SignupPage() {
           <p className="mt-2 text-sm text-[var(--text-secondary)]">
             We sent a confirmation link to{' '}
             <span className="font-medium text-[var(--text-primary)]">{email}</span>.
-            Click it to activate your account and get your free credits.
+            Click it to activate your account and get started.
           </p>
           <Link
             href="/login"
@@ -109,7 +109,9 @@ export default function SignupPage() {
             <img src="/logo.png" alt="Scrivly" className="mx-auto mb-3" style={{ height: '40px', width: 'auto', cursor: 'pointer' }} />
           </Link>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">Scrivly</h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">Create your free account</p>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Create your account and start generating SEO-optimized Etsy listings in seconds.
+          </p>
         </div>
 
         <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] p-10 shadow-sm">
@@ -181,7 +183,7 @@ export default function SignupPage() {
                 text-base font-bold text-white shadow-md transition
                 hover:opacity-90 hover:shadow-[0_0_30px_rgba(255,61,139,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? 'Creating account…' : 'Get Started Free'}
+              {loading ? 'Creating account…' : 'Get Started'}
             </button>
           </form>
 
@@ -190,6 +192,10 @@ export default function SignupPage() {
             <Link href="/login" className="font-medium text-brand-pink hover:text-brand-orange">
               Sign in
             </Link>
+          </p>
+
+          <p className="mt-4 text-center" style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+            Have a credit pack code from Etsy? You can redeem it after signing up in your dashboard.
           </p>
         </div>
       </div>

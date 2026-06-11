@@ -18,7 +18,7 @@ const STEPS = [
     number: "02",
     title: "Sign up and redeem your code",
     body: "Go to scrivly.vercel.app and create your free account with just your email address. Confirm your email, then go to your dashboard. You will see the redeem code banner at the top — enter your unique code and click Activate Credits. Your credits are added to your account instantly.",
-    note: "First time? You already have 10 free credits waiting — no code needed to start.",
+    note: "New accounts start with 0 credits — purchase a credit pack on Etsy to get started.",
   },
   {
     number: "03",
@@ -143,7 +143,7 @@ export default function HowItWorksPage() {
 
         <CtaBanner
           heading="Ready to try it yourself?"
-          subtext="Start with 10 free credits — no card needed"
+          subtext="Credits from $9 · Never expire"
           buttons={[{ label: "Create free account", href: "/signup" }]}
         />
       </main>

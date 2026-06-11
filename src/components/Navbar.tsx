@@ -53,7 +53,7 @@ export default function Navbar() {
             className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition
               hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
           >
-            Get started free
+            Get started
           </Link>
         </div>
 
@@ -106,7 +106,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
               >
-                Get started free
+                Get started
               </Link>
             </div>
           </nav>

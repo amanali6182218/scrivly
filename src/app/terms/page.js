@@ -56,7 +56,7 @@ export default function TermsPage() {
             <ul className="list-disc space-y-1.5 pl-5">
               <li>Use Scrivly to generate content that violates Etsy&apos;s policies</li>
               <li>Attempt to reverse engineer or copy the service</li>
-              <li>Create multiple accounts to abuse the free credit system</li>
+              <li>Create multiple accounts to abuse the credit system</li>
               <li>Use automated scripts or bots to access the service</li>
               <li>Share, resell, or redistribute generated content as a competing service</li>
             </ul>

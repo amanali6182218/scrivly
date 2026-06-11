@@ -309,6 +309,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
             type="button"
             onClick={handleAnalyze}
             disabled={!canAnalyze || creditsAvailable < 2}
+            title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
             className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand
               px-5 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
               hover:shadow-[0_0_40px_rgba(255,61,139,0.35)] disabled:cursor-not-allowed

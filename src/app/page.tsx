@@ -73,7 +73,7 @@ export default function LandingPage() {
       <main className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)]">
           <span className="h-1.5 w-1.5 rounded-full bg-brand-orange"></span>
-          10 free credits when you sign up
+          Credits from $9 · Never expire
         </div>
 
         <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl lg:text-6xl">
@@ -92,7 +92,7 @@ export default function LandingPage() {
             className="w-full rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-white shadow-md
               transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
           >
-            Start for free — 10 credits
+            Start generating today
           </Link>
           <Link
             href="/login"

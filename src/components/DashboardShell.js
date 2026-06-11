@@ -8,6 +8,7 @@ import ListingGenerator from '@/components/ListingGenerator'
 import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from '@/components/Avatar'
 import RedeemBanner from '@/components/RedeemBanner'
+import WelcomeModal from '@/components/WelcomeModal'
 import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 
@@ -198,7 +199,7 @@ export default function DashboardShell({ user, profile }) {
     if (credits >= 3) setModalDismissed(false)
   }, [credits])
 
-  const showLowCreditsModal = credits < 3 && !modalDismissed
+  const showLowCreditsModal = credits < 3 && !modalDismissed && profile.total_credits_purchased > 0
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -217,6 +218,14 @@ export default function DashboardShell({ user, profile }) {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
+      {/* First-time welcome modal */}
+      <WelcomeModal
+        userId={user.id}
+        credits={credits}
+        totalPurchased={profile.total_credits_purchased}
+        onRedeem={handleCreditsAdded}
+      />
+
       {/* Low credits modal */}
       {showLowCreditsModal && (
         <LowCreditsModal

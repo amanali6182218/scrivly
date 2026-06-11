@@ -112,7 +112,7 @@ export default function LoginPage() {
           <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="font-medium text-brand-pink hover:text-brand-orange">
-              Get started free
+              Get started
             </Link>
           </p>
         </div>

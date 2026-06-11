@@ -99,7 +99,7 @@ export default function DemoPage() {
             href="/signup"
             className="rounded-lg bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
           >
-            Get started free
+            Get started
           </Link>
         </div>
 
@@ -142,14 +142,14 @@ export default function DemoPage() {
         {/* CTA */}
         <div className="mx-auto mt-20 max-w-[1100px] rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] px-6 py-10 text-center sm:px-12 sm:py-14">
           <h2 className="text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
-            Try it yourself — 10 credits free
+            Try it yourself — start generating today
           </h2>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
               className="w-full rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-white shadow-md transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
             >
-              Get started free
+              Get started
             </Link>
             <Link
               href="/etsy-shop"
