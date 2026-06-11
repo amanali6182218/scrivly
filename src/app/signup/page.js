@@ -62,17 +62,17 @@ export default function SignupPage() {
   }
 
   const inputClasses =
-    'w-full rounded-lg border border-[#222222] bg-[#0A0A0A] px-4 py-2.5 text-sm text-white ' +
-    'placeholder:text-[#555555] shadow-sm transition focus:border-brand-pink focus:outline-none ' +
+    'w-full rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-primary)] ' +
+    'placeholder:text-[var(--text-muted)] shadow-sm transition focus:border-brand-pink focus:outline-none ' +
     'focus:ring-[3px] focus:ring-[rgba(255,61,139,0.15)]'
 
   if (success) {
     return (
       <div
-        className="relative flex min-h-screen items-center justify-center bg-black px-4"
+        className="relative flex min-h-screen items-center justify-center bg-[var(--bg-primary)] px-4"
         style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(123,47,255,0.08) 0%, transparent 70%)' }}
       >
-        <div className="relative w-full max-w-sm rounded-2xl border border-[#222222] bg-[#111111] p-10 text-center shadow-sm">
+        <div className="relative w-full max-w-sm rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] p-10 text-center shadow-sm">
           <div className="mb-4 flex justify-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(34,197,94,0.15)' }}>
               <svg className="h-7 w-7 text-[#22C55E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -80,10 +80,10 @@ export default function SignupPage() {
               </svg>
             </div>
           </div>
-          <h2 className="text-lg font-semibold text-white">Check your email</h2>
-          <p className="mt-2 text-sm text-[#A0A0A0]">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Check your email</h2>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             We sent a confirmation link to{' '}
-            <span className="font-medium text-white">{email}</span>.
+            <span className="font-medium text-[var(--text-primary)]">{email}</span>.
             Click it to activate your account and get your free credits.
           </p>
           <Link
@@ -99,7 +99,7 @@ export default function SignupPage() {
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center bg-black px-4"
+      className="relative flex min-h-screen items-center justify-center bg-[var(--bg-primary)] px-4"
       style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(123,47,255,0.08) 0%, transparent 70%)' }}
     >
       <div className="relative w-full max-w-sm">
@@ -108,14 +108,14 @@ export default function SignupPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Scrivly" className="mx-auto mb-3" style={{ height: '40px', width: 'auto', cursor: 'pointer' }} />
           </Link>
-          <h1 className="text-2xl font-bold text-white">Scrivly</h1>
-          <p className="mt-1 text-sm text-[#A0A0A0]">Create your free account</p>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Scrivly</h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">Create your free account</p>
         </div>
 
-        <div className="rounded-2xl border border-[#222222] bg-[#111111] p-10 shadow-sm">
+        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] p-10 shadow-sm">
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-white">
+              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-[var(--text-primary)]">
                 Email
               </label>
               <input
@@ -128,14 +128,14 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <p className="mt-1.5 text-xs text-[#555555]">
+              <p className="mt-1.5 text-xs text-[var(--text-muted)]">
                 Please use a real email address. Temporary emails are not accepted.
               </p>
             </div>
 
             <div>
-              <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-white">
-                Password <span className="font-normal text-[#555555]">(min. 6 characters)</span>
+              <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-[var(--text-primary)]">
+                Password <span className="font-normal text-[var(--text-muted)]">(min. 6 characters)</span>
               </label>
               <input
                 id="password"
@@ -150,7 +150,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="confirm-password" className="mb-1.5 block text-sm font-medium text-white">
+              <label htmlFor="confirm-password" className="mb-1.5 block text-sm font-medium text-[var(--text-primary)]">
                 Confirm password
               </label>
               <input
@@ -178,14 +178,14 @@ export default function SignupPage() {
               type="submit"
               disabled={loading}
               className="w-full rounded-lg bg-brand px-4 py-3.5
-                text-base font-bold text-white shadow-md transition
+                text-base font-bold text-[var(--text-primary)] shadow-md transition
                 hover:opacity-90 hover:shadow-[0_0_30px_rgba(255,61,139,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? 'Creating account…' : 'Get Started Free'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-[#A0A0A0]">
+          <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
             Already have an account?{' '}
             <Link href="/login" className="font-medium text-brand-pink hover:text-brand-orange">
               Sign in

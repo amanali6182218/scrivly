@@ -30,15 +30,15 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
   return (
     <div>
       <div className="mb-6 max-w-2xl">
-        <h2 className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">
+        <h2 className="text-xl font-bold text-[var(--text-primary)] sm:text-2xl lg:text-3xl">
           {TAB_COPY[activeTab].heading}
         </h2>
-        <p className="mt-2 text-sm text-[#A0A0A0] sm:text-base">
+        <p className="mt-2 text-sm text-[var(--text-secondary)] sm:text-base">
           {TAB_COPY[activeTab].subheading}
         </p>
       </div>
 
-      <div className="mb-8 inline-flex rounded-xl border border-[#222222] bg-[#111111] p-1 shadow-sm">
+      <div className="mb-8 inline-flex rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] p-1 shadow-sm">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -46,8 +46,8 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition sm:px-5 ${
               activeTab === tab.id
-                ? 'bg-brand text-white shadow-sm'
-                : 'text-[#A0A0A0] hover:text-white'
+                ? 'bg-brand text-[var(--text-primary)] shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             {tab.label}

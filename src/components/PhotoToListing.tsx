@@ -54,8 +54,8 @@ function formatBytes(bytes: number): string {
 }
 
 const textareaClasses =
-  "w-full resize-none rounded-lg border border-[#222222] bg-[#0A0A0A] px-4 py-2.5 text-sm text-white " +
-  "placeholder:text-[#555555] shadow-sm transition focus:border-brand-pink focus:outline-none " +
+  "w-full resize-none rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-primary)] " +
+  "placeholder:text-[var(--text-muted)] shadow-sm transition focus:border-brand-pink focus:outline-none " +
   "focus:ring-2 focus:ring-[rgba(255,61,139,0.15)]";
 
 export interface PhotoListingResult {
@@ -220,10 +220,10 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <div className="rounded-2xl border border-[#222222] bg-[#111111] p-5 shadow-sm sm:p-8">
+      <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] p-5 shadow-sm sm:p-8">
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-white">Upload a product photo</h2>
-          <p className="mt-1 text-sm text-[#A0A0A0]">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Upload a product photo</h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
             We&apos;ll examine your photo and write an SEO-ready title, description, and tags based
             on exactly what we see.
           </p>
@@ -238,29 +238,29 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             className={`flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed
-              bg-[#0A0A0A] px-6 py-12 text-center transition ${
-                isDragging ? "border-brand-pink" : "border-[#333333]"
+              bg-[var(--bg-input)] px-6 py-12 text-center transition ${
+                isDragging ? "border-brand-pink" : "border-[var(--border-default)]"
               }`}
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand">
-              <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+              <svg className="h-6 w-6 text-[var(--text-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <p className="text-sm font-medium text-white">Drag and drop a photo here</p>
-            <p className="text-xs text-[#555555]">or</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">Drag and drop a photo here</p>
+            <p className="text-xs text-[var(--text-muted)]">or</p>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#333333] bg-transparent
-                px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:border-[#555555]"
+              className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-default)] bg-transparent
+                px-4 py-2 text-sm font-medium text-[var(--text-primary)] shadow-sm transition hover:border-[var(--text-muted)]"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h3.172a2 2 0 011.414.586l1.828 1.828A2 2 0 0014.828 8H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
               </svg>
               Choose a photo
             </button>
-            <p className="text-xs text-[#555555]">{ACCEPTED_EXTENSIONS} — up to 5MB</p>
+            <p className="text-xs text-[var(--text-muted)]">{ACCEPTED_EXTENSIONS} — up to 5MB</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -271,7 +271,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="overflow-hidden rounded-xl border border-[#222222] bg-[#0A0A0A]">
+            <div className="overflow-hidden rounded-xl border border-[var(--border-default)] bg-[var(--bg-input)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image.previewUrl}
@@ -279,7 +279,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
                 className="max-h-80 w-full object-contain"
               />
             </div>
-            <div className="flex items-center justify-between gap-3 text-xs text-[#A0A0A0]">
+            <div className="flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
               <span className="truncate">
                 {image.file.name} · {formatBytes(image.file.size)}
               </span>
@@ -294,7 +294,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="font-medium text-[#A0A0A0] transition hover:text-[#FF3D8B]"
+                  className="font-medium text-[var(--text-secondary)] transition hover:text-[#FF3D8B]"
                 >
                   Remove
                 </button>
@@ -318,7 +318,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
               Suggested Etsy Category
             </p>
             {isCategoryLoading ? (
-              <div className="flex items-center gap-2 text-sm text-[#A0A0A0]">
+              <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
                 <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path
@@ -343,8 +343,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
                         className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium
                           transition ${
                             isSelected
-                              ? "border-transparent bg-brand text-white"
-                              : "border-[#222222] bg-[#0A0A0A] text-[#A0A0A0] hover:border-[#333333]"
+                              ? "border-transparent bg-brand text-[var(--text-primary)]"
+                              : "border-[var(--border-default)] bg-[var(--bg-input)] text-[var(--text-secondary)] hover:border-[var(--border-default)]"
                           }`}
                       >
                         {isSelected && <span>✓</span>}
@@ -356,7 +356,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
                     );
                   })}
                 </div>
-                <p className="mt-1.5 text-xs text-[#555555]">
+                <p className="mt-1.5 text-xs text-[var(--text-muted)]">
                   Based on your photo · Click to change category
                 </p>
               </>
@@ -365,8 +365,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         )}
 
         <div className="mt-6">
-          <label htmlFor="details" className="mb-1.5 block text-sm font-medium text-white">
-            Add details <span className="font-normal text-[#555555]">(optional)</span>
+          <label htmlFor="details" className="mb-1.5 block text-sm font-medium text-[var(--text-primary)]">
+            Add details <span className="font-normal text-[var(--text-muted)]">(optional)</span>
           </label>
           <textarea
             id="details"
@@ -376,7 +376,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
             value={details}
             onChange={(e) => setDetails(e.target.value)}
           />
-          <p className="mt-1.5 text-xs text-[#555555]">
+          <p className="mt-1.5 text-xs text-[var(--text-muted)]">
             Add anything the photo can&apos;t show — materials, size, scent, and so on.
           </p>
         </div>
@@ -386,7 +386,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           onClick={() => generate()}
           disabled={!image || isGenerating || creditsAvailable < 3}
           className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-brand
-            px-6 py-3 text-sm font-bold text-white shadow-md transition-all duration-200 ease-in-out
+            px-6 py-3 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
             hover:shadow-[0_0_40px_rgba(255,61,139,0.35)]
             disabled:cursor-not-allowed disabled:opacity-60"
         >
@@ -419,14 +419,14 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         )}
 
         <div className="mt-3 flex items-center justify-between">
-          <p className="text-xs text-[#A0A0A0]">
+          <p className="text-xs text-[var(--text-secondary)]">
             Uses <span className="font-semibold text-brand-orange">3 credits</span> — listing + price research + health score
           </p>
         </div>
 
-        <p className="mt-3 rounded-lg border border-[#222222] bg-[#0A0A0A] px-4 py-3 text-xs
-          text-[#A0A0A0] sm:text-sm">
-          <span className="font-semibold text-white">Tip:</span> Use a clear, well-lit photo that shows the
+        <p className="mt-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-3 text-xs
+          text-[var(--text-secondary)] sm:text-sm">
+          <span className="font-semibold text-[var(--text-primary)]">Tip:</span> Use a clear, well-lit photo that shows the
           whole product — Claude writes the listing purely from what it can see (plus any details
           you add).
         </p>
