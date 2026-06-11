@@ -122,17 +122,32 @@ function ErrorState({ message }: { message: string }) {
   );
 }
 
-function ResultsView({ result }: { result: SpyResult }) {
+function ResultsView({ result, onClear }: { result: SpyResult; onClear?: () => void }) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* LEFT — competitor */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center rounded-full border border-[#222222] bg-[#111111] px-3 py-1 text-xs font-semibold text-[#A0A0A0]">
-            Their listing
-          </span>
-          {result.competitorPrice && (
-            <span className="text-sm font-medium text-[#A0A0A0]">{result.competitorPrice}</span>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center rounded-full border border-[#222222] bg-[#111111] px-3 py-1 text-xs font-semibold text-[#A0A0A0]">
+              Their listing
+            </span>
+            {result.competitorPrice && (
+              <span className="text-sm font-medium text-[#A0A0A0]">{result.competitorPrice}</span>
+            )}
+          </div>
+          {onClear && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#222222] bg-[#1A1A1A]
+                px-3 py-1.5 text-xs font-medium text-[#A0A0A0] shadow-sm transition hover:border-[#FF3D8B] hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Clear
+            </button>
           )}
         </div>
 
@@ -226,11 +241,12 @@ function ResultsView({ result }: { result: SpyResult }) {
 interface SpyImproveProps {
   onCreditsUsed?: (amount: number) => void;
   creditsAvailable?: number;
+  result?: SpyResult | null;
+  onResultChange?: (result: SpyResult | null) => void;
 }
 
-export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity }: SpyImproveProps = {}) {
+export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange }: SpyImproveProps = {}) {
   const [url, setUrl] = useState("");
-  const [result, setResult] = useState<SpyResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -240,7 +256,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity 
     if (!canAnalyze) return;
 
     setIsLoading(true);
-    setResult(null);
+    onResultChange?.(null);
     setError(null);
 
     try {
@@ -256,7 +272,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity 
         throw new Error(data?.error || "Failed to analyze listing.");
       }
 
-      setResult(data as SpyResult);
+      onResultChange?.(data as SpyResult);
       onCreditsUsed?.(2);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -332,7 +348,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity 
 
       {isLoading && <LoadingState />}
       {error && !isLoading && <ErrorState message={error} />}
-      {result && !isLoading && !error && <ResultsView result={result} />}
+      {result && !isLoading && !error && <ResultsView result={result} onClear={() => onResultChange?.(null)} />}
 
       {!isLoading && !error && !result && (
         <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed

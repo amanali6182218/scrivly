@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import ListingGenerator from '@/components/ListingGenerator'
+import ThemeToggle from '@/components/ThemeToggle'
+import Avatar from '@/components/Avatar'
 
 // TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
@@ -171,9 +174,22 @@ export default function DashboardShell({ user, profile }) {
   const [signingOut, setSigningOut] = useState(false)
   const [modalDismissed, setModalDismissed] = useState(false)
   const [redeemExpanded, setRedeemExpanded] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef(null)
 
   const emailPrefix = user.email.split('@')[0]
-  const initial = user.email.charAt(0).toUpperCase()
+  const displayName = profile.full_name || emailPrefix
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
 
   // Reset dismissed state when credits recover so modal re-appears next drop
   useEffect(() => {
@@ -186,7 +202,7 @@ export default function DashboardShell({ user, profile }) {
     setSigningOut(true)
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push('/')
   }
 
   const handleCreditsUsed = (amount) => {
@@ -212,13 +228,14 @@ export default function DashboardShell({ user, profile }) {
       {/* Header */}
       <header className="border-b border-[#1A1A1A] bg-[#0D0D0D]">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <span className="flex items-center gap-2 text-base font-bold text-white sm:text-lg">
+          <Link href="/dashboard" className="flex items-center gap-2 text-base font-bold text-white sm:text-lg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Scrivly" style={{ height: '40px', width: 'auto' }} />
+            <img src="/logo.png" alt="Scrivly" style={{ height: '40px', width: 'auto', cursor: 'pointer' }} />
             Scrivly
-          </span>
+          </Link>
 
           <div className="flex items-center gap-4 sm:gap-6">
+            <ThemeToggle />
             <div
               className="flex items-center gap-2 rounded-full px-3 py-1.5"
               style={{
@@ -233,22 +250,55 @@ export default function DashboardShell({ user, profile }) {
               <span className="hidden text-xs text-[#A0A0A0] sm:inline">credits</span>
             </div>
 
-            <div
-              title={user.email}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand
-                text-sm font-semibold text-white shadow-sm"
-            >
-              {initial}
-            </div>
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((prev) => !prev)}
+                title={user.email}
+                className="block shrink-0 transition hover:opacity-80"
+              >
+                <Avatar profile={profile} email={user.email} size={36} />
+              </button>
 
-            <button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="rounded-lg border border-[#333333] bg-transparent px-3 py-1.5 text-xs font-medium
-                text-white transition hover:border-[#555555] disabled:opacity-50"
-            >
-              {signingOut ? 'Signing out…' : 'Sign out'}
-            </button>
+              {menuOpen && (
+                <div
+                  className="absolute right-0 top-[calc(100%+8px)] z-50 w-56"
+                  style={{
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-default)',
+                    borderRadius: '12px',
+                    padding: '8px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  <div className="px-3 py-2">
+                    <p className="truncate text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      {displayName}
+                    </p>
+                    {profile.full_name && (
+                      <p className="truncate text-xs" style={{ color: 'var(--text-muted)' }}>{user.email}</p>
+                    )}
+                  </div>
+                  <Link
+                    href="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Manage Account
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    disabled={signingOut}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[var(--bg-elevated)] disabled:opacity-50"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {signingOut ? 'Signing out…' : 'Sign Out'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -257,9 +307,12 @@ export default function DashboardShell({ user, profile }) {
         {/* Welcome card */}
         <div className="relative mb-8 flex flex-col overflow-hidden rounded-2xl border border-[#1A1A1A] bg-[#111111] shadow-sm sm:flex-row">
           <div className="absolute inset-y-0 left-0 w-[3px] bg-brand" />
-          <div className="flex-1 px-5 py-5 pl-6 sm:px-6 sm:pl-7">
-            <p className="text-lg font-bold text-white">Welcome back 👋</p>
-            <p className="mt-0.5 text-sm text-[#A0A0A0]">{emailPrefix}</p>
+          <div className="flex flex-1 items-center gap-4 px-5 py-5 pl-6 sm:px-6 sm:pl-7">
+            <Avatar profile={profile} email={user.email} size={56} fontSize={20} />
+            <div>
+              <p className="text-sm text-[#A0A0A0]">Welcome back,</p>
+              <p className="text-lg font-bold text-white">{displayName}</p>
+            </div>
           </div>
           <div className="flex flex-1 flex-col justify-center gap-2 px-5 py-5 sm:px-6">
             <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-sm font-bold text-white">

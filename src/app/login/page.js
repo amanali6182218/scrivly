@@ -42,8 +42,10 @@ export default function LoginPage() {
     >
       <div className="relative w-full max-w-sm">
         <div className="mb-8 text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Scrivly" className="mx-auto mb-3" style={{ height: '40px', width: 'auto' }} />
+          <Link href="/" className="inline-block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Scrivly" className="mx-auto mb-3" style={{ height: '40px', width: 'auto', cursor: 'pointer' }} />
+          </Link>
           <h1 className="text-2xl font-bold text-white">Scrivly</h1>
           <p className="mt-1 text-sm text-[#A0A0A0]">Sign in to your account</p>
         </div>

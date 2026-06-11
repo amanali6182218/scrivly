@@ -24,6 +24,8 @@ const TAB_COPY = {
 
 export default function ListingGenerator({ credits, onCreditsUsed }) {
   const [activeTab, setActiveTab] = useState('photo')
+  const [listingResult, setListingResult] = useState(null)
+  const [spyResult, setSpyResult] = useState(null)
 
   return (
     <div>
@@ -65,10 +67,20 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
       )}
 
       {activeTab === 'photo' && (
-        <PhotoToListing onCreditsUsed={onCreditsUsed} creditsAvailable={credits} />
+        <PhotoToListing
+          onCreditsUsed={onCreditsUsed}
+          creditsAvailable={credits}
+          result={listingResult}
+          onResultChange={setListingResult}
+        />
       )}
       {activeTab === 'spy' && (
-        <SpyImprove onCreditsUsed={onCreditsUsed} creditsAvailable={credits} />
+        <SpyImprove
+          onCreditsUsed={onCreditsUsed}
+          creditsAvailable={credits}
+          result={spyResult}
+          onResultChange={setSpyResult}
+        />
       )}
     </div>
   )

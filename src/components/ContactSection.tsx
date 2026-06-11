@@ -1,0 +1,79 @@
+import { SOCIAL_LINKS, EtsyIcon, EmailIcon } from "@/components/SocialIcons";
+
+export default function ContactSection() {
+  return (
+    <div className="mt-20 text-left">
+      <h2 className="text-center text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+        Get in touch
+      </h2>
+      <p className="mx-auto mt-3 max-w-xl text-center text-sm text-[#A0A0A0] sm:text-base">
+        Have a question or need help? We are here for you.
+      </p>
+
+      <div className="mx-auto mt-10 grid max-w-3xl gap-6 sm:grid-cols-2">
+        {/* Left — contact info */}
+        <div
+          className="flex flex-col gap-4 rounded-2xl p-6 sm:p-8"
+          style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}
+        >
+          <a
+            href="#etsy-shop"
+            className="flex items-center gap-3 text-sm font-medium text-white transition hover:text-brand-pink"
+          >
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: "var(--bg-elevated)" }}
+            >
+              <EtsyIcon className="h-5 w-5" />
+            </span>
+            Message us on Etsy
+          </a>
+          <a
+            href="mailto:hello@scrivly.ai"
+            className="flex items-center gap-3 text-sm font-medium text-white transition hover:text-brand-pink"
+          >
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: "var(--bg-elevated)" }}
+            >
+              <EmailIcon className="h-5 w-5" />
+            </span>
+            Email us
+          </a>
+          <p className="mt-2 text-xs text-[#555555]">We reply within 24 hours</p>
+        </div>
+
+        {/* Right — social */}
+        <div
+          className="flex flex-col gap-4 rounded-2xl p-6 sm:p-8"
+          style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}
+        >
+          <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            Follow us
+          </h3>
+          <div className="flex flex-wrap gap-3">
+            {SOCIAL_LINKS.map(({ id, label, Icon }) => (
+              <a
+                key={id}
+                href="#"
+                id={id}
+                aria-label={label}
+                className="flex items-center justify-center rounded-lg border transition
+                  hover:border-[var(--accent-pink)] hover:bg-[var(--bg-elevated)]"
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  background: "var(--bg-card)",
+                  borderColor: "var(--border-default)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <Icon className="h-5 w-5" />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

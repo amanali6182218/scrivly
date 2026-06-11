@@ -1,4 +1,8 @@
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
+import FAQSection from "@/components/FAQSection";
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
 
 const FEATURES = [
   {
@@ -68,12 +72,13 @@ export default function LandingPage() {
         style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(12px)" }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <span className="flex items-center gap-2 text-base font-bold text-white sm:text-lg">
+          <Link href="/" className="flex items-center gap-2 text-base font-bold text-white sm:text-lg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Scrivly" style={{ height: "40px", width: "auto" }} />
+            <img src="/logo.png" alt="Scrivly" style={{ height: "40px", width: "auto", cursor: "pointer" }} />
             Scrivly
-          </span>
+          </Link>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/login"
               className="rounded-lg border border-[#333333] bg-transparent px-4 py-2 text-sm font-medium
@@ -305,24 +310,55 @@ export default function LandingPage() {
             have a code? Sign up free and redeem it.
           </p>
         </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#1A1A1A] bg-[#0D0D0D]">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-center text-xs text-[#A0A0A0] sm:flex-row sm:px-6 sm:text-left">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Scrivly" style={{ height: "32px", width: "auto" }} />
-          <p>© 2026 Scrivly · AI-powered Etsy listing agent</p>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="font-medium text-brand-pink hover:text-brand-orange">
-              Sign in
-            </Link>
-            <Link href="/signup" className="font-medium text-brand-pink hover:text-brand-orange">
-              Get started free
-            </Link>
+        {/* About */}
+        <div className="mt-20 text-left">
+          <p className="gradient-text text-center text-xs font-semibold uppercase tracking-wide">ABOUT SCRIVLY</p>
+          <h2 className="mt-2 text-center text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+            Built by sellers, for sellers.
+          </h2>
+
+          <div className="mx-auto mt-6 max-w-3xl space-y-4">
+            <p className="text-sm leading-relaxed text-[#A0A0A0] sm:text-base">
+              Scrivly was built because writing Etsy listings is one of the most time-consuming parts
+              of running a shop. A great product deserves a great listing — but most sellers spend 30
+              to 45 minutes writing each one by hand.
+            </p>
+            <p className="text-sm leading-relaxed text-[#A0A0A0] sm:text-base">
+              We built Scrivly to solve that. Upload your product photo. Our AI reads exactly what it
+              sees — the materials, style, colors, and details — and writes a complete, SEO-optimized
+              listing in under 30 seconds. Title, description, 13 tags, price research, and a health
+              score. Everything.
+            </p>
+            <p className="text-sm leading-relaxed text-[#A0A0A0] sm:text-base">
+              Scrivly is powered by Claude, Anthropic&apos;s AI — the same technology trusted by
+              thousands of developers and businesses worldwide. No generic output. No copy-paste
+              prompts. Just your product, analyzed and written properly, every time.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 grid max-w-xl grid-cols-3 gap-6 text-center">
+            <div>
+              <p className="gradient-text text-3xl font-extrabold sm:text-4xl">30 sec</p>
+              <p className="mt-1 text-xs text-[#A0A0A0] sm:text-sm">Average generation time</p>
+            </div>
+            <div>
+              <p className="gradient-text text-3xl font-extrabold sm:text-4xl">91/100</p>
+              <p className="mt-1 text-xs text-[#A0A0A0] sm:text-sm">Average listing health score</p>
+            </div>
+            <div>
+              <p className="gradient-text text-3xl font-extrabold sm:text-4xl">500+</p>
+              <p className="mt-1 text-xs text-[#A0A0A0] sm:text-sm">Etsy sellers using Scrivly</p>
+            </div>
           </div>
         </div>
-      </footer>
+
+        <FAQSection />
+
+        <ContactSection />
+      </main>
+
+      <Footer />
     </div>
   );
 }

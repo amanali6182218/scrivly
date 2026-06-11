@@ -48,6 +48,24 @@
   --error:            #FF3D8B;
 }
 
+/* Light mode overrides */
+.light {
+  --bg-primary:       #FFFFFF;
+  --bg-secondary:     #F8F8F8;
+  --bg-card:          #F2F2F2;
+  --bg-card-hover:    #EBEBEB;
+  --bg-input:         #FFFFFF;
+  --bg-elevated:      #EEEEEE;
+
+  --text-primary:     #0A0A0A;
+  --text-secondary:   #444444;
+  --text-muted:       #888888;
+
+  --border-default:   #DDDDDD;
+  --border-subtle:    #E8E8E8;
+  --border-active:    #FF3D8B;
+}
+
 html {
   scroll-behavior: smooth;
 }

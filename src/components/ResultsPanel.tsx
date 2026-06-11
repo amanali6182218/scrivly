@@ -10,6 +10,7 @@ interface ResultsPanelProps {
   error?: string | null;
   onRegenerate?: () => void;
   onFix?: (weakAreas: string[]) => void;
+  onClear?: () => void;
   priceResult?: PriceResearchResult | null;
   isPriceLoading?: boolean;
 }
@@ -310,7 +311,7 @@ function titleCounterInfo(length: number): { className: string; label: string } 
   return { className: "text-[#22C55E]", label: "Optimal ✓" };
 }
 
-export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, priceResult, isPriceLoading }: ResultsPanelProps) {
+export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading }: ResultsPanelProps) {
   const [showToast, setShowToast] = useState(false);
 
   if (isGenerating) return <LoadingState />;
@@ -346,19 +347,34 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
     <div className="animate-fade-in space-y-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-medium text-[#A0A0A0]">Your generated listing</p>
-        {onRegenerate && (
-          <button
-            type="button"
-            onClick={onRegenerate}
-            className="inline-flex items-center gap-1.5 rounded-md border border-[#222222] bg-[#1A1A1A]
-              px-3 py-1.5 text-xs font-medium text-[#A0A0A0] shadow-sm transition hover:border-brand-pink hover:text-white"
-          >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Regenerate
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onRegenerate && (
+            <button
+              type="button"
+              onClick={onRegenerate}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#222222] bg-[#1A1A1A]
+                px-3 py-1.5 text-xs font-medium text-[#A0A0A0] shadow-sm transition hover:border-brand-pink hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Regenerate
+            </button>
+          )}
+          {onClear && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#222222] bg-[#1A1A1A]
+                px-3 py-1.5 text-xs font-medium text-[#A0A0A0] shadow-sm transition hover:border-[#FF3D8B] hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       <button

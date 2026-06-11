@@ -58,20 +58,27 @@ const textareaClasses =
   "placeholder:text-[#555555] shadow-sm transition focus:border-brand-pink focus:outline-none " +
   "focus:ring-2 focus:ring-[rgba(255,61,139,0.15)]";
 
+export interface PhotoListingResult {
+  listing: GeneratedListing;
+  priceResult: PriceResearchResult | null;
+}
+
 interface PhotoToListingProps {
   onCreditsUsed?: (amount: number) => void;
   creditsAvailable?: number;
+  result?: PhotoListingResult | null;
+  onResultChange?: (result: PhotoListingResult | null | ((prev: PhotoListingResult | null) => PhotoListingResult | null)) => void;
 }
 
-export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity }: PhotoToListingProps = {}) {
+export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange }: PhotoToListingProps = {}) {
   const [image, setImage] = useState<UploadedImage | null>(null);
   const [details, setDetails] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [listing, setListing] = useState<GeneratedListing | null>(null);
+  const listing = result?.listing ?? null;
+  const priceResult = result?.priceResult ?? null;
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [priceResult, setPriceResult] = useState<PriceResearchResult | null>(null);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
   const [categorySuggestions, setCategorySuggestions] = useState<CategorySuggestion[]>([]);
   const [isCategoryLoading, setIsCategoryLoading] = useState(false);
@@ -102,7 +109,6 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
   const fetchPrice = async (forListing: GeneratedListing) => {
     setIsPriceLoading(true);
-    setPriceResult(null);
     const productName = forListing.title.split(/[|–—]/)[0].trim().slice(0, 80);
     try {
       const res = await fetch("/api/price-research", {
@@ -111,7 +117,9 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         body: JSON.stringify({ productName, category: selectedCategory || "Other", partOfGeneration: true }),
       });
       const data = await res.json();
-      if (res.ok) setPriceResult(data as PriceResearchResult);
+      if (res.ok) {
+        onResultChange?.((prev) => ({ listing: prev?.listing ?? forListing, priceResult: data as PriceResearchResult }));
+      }
     } catch {
       // silently suppress — price section just won't render
     } finally {
@@ -137,7 +145,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         if (prev) URL.revokeObjectURL(prev.previewUrl);
         return { file, previewUrl: URL.createObjectURL(file), base64: data, mediaType };
       });
-      setListing(null);
+      onResultChange?.(null);
       setError(null);
       fetchCategorySuggestions(data, mediaType);
     } catch {
@@ -163,7 +171,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
       if (prev) URL.revokeObjectURL(prev.previewUrl);
       return null;
     });
-    setListing(null);
+    onResultChange?.(null);
     setError(null);
     setCategorySuggestions([]);
     setSelectedCategory(null);
@@ -174,9 +182,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
     if (!image) return;
 
     setIsGenerating(true);
-    setListing(null);
+    onResultChange?.(null);
     setError(null);
-    setPriceResult(null);
     setIsPriceLoading(false);
 
     try {
@@ -201,7 +208,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
       }
 
       const newListing = { title: data.title, description: data.description, tags: data.tags };
-      setListing(newListing);
+      onResultChange?.({ listing: newListing, priceResult: null });
       onCreditsUsed?.(3);
       fetchPrice(newListing);
     } catch (err) {
@@ -432,6 +439,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           error={error}
           onRegenerate={image ? () => generate() : undefined}
           onFix={image ? (wa) => generate(wa) : undefined}
+          onClear={listing ? () => onResultChange?.(null) : undefined}
           priceResult={priceResult}
           isPriceLoading={isPriceLoading}
         />
