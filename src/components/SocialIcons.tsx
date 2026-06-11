@@ -62,9 +62,9 @@ export function EmailIcon({ className = "h-5 w-5" }: IconProps) {
 }
 
 export const SOCIAL_LINKS = [
-  { id: "social-twitter", label: "Twitter / X", Icon: TwitterIcon },
-  { id: "social-instagram", label: "Instagram", Icon: InstagramIcon },
-  { id: "social-facebook", label: "Facebook", Icon: FacebookIcon },
-  { id: "social-youtube", label: "YouTube", Icon: YouTubeIcon },
-  { id: "social-tiktok", label: "TikTok", Icon: TikTokIcon },
+  { id: "social-twitter", label: "X (Twitter)", Icon: TwitterIcon, href: "https://x.com" },
+  { id: "social-instagram", label: "Instagram", Icon: InstagramIcon, href: "https://instagram.com/scrivly" },
+  { id: "social-facebook", label: "Facebook", Icon: FacebookIcon, href: "https://facebook.com/scrivly" },
+  { id: "social-youtube", label: "YouTube", Icon: YouTubeIcon, href: "https://youtube.com" },
+  { id: "social-tiktok", label: "TikTok", Icon: TikTokIcon, href: "https://tiktok.com" },
 ];

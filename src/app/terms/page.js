@@ -27,6 +27,7 @@ export default function TermsPage() {
               service where users purchase credits to generate SEO-optimized Etsy listings from product
               photos.
             </p>
+            <p>Scrivly is operated by Aman Ali, Sialkot, Pakistan.</p>
           </DocSection>
 
           <DocSection heading="2. Accounts">
@@ -109,7 +110,22 @@ export default function TermsPage() {
           </DocSection>
 
           <DocSection heading="11. Contact">
-            <p>Questions about these Terms? Contact us through the Contact page on our website.</p>
+            <p>
+              Questions about these Terms? Email{" "}
+              <a href="mailto:scrivly@gmail.com" className="text-brand-pink hover:underline">
+                scrivly@gmail.com
+              </a>{" "}
+              or message us at{" "}
+              <a
+                href="https://www.etsy.com/shop/AmanCraftio"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-pink hover:underline"
+              >
+                etsy.com/shop/AmanCraftio
+              </a>
+              .
+            </p>
           </DocSection>
         </DocLayout>
       </main>

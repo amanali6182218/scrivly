@@ -108,7 +108,22 @@ export default function PrivacyPage() {
           </DocSection>
 
           <DocSection heading="9. Contact">
-            <p>For privacy-related questions, contact us through the Contact page on our website.</p>
+            <p>
+              For privacy-related questions contact us at{" "}
+              <a href="mailto:scrivly@gmail.com" className="text-brand-pink hover:underline">
+                scrivly@gmail.com
+              </a>{" "}
+              or message us at{" "}
+              <a
+                href="https://www.etsy.com/shop/AmanCraftio"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-pink hover:underline"
+              >
+                etsy.com/shop/AmanCraftio
+              </a>
+              .
+            </p>
           </DocSection>
         </DocLayout>
       </main>

@@ -48,11 +48,13 @@ export default function Footer() {
               AI-powered listing agent for Etsy sellers
             </p>
             <div className="mt-5 flex gap-2">
-              {SOCIAL_LINKS.map(({ id, label, Icon }) => (
+              {SOCIAL_LINKS.map(({ id, label, Icon, href }) => (
                 <a
                   key={id}
-                  href="#"
+                  href={href}
                   id={id}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="flex items-center justify-center rounded-lg border transition
                     hover:border-[var(--accent-pink)] hover:bg-[var(--bg-elevated)]"

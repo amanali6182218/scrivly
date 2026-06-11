@@ -18,6 +18,7 @@ const PACKS = [
     perListing: "~$0.27 per listing",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-starter-link",
+    href: "https://www.etsy.com/shop/AmanCraftio",
   },
   {
     name: "Pro Pack",
@@ -28,6 +29,7 @@ const PACKS = [
     popular: true,
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-pro-link",
+    href: "https://www.etsy.com/shop/AmanCraftio",
   },
   {
     name: "Power Seller Pack",
@@ -37,6 +39,7 @@ const PACKS = [
     perListing: "~$0.21 per listing",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-power-link",
+    href: "https://www.etsy.com/shop/AmanCraftio",
   },
 ];
 

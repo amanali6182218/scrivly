@@ -7,6 +7,7 @@ export type CreditPack = {
   popular?: boolean;
   buttonLabel: string;
   buttonId: string;
+  href?: string;
 };
 
 const FEATURES = ["SEO-optimized title", "Full description", "All 13 tags", "Price research", "Health score /100"];
@@ -48,8 +49,10 @@ export default function CreditPackCard({ pack }: { pack: CreditPack }) {
       </ul>
 
       <a
-        href="#"
+        href={pack.href || "#"}
         id={pack.buttonId}
+        target="_blank"
+        rel="noopener noreferrer"
         className={`mt-8 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
           pack.popular
             ? "bg-brand text-white shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"

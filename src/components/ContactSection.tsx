@@ -17,7 +17,9 @@ export default function ContactSection() {
           style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}
         >
           <a
-            href="#etsy-shop"
+            href="https://www.etsy.com/shop/AmanCraftio"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-3 text-sm font-medium text-[var(--text-primary)] transition hover:text-brand-pink"
           >
             <span
@@ -29,7 +31,7 @@ export default function ContactSection() {
             Message us on Etsy
           </a>
           <a
-            href="mailto:hello@scrivly.ai"
+            href="mailto:scrivly@gmail.com"
             className="flex items-center gap-3 text-sm font-medium text-[var(--text-primary)] transition hover:text-brand-pink"
           >
             <span
@@ -52,11 +54,13 @@ export default function ContactSection() {
             Follow us
           </h3>
           <div className="flex flex-wrap gap-3">
-            {SOCIAL_LINKS.map(({ id, label, Icon }) => (
+            {SOCIAL_LINKS.map(({ id, label, Icon, href }) => (
               <a
                 key={id}
-                href="#"
+                href={href}
                 id={id}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 className="flex items-center justify-center rounded-lg border transition
                   hover:border-[var(--accent-pink)] hover:bg-[var(--bg-elevated)]"
