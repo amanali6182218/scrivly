@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import ListingGenerator from '@/components/ListingGenerator'
 import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from '@/components/Avatar'
+import RedeemBanner from '@/components/RedeemBanner'
 
 // TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
@@ -168,12 +169,11 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
   )
 }
 
-export default function DashboardShell({ user, profile }) {
+export default function DashboardShell({ user, profile, hasRedeemed }) {
   const router = useRouter()
   const [credits, setCredits] = useState(profile.credits)
   const [signingOut, setSigningOut] = useState(false)
   const [modalDismissed, setModalDismissed] = useState(false)
-  const [redeemExpanded, setRedeemExpanded] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -304,6 +304,14 @@ export default function DashboardShell({ user, profile }) {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+        <RedeemBanner
+          userId={user.id}
+          credits={credits}
+          hasRedeemed={hasRedeemed}
+          createdAt={profile.created_at}
+          onRedeem={handleCreditsAdded}
+        />
+
         {/* Welcome card */}
         <div className="relative mb-8 flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm sm:flex-row">
           <div className="absolute inset-y-0 left-0 w-[3px] bg-brand" />
@@ -332,29 +340,6 @@ export default function DashboardShell({ user, profile }) {
         </div>
 
         <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} />
-
-        {/* Redeem section */}
-        <div className="mt-8 rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] p-4 shadow-sm">
-          <button
-            type="button"
-            onClick={() => setRedeemExpanded((prev) => !prev)}
-            className="flex w-full items-center justify-between text-sm font-medium text-[var(--text-secondary)]
-              transition hover:text-[var(--text-primary)]"
-          >
-            Have a redeem code? Click to expand
-            <svg
-              className={`h-4 w-4 shrink-0 transition-transform ${redeemExpanded ? 'rotate-180' : ''}`}
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {redeemExpanded && (
-            <div className="mt-4 border-t border-[var(--border-default)] pt-4">
-              <RedeemForm userId={user.id} onRedeem={handleCreditsAdded} compact />
-            </div>
-          )}
-        </div>
       </main>
 
       <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-center text-xs text-[var(--text-muted)] sm:px-6">
