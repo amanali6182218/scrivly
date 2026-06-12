@@ -296,7 +296,9 @@ export default function LandingPage() {
                 <p className="text-sm text-[var(--text-secondary)]">{plan.listings}</p>
                 <p className="mt-2 gradient-text text-sm font-medium">{plan.blurb}</p>
                 <a
-                  href="#"
+                  href="https://www.etsy.com/shop/AmanCraftio"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`mt-6 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
                     plan.featured
                       ? "bg-brand text-white shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"

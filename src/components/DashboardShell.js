@@ -12,11 +12,10 @@ import WelcomeModal from '@/components/WelcomeModal'
 import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 
-// TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
-  { name: 'Starter Pack',  credits: 100, price: '$9',  url: 'https://www.etsy.com/listing/STARTER_PACK_ID' },
-  { name: 'Pro Pack',      credits: 250, price: '$19', url: 'https://www.etsy.com/listing/PRO_PACK_ID' },
-  { name: 'Power Seller',  credits: 500, price: '$35', url: 'https://www.etsy.com/listing/POWER_SELLER_ID' },
+  { name: 'Starter Pack',  credits: 100, price: '$9',  url: 'https://www.etsy.com/shop/AmanCraftio' },
+  { name: 'Pro Pack',      credits: 250, price: '$19', url: 'https://www.etsy.com/shop/AmanCraftio' },
+  { name: 'Power Seller',  credits: 500, price: '$35', url: 'https://www.etsy.com/shop/AmanCraftio' },
 ]
 
 function RedeemForm({ userId, onRedeem, compact = false }) {
@@ -338,12 +337,14 @@ export default function DashboardShell({ user, profile }) {
               {credits} credits remaining
             </span>
             <p className="text-xs text-[var(--text-secondary)]">Each generation uses 3 credits, or 5 with price research</p>
-            <button
-              onClick={() => setModalDismissed(false)}
+            <a
+              href="https://www.etsy.com/shop/AmanCraftio"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-fit text-sm font-medium text-brand-pink transition hover:text-brand-orange"
             >
               Buy more credits →
-            </button>
+            </a>
           </div>
         </div>
 
