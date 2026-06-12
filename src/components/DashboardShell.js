@@ -14,9 +14,9 @@ import Footer from '@/components/Footer'
 
 // TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
-  { name: 'Starter Pack',  credits: 100, price: '$9',  url: 'https://www.etsy.com/listing/STARTER_PACK_ID' },
-  { name: 'Pro Pack',      credits: 250, price: '$19', url: 'https://www.etsy.com/listing/PRO_PACK_ID' },
-  { name: 'Power Seller',  credits: 500, price: '$35', url: 'https://www.etsy.com/listing/POWER_SELLER_ID' },
+  { name: 'Starter Pack',  credits: 100, price: '$15', url: 'https://www.etsy.com/listing/STARTER_PACK_ID' },
+  { name: 'Pro Pack',      credits: 250, price: '$29', url: 'https://www.etsy.com/listing/PRO_PACK_ID' },
+  { name: 'Power Seller',  credits: 500, price: '$49', url: 'https://www.etsy.com/listing/POWER_SELLER_ID' },
 ]
 
 function RedeemForm({ userId, onRedeem, compact = false }) {

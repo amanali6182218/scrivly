@@ -7,9 +7,9 @@ const DISMISS_HOURS = 24
 const ETSY_SHOP_URL = 'https://www.etsy.com/shop/AmanCraftio'
 
 const PACKS = [
-  { name: 'Starter Pack', credits: 100, price: '$9', popular: false },
-  { name: 'Pro Pack', credits: 250, price: '$19', popular: true },
-  { name: 'Power Pack', credits: 500, price: '$35', popular: false },
+  { name: 'Starter Pack', credits: 100, price: '$15', popular: false },
+  { name: 'Pro Pack', credits: 250, price: '$29', popular: true },
+  { name: 'Power Pack', credits: 500, price: '$49', popular: false },
 ]
 
 function wasRecentlyDismissed() {

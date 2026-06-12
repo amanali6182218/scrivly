@@ -5,7 +5,7 @@ import CreditPackCard from "@/components/CreditPackCard";
 
 export const metadata = {
   title: "Buy Credits — Scrivly Etsy Shop",
-  description: "Purchase Scrivly credit packs on Etsy. Starter $9, Pro $19, Power $35. Unique code delivered instantly.",
+  description: "Purchase Scrivly credit packs on Etsy. Starter $15, Pro $29, Power $49. Unique code delivered instantly.",
 };
 
 const STEPS = [
@@ -26,20 +26,20 @@ const STEPS = [
 const PACKS = [
   {
     name: "Starter Pack",
-    price: "$9",
+    price: "$15",
     credits: "100",
-    listings: "~33 complete listings",
-    perListing: "~$0.27 per listing",
+    listings: "~10 complete listings",
+    perListing: "~$1.50 per listing",
     buttonLabel: "Buy Starter on Etsy →",
     buttonId: "etsy-starter-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
   },
   {
     name: "Pro Pack",
-    price: "$19",
+    price: "$29",
     credits: "250",
-    listings: "~83 complete listings",
-    perListing: "~$0.23 per listing",
+    listings: "~25 complete listings",
+    perListing: "~$1.16 per listing",
     popular: true,
     buttonLabel: "Buy Pro Pack on Etsy →",
     buttonId: "etsy-pro-link",
@@ -47,10 +47,10 @@ const PACKS = [
   },
   {
     name: "Power Seller Pack",
-    price: "$35",
+    price: "$49",
     credits: "500",
-    listings: "~166 complete listings",
-    perListing: "~$0.21 per listing",
+    listings: "~50 complete listings",
+    perListing: "~$0.98 per listing",
     buttonLabel: "Buy Power Pack on Etsy →",
     buttonId: "etsy-power-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
@@ -114,6 +114,18 @@ export default function EtsyShopPage() {
           <p className="mt-2 leading-relaxed">
             After purchasing on Etsy, your unique redeem code arrives via Etsy message within 1–2 minutes.
             Each code is unique and single-use — it cannot be shared or reused. Credits never expire.
+          </p>
+        </div>
+
+        {/* Important note */}
+        <div
+          className="mx-auto mt-6 max-w-3xl rounded-2xl p-6 text-sm sm:p-8"
+          style={{ border: "1px solid var(--border-default)", background: "var(--bg-card)", color: "var(--text-secondary)" }}
+        >
+          <p className="font-semibold text-[var(--text-primary)]">Important:</p>
+          <p className="mt-2 leading-relaxed">
+            Each full generation uses 10 credits and includes: title, description, 13 tags, price
+            research, and health score. Skip price research to generate for 6 credits instead.
           </p>
         </div>
 
