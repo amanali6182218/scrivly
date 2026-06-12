@@ -27,6 +27,22 @@ function getPasswordStrength(password) {
   return Math.min(score, 4)
 }
 
+function EyeIcon({ visible }) {
+  if (visible) {
+    return (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18M10.58 10.58a2 2 0 002.83 2.83M9.88 4.24A9.77 9.77 0 0112 4c5 0 9 4 10 8a9.78 9.78 0 01-1.67 3.04M6.61 6.61C3.96 8.06 2.17 10.5 1 12c1 4 5 8 11 8a9.77 9.77 0 005.39-1.61" />
+      </svg>
+    )
+  }
+  return (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function getInitials(fullName, email) {
   const trimmed = (fullName || '').trim()
   if (trimmed) {
@@ -63,10 +79,16 @@ export default function AccountShell({ user, profile }) {
   const [savingProfile, setSavingProfile] = useState(false)
   const [profileMessage, setProfileMessage] = useState(null)
 
+  const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [savingPassword, setSavingPassword] = useState(false)
-  const [passwordMessage, setPasswordMessage] = useState(null)
+  const [currentPasswordError, setCurrentPasswordError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordToast, setPasswordToast] = useState(null)
 
   const handleSaveProfile = async (e) => {
     e.preventDefault()
@@ -97,35 +119,70 @@ export default function AccountShell({ user, profile }) {
     if (error) setAvatarColor(previous)
   }
 
+  const showPasswordToast = (toast) => {
+    setPasswordToast(toast)
+    setTimeout(() => setPasswordToast(null), 3000)
+  }
+
   const handleChangePassword = async (e) => {
     e.preventDefault()
-    setPasswordMessage(null)
+    setCurrentPasswordError('')
+    setPasswordError('')
 
-    if (newPassword !== confirmPassword) {
-      setPasswordMessage({ type: 'error', text: 'Passwords do not match.' })
+    if (!currentPassword) {
+      setCurrentPasswordError('Please enter your current password')
       return
     }
-    if (newPassword.length < 6) {
-      setPasswordMessage({ type: 'error', text: 'Password must be at least 6 characters.' })
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match')
+      return
+    }
+    if (newPassword === currentPassword) {
+      setPasswordError('New password must be different from your current password')
       return
     }
 
     setSavingPassword(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.updateUser({ password: newPassword })
 
-    if (error) {
-      setPasswordMessage({ type: 'error', text: error.message })
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    })
+
+    if (signInError) {
+      setCurrentPasswordError('Incorrect current password. Please try again.')
+      setCurrentPassword('')
+      setSavingPassword(false)
+      return
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+
+    if (updateError) {
+      showPasswordToast({ type: 'error', text: 'Failed to update password. Please try again.' })
     } else {
-      setPasswordMessage({ type: 'success', text: 'Password updated successfully' })
+      setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
+      showPasswordToast({ type: 'success', text: 'Password updated successfully ✓' })
     }
     setSavingPassword(false)
   }
 
   const strength = getPasswordStrength(newPassword)
   const strengthInfo = STRENGTH_LEVELS[strength]
+  const confirmMatches = confirmPassword.length > 0 && confirmPassword === newPassword
+  const confirmMismatch = confirmPassword.length > 0 && confirmPassword !== newPassword
+  const canSubmitPassword =
+    currentPassword.length > 0 &&
+    newPassword.length >= 8 &&
+    newPassword === confirmPassword &&
+    newPassword !== currentPassword
 
   const cardStyle = {
     background: 'var(--bg-card)',
@@ -260,25 +317,72 @@ export default function AccountShell({ user, profile }) {
 
           {/* SECTION 3 — CHANGE PASSWORD */}
           <div className="p-6 shadow-sm sm:p-8" style={cardStyle}>
-            <h2 className="mb-5 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Change password
+            <h2 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+              Change Password
             </h2>
+            <p className="mb-5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+              To change your password you must verify your current password first.
+            </p>
 
             <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <label htmlFor="current-password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                  Current password
+                </label>
+                <div className="relative">
+                  <input
+                    id="current-password"
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="Enter your current password"
+                    required
+                    className={`${inputClasses} pr-10`}
+                    style={fieldInputStyle}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 transition hover:opacity-80"
+                    style={{ color: 'var(--text-muted)' }}
+                    aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <EyeIcon visible={showCurrentPassword} />
+                  </button>
+                </div>
+                {currentPasswordError && (
+                  <p className="mt-1.5 text-xs" style={{ color: '#FF8FB8' }}>
+                    {currentPasswordError}
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label htmlFor="new-password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                   New password
                 </label>
-                <input
-                  id="new-password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  className={inputClasses}
-                  style={fieldInputStyle}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <input
+                    id="new-password"
+                    type={showNewPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="Enter new password"
+                    className={`${inputClasses} pr-10`}
+                    style={fieldInputStyle}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 transition hover:opacity-80"
+                    style={{ color: 'var(--text-muted)' }}
+                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <EyeIcon visible={showNewPassword} />
+                  </button>
+                </div>
                 {newPassword && (
                   <div className="mt-2">
                     <div className="flex h-1.5 gap-1">
@@ -292,6 +396,7 @@ export default function AccountShell({ user, profile }) {
                     </div>
                     <p className="mt-1 text-xs" style={{ color: strengthInfo.color }}>
                       {strengthInfo.label}
+                      {strength < 2 ? ' — Please choose a stronger password' : ''}
                     </p>
                   </div>
                 )}
@@ -301,28 +406,60 @@ export default function AccountShell({ user, profile }) {
                 <label htmlFor="confirm-new-password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                   Confirm new password
                 </label>
-                <input
-                  id="confirm-new-password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  className={inputClasses}
-                  style={fieldInputStyle}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <input
+                    id="confirm-new-password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="Repeat new password"
+                    className={`${inputClasses} pr-16`}
+                    style={fieldInputStyle}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">
+                    {confirmMatches && (
+                      <span style={{ color: '#22C55E' }} aria-label="Passwords match">✓</span>
+                    )}
+                    {confirmMismatch && (
+                      <span style={{ color: '#FF3D8B' }} aria-label="Passwords do not match">✗</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((v) => !v)}
+                      className="transition hover:opacity-80"
+                      style={{ color: 'var(--text-muted)' }}
+                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    >
+                      <EyeIcon visible={showConfirmPassword} />
+                    </button>
+                  </div>
+                </div>
               </div>
+
+              {passwordError && (
+                <p
+                  className="rounded-lg px-4 py-2.5 text-sm"
+                  style={{ background: 'rgba(255,61,139,0.08)', border: '1px solid rgba(255,61,139,0.3)', color: '#FF8FB8' }}
+                >
+                  {passwordError}
+                </p>
+              )}
 
               <button
                 type="submit"
-                disabled={savingPassword || !newPassword || !confirmPassword}
-                className="rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm
+                disabled={savingPassword || !canSubmitPassword}
+                className="w-full rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm
                   transition hover:shadow-[0_0_20px_rgba(255,61,139,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {savingPassword ? 'Updating…' : 'Change Password'}
+                {savingPassword ? 'Verifying…' : 'Update Password'}
               </button>
 
-              <Toast message={passwordMessage} />
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                For your security, you will remain logged in after changing your password.
+              </p>
+
+              <Toast message={passwordToast} />
             </form>
           </div>
         </div>

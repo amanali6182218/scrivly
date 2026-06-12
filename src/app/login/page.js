@@ -73,9 +73,17 @@ export default function LoginPage() {
                 <label htmlFor="password" className="text-sm font-medium text-[var(--text-primary)]">
                   Password
                 </label>
-                <span className="text-xs text-brand-pink hover:text-brand-orange cursor-pointer">
+                <Link
+                  href="/forgot-password"
+                  style={{
+                    color: '#FF3D8B',
+                    fontSize: '13px',
+                    textDecoration: 'none'
+                  }}
+                  className="hover:text-brand-orange"
+                >
                   Forgot password?
-                </span>
+                </Link>
               </div>
               <input
                 id="password"
