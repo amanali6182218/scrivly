@@ -12,20 +12,20 @@ export const metadata = {
 const PACKS = [
   {
     name: "Starter Pack",
-    price: "$15",
+    price: "$9",
     credits: "100",
-    listings: "~10 complete listings",
-    perListing: "~$1.50 per listing",
+    listings: "~33 complete listings",
+    perListing: "~$0.27 per listing",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-starter-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
   },
   {
     name: "Pro Pack",
-    price: "$29",
+    price: "$19",
     credits: "250",
-    listings: "~25 complete listings",
-    perListing: "~$1.16 per listing",
+    listings: "~83 complete listings",
+    perListing: "~$0.23 per listing",
     popular: true,
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-pro-link",
@@ -33,10 +33,10 @@ const PACKS = [
   },
   {
     name: "Power Seller Pack",
-    price: "$49",
+    price: "$35",
     credits: "500",
-    listings: "~50 complete listings",
-    perListing: "~$0.98 per listing",
+    listings: "~166 complete listings",
+    perListing: "~$0.21 per listing",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-power-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
@@ -44,13 +44,11 @@ const PACKS = [
 ];
 
 const CREDIT_USAGE = [
-  ["Full generation with price research (photo + listing + price + score)", "10 credits"],
-  ["Basic generation (no price research)", "6 credits"],
-  ["Price research standalone", "4 credits"],
-  ["Spy and Improve", "8 credits"],
-  ["Fix weak areas", "2 credits"],
+  ["Full generation (title + description + tags + score)", "3 credits"],
+  ["Add price research (optional)", "+2 credits"],
+  ["Spy and Improve", "4 credits"],
+  ["Fix weak areas", "1 credit"],
   ["Category suggestion", "Free"],
-  ["Post to Etsy", "Free"],
 ];
 
 const SELLER_PROFILES = [
@@ -58,19 +56,19 @@ const SELLER_PROFILES = [
     name: "Occasional seller",
     desc: "List 1–5 new products per month",
     pack: "Starter Pack (100 credits)",
-    duration: "Lasts approximately 2–3 months",
+    duration: "Lasts approximately 4–6 months",
   },
   {
     name: "Active seller",
     desc: "List 10–20 new products per month",
     pack: "Pro Pack (250 credits)",
-    duration: "Lasts approximately 1–2 months",
+    duration: "Lasts approximately 3–4 months",
   },
   {
     name: "Power seller",
     desc: "List 30+ new products per month",
     pack: "Power Pack (500 credits)",
-    duration: "Lasts approximately 1–2 months",
+    duration: "Lasts approximately 3–4 months",
   },
 ];
 
@@ -89,7 +87,7 @@ const PRICING_FAQS = [
   },
   {
     q: "Is there a free trial?",
-    a: "Scrivly does not currently offer a free trial. Purchase any credit pack on Etsy from $15 to get started.",
+    a: "Scrivly does not currently offer a free trial. Purchase any credit pack on Etsy from $9 to get started.",
   },
 ];
 
@@ -114,7 +112,7 @@ export default function PricingPage() {
           }}
         >
           <p className="text-sm font-medium text-[var(--text-primary)] sm:text-base">
-            New account? Get started with our Starter Pack for just $15.
+            New account? Get started with our Starter Pack for just $9.
           </p>
           <Link
             href="/signup"

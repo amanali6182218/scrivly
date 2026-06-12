@@ -39,25 +39,25 @@ const FEATURES = [
 const PRICING_PLANS = [
   {
     name: "Starter",
-    price: "$15",
+    price: "$9",
     credits: "100 credits",
-    listings: "~10 full listings",
+    listings: "~33 full listings",
     blurb: "Perfect to start",
     featured: false,
   },
   {
     name: "Pro Pack",
-    price: "$29",
+    price: "$19",
     credits: "250 credits",
-    listings: "~25 full listings",
+    listings: "~83 full listings",
     blurb: "Best value",
     featured: true,
   },
   {
     name: "Power Seller",
-    price: "$49",
+    price: "$35",
     credits: "500 credits",
-    listings: "~50 full listings",
+    listings: "~166 full listings",
     blurb: "For active shops",
     featured: false,
   },
@@ -73,7 +73,7 @@ export default function LandingPage() {
       <main className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)]">
           <span className="h-1.5 w-1.5 rounded-full bg-brand-orange"></span>
-          Credits from $15 · Never expire
+          Credits from $9 · Never expire
         </div>
 
         <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl lg:text-6xl">
@@ -310,7 +310,7 @@ export default function LandingPage() {
           </div>
 
           <p className="mx-auto mt-6 max-w-xl text-sm text-[var(--text-secondary)]">
-            Each generation (listing + health score) uses 6 credits, or 10 credits with price
+            Each generation (listing + health score) uses 3 credits, or 5 credits with price
             research included. Already have a code? Sign up free and redeem it.
           </p>
         </div>

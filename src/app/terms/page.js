@@ -46,7 +46,7 @@ export default function TermsPage() {
               in account suspension.
             </p>
             <p>
-              Each generation (photo to listing) costs 6 credits, or 10 credits with price research
+              Each generation (photo to listing) costs 3 credits, or 5 credits with price research
               included. Credit costs for other features are displayed in the dashboard before use.
             </p>
           </DocSection>

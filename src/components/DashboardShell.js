@@ -14,9 +14,9 @@ import Footer from '@/components/Footer'
 
 // TODO: Replace each URL with your actual Etsy listing URL before going live
 const CREDIT_PACKS = [
-  { name: 'Starter Pack',  credits: 100, price: '$15', url: 'https://www.etsy.com/listing/STARTER_PACK_ID' },
-  { name: 'Pro Pack',      credits: 250, price: '$29', url: 'https://www.etsy.com/listing/PRO_PACK_ID' },
-  { name: 'Power Seller',  credits: 500, price: '$49', url: 'https://www.etsy.com/listing/POWER_SELLER_ID' },
+  { name: 'Starter Pack',  credits: 100, price: '$9',  url: 'https://www.etsy.com/listing/STARTER_PACK_ID' },
+  { name: 'Pro Pack',      credits: 250, price: '$19', url: 'https://www.etsy.com/listing/PRO_PACK_ID' },
+  { name: 'Power Seller',  credits: 500, price: '$35', url: 'https://www.etsy.com/listing/POWER_SELLER_ID' },
 ]
 
 function RedeemForm({ userId, onRedeem, compact = false }) {
@@ -196,10 +196,10 @@ export default function DashboardShell({ user, profile }) {
 
   // Reset dismissed state when credits recover so modal re-appears next drop
   useEffect(() => {
-    if (credits >= 6) setModalDismissed(false)
+    if (credits >= 3) setModalDismissed(false)
   }, [credits])
 
-  const showLowCreditsModal = credits < 6 && !modalDismissed && profile.total_credits_purchased > 0
+  const showLowCreditsModal = credits < 3 && !modalDismissed && profile.total_credits_purchased > 0
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -337,7 +337,7 @@ export default function DashboardShell({ user, profile }) {
               </svg>
               {credits} credits remaining
             </span>
-            <p className="text-xs text-[var(--text-secondary)]">Each generation uses 6 credits, or 10 with price research</p>
+            <p className="text-xs text-[var(--text-secondary)]">Each generation uses 3 credits, or 5 with price research</p>
             <button
               onClick={() => setModalDismissed(false)}
               className="w-fit text-sm font-medium text-brand-pink transition hover:text-brand-orange"

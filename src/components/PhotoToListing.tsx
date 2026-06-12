@@ -115,11 +115,12 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
       const res = await fetch("/api/price-research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productName, category: selectedCategory || "Other", partOfGeneration: true }),
+        body: JSON.stringify({ productName, category: selectedCategory || "Other" }),
       });
       const data = await res.json();
       if (res.ok) {
         onResultChange?.((prev) => ({ listing: prev?.listing ?? forListing, priceResult: data as PriceResearchResult }));
+        onCreditsUsed?.(2);
       }
     } catch {
       // silently suppress — price section just won't render
@@ -196,7 +197,6 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           image: image.base64,
           mediaType: image.mediaType,
           details,
-          withPriceResearch: includePriceResearch,
           ...(selectedCategory ? { selectedCategory } : {}),
           ...(weakAreas?.length ? { weakAreas } : {}),
         }),
@@ -210,7 +210,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
       const newListing = { title: data.title, description: data.description, tags: data.tags };
       onResultChange?.({ listing: newListing, priceResult: null });
-      onCreditsUsed?.(includePriceResearch ? 10 : 6);
+      onCreditsUsed?.(3);
       if (includePriceResearch) fetchPrice(newListing);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -382,10 +382,25 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           </p>
         </div>
 
+        <label className="mt-4 flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+          <input
+            type="checkbox"
+            checked={includePriceResearch}
+            onChange={(e) => setIncludePriceResearch(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-[var(--border-default)] text-brand-pink focus:ring-[rgba(255,61,139,0.15)]"
+          />
+          <span>
+            Include price research (+2 credits)
+            <span className="block text-xs text-[var(--text-muted)]">
+              Research live Etsy prices for your product type
+            </span>
+          </span>
+        </label>
+
         <button
           type="button"
           onClick={() => generate()}
-          disabled={!image || isGenerating || creditsAvailable < (includePriceResearch ? 10 : 6)}
+          disabled={!image || isGenerating || creditsAvailable < 3}
           title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
           className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-brand
             px-6 py-3 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
@@ -414,28 +429,18 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           )}
         </button>
 
-        <label className="mt-3 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-          <input
-            type="checkbox"
-            checked={includePriceResearch}
-            onChange={(e) => setIncludePriceResearch(e.target.checked)}
-            className="h-4 w-4 rounded border-[var(--border-default)] text-brand-pink focus:ring-[rgba(255,61,139,0.15)]"
-          />
-          Include price research (+4 credits)
-        </label>
-
-        {creditsAvailable < (includePriceResearch ? 10 : 6) && creditsAvailable !== Infinity && (
+        {creditsAvailable < 3 && creditsAvailable !== Infinity && (
           <p className="mt-3 text-sm text-[#FF3D8B]">
-            You need at least {includePriceResearch ? 10 : 6} credits to generate a listing.
+            You need at least 3 credits to generate a listing.
           </p>
         )}
 
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-[var(--text-secondary)]">
             {includePriceResearch ? (
-              <>Uses <span className="font-semibold text-brand-orange">10 credits</span> · includes price research</>
+              <>Uses <span className="font-semibold text-brand-orange">5 credits</span> · includes price research</>
             ) : (
-              <>Uses <span className="font-semibold text-brand-orange">6 credits</span></>
+              <>Uses <span className="font-semibold text-brand-orange">3 credits</span></>
             )}
           </p>
         </div>

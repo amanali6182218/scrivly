@@ -12,7 +12,7 @@ const STEPS = [
   {
     number: "01",
     title: "Get your credit pack on Etsy",
-    body: "Visit our Etsy shop and choose the credit pack that fits your needs. Starter (100 credits / $15), Pro (250 credits / $29), or Power (500 credits / $49). Purchase securely through Etsy's checkout. Your unique redeem code arrives in your Etsy messages within 1–2 minutes of purchase.",
+    body: "Visit our Etsy shop and choose the credit pack that fits your needs. Starter (100 credits / $9), Pro (250 credits / $19), or Power (500 credits / $35). Purchase securely through Etsy's checkout. Your unique redeem code arrives in your Etsy messages within 1–2 minutes of purchase.",
   },
   {
     number: "02",
@@ -143,7 +143,7 @@ export default function HowItWorksPage() {
 
         <CtaBanner
           heading="Ready to try it yourself?"
-          subtext="Credits from $15 · Never expire"
+          subtext="Credits from $9 · Never expire"
           buttons={[{ label: "Create free account", href: "/signup" }]}
         />
       </main>

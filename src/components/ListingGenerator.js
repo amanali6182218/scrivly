@@ -55,14 +55,14 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
         ))}
       </div>
 
-      {credits < 6 && (
+      {credits < 3 && (
         <div
           className="mb-6 rounded-xl p-4 text-sm"
           style={{ background: 'rgba(255,61,139,0.1)', border: '1px solid rgba(255,61,139,0.3)', color: '#FF8FB8' }}
         >
           {credits === 0
             ? "You have no credits left. Redeem a code above to generate more listings."
-            : "You need at least 6 credits to generate a listing, or 8 credits for Spy & Improve."}
+            : "You need at least 3 credits to generate a listing, or 4 credits for Spy & Improve."}
         </div>
       )}
 

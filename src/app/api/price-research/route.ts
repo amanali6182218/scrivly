@@ -105,9 +105,9 @@ export async function POST(request: Request) {
   const { userId } = authResult as { userId: string };
 
   // When called as part of a full generation (credits already deducted there), skip deduction.
-  // When called standalone, charge 4 credits.
+  // When called standalone, charge 2 credits.
   if (!body.partOfGeneration) {
-    const deductErr = await deductCredits(userId, 4, "Price research");
+    const deductErr = await deductCredits(userId, 2, "Price research");
     if (deductErr) return deductErr;
   }
 

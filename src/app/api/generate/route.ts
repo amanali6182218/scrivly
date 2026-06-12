@@ -198,7 +198,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Parse body first so we know how many credits to charge
   let body: GenerateRequestBody;
   try {
     body = await request.json();
@@ -206,12 +205,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request body must be valid JSON." }, { status: 400 });
   }
 
-  // 10 credits when price research is bundled in, 6 for basic generation
-  const withPriceResearch = !!(body as GenerateRequestBody & { withPriceResearch?: boolean }).withPriceResearch;
-  const creditAmount = withPriceResearch ? 10 : 6;
-  const creditDescription = withPriceResearch ? "Full listing generation" : "Basic listing generation";
-
-  const authResult = await checkAuthAndDeductCredit(creditDescription, creditAmount);
+  const authResult = await checkAuthAndDeductCredit("Listing generation", 3);
   if (authResult instanceof NextResponse) return authResult;
 
   const params = buildRequestParams(body);

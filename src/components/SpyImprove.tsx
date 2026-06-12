@@ -250,7 +250,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canAnalyze = url.trim().length > 0 && !isLoading && creditsAvailable >= 8;
+  const canAnalyze = url.trim().length > 0 && !isLoading && creditsAvailable >= 4;
 
   const handleAnalyze = async () => {
     if (!canAnalyze) return;
@@ -273,7 +273,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
       }
 
       onResultChange?.(data as SpyResult);
-      onCreditsUsed?.(8);
+      onCreditsUsed?.(4);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -308,7 +308,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
           <button
             type="button"
             onClick={handleAnalyze}
-            disabled={!canAnalyze || creditsAvailable < 8}
+            disabled={!canAnalyze || creditsAvailable < 4}
             title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
             className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand
               px-5 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
@@ -337,12 +337,12 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
 
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-[var(--text-secondary)]">
-            Uses <span className="font-semibold text-brand-orange">8 credits</span> — competitor analysis + improved listing
+            Uses <span className="font-semibold text-brand-orange">4 credits</span> — competitor analysis + improved listing
           </p>
         </div>
-        {creditsAvailable < 8 && creditsAvailable !== Infinity && (
+        {creditsAvailable < 4 && creditsAvailable !== Infinity && (
           <p className="mt-2 text-sm text-[#FF3D8B]">
-            You need at least 8 credits to run a competitor analysis.
+            You need at least 4 credits to run a competitor analysis.
           </p>
         )}
       </div>
