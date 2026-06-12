@@ -196,10 +196,10 @@ export default function DashboardShell({ user, profile }) {
 
   // Reset dismissed state when credits recover so modal re-appears next drop
   useEffect(() => {
-    if (credits >= 3) setModalDismissed(false)
+    if (credits >= 6) setModalDismissed(false)
   }, [credits])
 
-  const showLowCreditsModal = credits < 3 && !modalDismissed && profile.total_credits_purchased > 0
+  const showLowCreditsModal = credits < 6 && !modalDismissed && profile.total_credits_purchased > 0
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -337,7 +337,7 @@ export default function DashboardShell({ user, profile }) {
               </svg>
               {credits} credits remaining
             </span>
-            <p className="text-xs text-[var(--text-secondary)]">Each full generation uses 3 credits</p>
+            <p className="text-xs text-[var(--text-secondary)]">Each generation uses 6 credits, or 10 with price research</p>
             <button
               onClick={() => setModalDismissed(false)}
               className="w-fit text-sm font-medium text-brand-pink transition hover:text-brand-orange"

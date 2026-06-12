@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: "What does one generation include?",
-    a: "Each generation uses 3 credits and includes: an SEO-optimized title up to 140 characters, a full description of 400 to 600 words, all 13 Etsy tags, a live price research with market demand indicator, and a listing health score out of 100 with specific improvement tips.",
+    a: "Each generation uses 6 credits and includes: an SEO-optimized title up to 140 characters, a full description of 400 to 600 words, all 13 Etsy tags, and a listing health score out of 100 with specific improvement tips. Add live price research with a market demand indicator for 10 credits total.",
   },
   {
     q: "Do my credits expire?",

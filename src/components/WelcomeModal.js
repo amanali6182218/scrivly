@@ -226,7 +226,7 @@ export default function WelcomeModal({ userId, credits, totalPurchased, onRedeem
 
         {/* Bottom */}
         <p className="mt-6" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-          Each full generation uses 3 credits. Credits never expire.
+          Each generation uses 6 credits, or 10 with price research. Credits never expire.
         </p>
         <button
           type="button"

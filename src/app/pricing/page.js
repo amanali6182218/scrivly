@@ -44,11 +44,10 @@ const PACKS = [
 ];
 
 const CREDIT_USAGE = [
-  ["Full generation (photo + listing + price + score)", "3 credits"],
-  ["Listing only (no price research)", "2 credits"],
-  ["Price research standalone", "2 credits"],
-  ["Spy and Improve", "4 credits"],
-  ["Regenerate / Fix weak areas", "1 credit"],
+  ["Full generation with price research (photo + listing + price + score)", "10 credits"],
+  ["Basic generation (no price research)", "6 credits"],
+  ["Spy and Improve", "8 credits"],
+  ["Fix weak areas", "2 credits"],
   ["Category suggestion", "Free"],
   ["Post to Etsy", "Free"],
 ];

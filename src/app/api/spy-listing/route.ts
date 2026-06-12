@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const authResult = await checkAuthAndDeductCredit("Competitor spy analysis", 2);
+  const authResult = await checkAuthAndDeductCredit("Competitor spy analysis", 8);
   if (authResult instanceof NextResponse) return authResult;
 
   let body: { url?: unknown };

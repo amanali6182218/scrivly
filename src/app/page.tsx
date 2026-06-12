@@ -310,8 +310,8 @@ export default function LandingPage() {
           </div>
 
           <p className="mx-auto mt-6 max-w-xl text-sm text-[var(--text-secondary)]">
-            Each full generation (listing + price research + health score) uses 3 credits. Already
-            have a code? Sign up free and redeem it.
+            Each generation (listing + health score) uses 6 credits, or 10 credits with price
+            research included. Already have a code? Sign up free and redeem it.
           </p>
         </div>
 

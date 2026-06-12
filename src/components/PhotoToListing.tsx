@@ -83,6 +83,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
   const [categorySuggestions, setCategorySuggestions] = useState<CategorySuggestion[]>([]);
   const [isCategoryLoading, setIsCategoryLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [includePriceResearch, setIncludePriceResearch] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchCategorySuggestions = async (base64: string, mediaType: string) => {
@@ -195,7 +196,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           image: image.base64,
           mediaType: image.mediaType,
           details,
-          withPriceResearch: true,
+          withPriceResearch: includePriceResearch,
           ...(selectedCategory ? { selectedCategory } : {}),
           ...(weakAreas?.length ? { weakAreas } : {}),
         }),
@@ -209,8 +210,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
       const newListing = { title: data.title, description: data.description, tags: data.tags };
       onResultChange?.({ listing: newListing, priceResult: null });
-      onCreditsUsed?.(3);
-      fetchPrice(newListing);
+      onCreditsUsed?.(includePriceResearch ? 10 : 6);
+      if (includePriceResearch) fetchPrice(newListing);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -384,7 +385,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         <button
           type="button"
           onClick={() => generate()}
-          disabled={!image || isGenerating || creditsAvailable < 3}
+          disabled={!image || isGenerating || creditsAvailable < (includePriceResearch ? 10 : 6)}
           title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
           className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-brand
             px-6 py-3 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
@@ -413,15 +414,29 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           )}
         </button>
 
-        {creditsAvailable < 3 && creditsAvailable !== Infinity && (
+        <label className="mt-3 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+          <input
+            type="checkbox"
+            checked={includePriceResearch}
+            onChange={(e) => setIncludePriceResearch(e.target.checked)}
+            className="h-4 w-4 rounded border-[var(--border-default)] text-brand-pink focus:ring-[rgba(255,61,139,0.15)]"
+          />
+          Include price research (+4 credits)
+        </label>
+
+        {creditsAvailable < (includePriceResearch ? 10 : 6) && creditsAvailable !== Infinity && (
           <p className="mt-3 text-sm text-[#FF3D8B]">
-            You need at least 3 credits to generate a listing.
+            You need at least {includePriceResearch ? 10 : 6} credits to generate a listing.
           </p>
         )}
 
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-[var(--text-secondary)]">
-            Uses <span className="font-semibold text-brand-orange">3 credits</span> — listing + price research + health score
+            {includePriceResearch ? (
+              <>Uses <span className="font-semibold text-brand-orange">10 credits</span> · includes price research</>
+            ) : (
+              <>Uses <span className="font-semibold text-brand-orange">6 credits</span></>
+            )}
           </p>
         </div>
 

@@ -206,10 +206,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request body must be valid JSON." }, { status: 400 });
   }
 
-  // 3 credits when price research is bundled in, 2 for listing only
+  // 10 credits when price research is bundled in, 6 for basic generation
   const withPriceResearch = !!(body as GenerateRequestBody & { withPriceResearch?: boolean }).withPriceResearch;
-  const creditAmount = withPriceResearch ? 3 : 2;
-  const creditDescription = withPriceResearch ? "Full listing generation" : "Listing generation only";
+  const creditAmount = withPriceResearch ? 10 : 6;
+  const creditDescription = withPriceResearch ? "Full listing generation" : "Basic listing generation";
 
   const authResult = await checkAuthAndDeductCredit(creditDescription, creditAmount);
   if (authResult instanceof NextResponse) return authResult;
