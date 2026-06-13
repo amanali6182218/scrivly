@@ -1,5 +1,9 @@
+'use client';
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SOCIAL_LINKS } from "@/components/SocialIcons";
+import { createClient } from "@/lib/supabase/client";
 
 const PRODUCT_LINKS = [
   { id: "footer-features", label: "Features", href: "/features" },
@@ -27,6 +31,15 @@ const headingClasses = "mb-4 text-sm font-semibold";
 const headingStyle = { color: "var(--text-primary)" };
 
 export default function Footer() {
+  const [user, setUser] = useState<{ id: string } | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
+
   return (
     <footer
       style={{
@@ -40,7 +53,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1 — Brand */}
           <div>
-            <Link href="/" className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+            <Link href={user ? "/dashboard" : "/"} className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
               Scrivly
             </Link>
             <p className="mt-4 text-sm" style={{ color: "var(--text-secondary)" }}>
