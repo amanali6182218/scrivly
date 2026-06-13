@@ -1,4 +1,4 @@
-export default function Avatar({ profile, email, size = 36, fontSize }) {
+export default function Avatar({ profile, email, size = 36, fontSize = undefined }) {
   const initials = profile?.avatar_initials || (email ? email.charAt(0).toUpperCase() : '?')
   const fs = fontSize || Math.round(size * 0.4)
 

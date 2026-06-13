@@ -274,7 +274,7 @@ export default function LandingPage() {
             {PRICING_PLANS.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative rounded-2xl border p-6 shadow-sm ${
+                className={`relative flex h-full flex-col rounded-2xl border p-6 shadow-sm ${
                   plan.featured ? "border-brand-pink shadow-[0_0_40px_rgba(255,61,139,0.2)]" : "border-[var(--border-default)] bg-[var(--bg-card)]"
                 }`}
                 style={
@@ -299,7 +299,7 @@ export default function LandingPage() {
                   href="https://www.etsy.com/shop/AmanCraftio"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`mt-6 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
+                  className={`mt-auto block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
                     plan.featured
                       ? "bg-brand text-white shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
                       : "border border-[var(--border-default)] text-[var(--text-primary)] hover:border-[var(--text-muted)]"

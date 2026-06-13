@@ -21,7 +21,7 @@ export type CreditPack = {
 export default function CreditPackCard({ pack }: { pack: CreditPack }) {
   return (
     <div
-      className={`relative rounded-2xl border p-6 shadow-sm sm:p-8 ${
+      className={`relative flex h-full flex-col rounded-2xl border p-6 shadow-sm sm:p-8 ${
         pack.popular ? "border-brand-pink" : "border-[var(--border-default)] bg-[var(--bg-card)]"
       }`}
       style={
@@ -52,7 +52,7 @@ export default function CreditPackCard({ pack }: { pack: CreditPack }) {
       <p className="text-sm text-[var(--text-secondary)]">{pack.listings}</p>
       {pack.perListing && <p className="mt-1 text-xs text-[var(--text-muted)]">{pack.perListing}</p>}
 
-      <ul className="mt-6 space-y-2.5">
+      <ul className="mt-6 flex-1 space-y-2.5">
         {pack.checklist.map((item) => (
           <li key={item.label} className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
             <span style={{ color: item.included ? "#22C55E" : "#FF3D8B" }}>{item.included ? "✓" : "✗"}</span>
@@ -66,7 +66,7 @@ export default function CreditPackCard({ pack }: { pack: CreditPack }) {
         id={pack.buttonId}
         target="_blank"
         rel="noopener noreferrer"
-        className={`mt-8 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
+        className={`mt-auto block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
           pack.popular
             ? "bg-brand text-white shadow-md hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
             : "border border-[var(--border-default)] text-[var(--text-primary)] hover:border-[var(--text-muted)]"

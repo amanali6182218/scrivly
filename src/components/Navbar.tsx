@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import Avatar from "@/components/Avatar";
+import { createClient } from "@/lib/supabase/client";
 
 const NAV_LINKS = [
   { href: "/features", label: "Features" },
@@ -11,8 +14,89 @@ const NAV_LINKS = [
   { href: "/demo", label: "Demo" },
 ];
 
+type NavbarUser = {
+  id: string;
+  email?: string;
+};
+
+type NavbarProfile = {
+  full_name?: string | null;
+  avatar_color?: string | null;
+  avatar_initials?: string | null;
+  pack_tier?: string | null;
+  credits?: number | null;
+};
+
 export default function Navbar() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<NavbarUser | null>(null);
+  const [profile, setProfile] = useState<NavbarProfile | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const loadProfile = async (userId: string) => {
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_color, avatar_initials, pack_tier, credits")
+        .eq("id", userId)
+        .single();
+      setProfile(profileData);
+    };
+
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser({ id: session.user.id, email: session.user.email });
+        await loadProfile(session.user.id);
+      }
+      setLoading(false);
+    };
+
+    init();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        setUser({ id: session.user.id, email: session.user.email });
+        await loadProfile(session.user.id);
+      } else {
+        setUser(null);
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+    setMenuOpen(false);
+    setSigningOut(false);
+    router.push("/");
+  };
+
+  const isPowerSeller = profile?.pack_tier === "power";
+  const displayName = profile?.full_name || user?.email || "";
 
   return (
     <header
@@ -41,25 +125,116 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <Link
-            href="/login"
-            className="rounded-lg border border-[var(--border-default)] bg-transparent px-4 py-2 text-sm font-medium
-              text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition
-              hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
-          >
-            Get started
-          </Link>
+
+          {loading ? (
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-20 animate-pulse rounded-lg" style={{ background: "var(--bg-elevated)" }} />
+              <div className="h-9 w-9 animate-pulse rounded-full" style={{ background: "var(--bg-elevated)" }} />
+            </div>
+          ) : user ? (
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((prev) => !prev)}
+                title={user.email}
+                className="block shrink-0 transition hover:opacity-80"
+              >
+                <Avatar profile={profile ?? undefined} email={user.email} size={36} />
+              </button>
+
+              {menuOpen && (
+                <div
+                  className="absolute right-0 top-[calc(100%+8px)] z-50 w-56"
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-default)",
+                    borderRadius: "12px",
+                    padding: "8px",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+                  }}
+                >
+                  <div className="px-3 py-2">
+                    <p className="truncate text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                      {displayName}
+                    </p>
+                    {profile?.full_name && (
+                      <p className="truncate text-xs" style={{ color: "var(--text-muted)" }}>{user.email}</p>
+                    )}
+                    {isPowerSeller && (
+                      <span
+                        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                        style={{ background: "linear-gradient(90deg, #FF8A00, #7B2FFF)" }}
+                      >
+                        Power Seller
+                      </span>
+                    )}
+                  </div>
+                  <div className="my-1 border-t" style={{ borderColor: "var(--border-subtle)" }} />
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Manage Account
+                  </Link>
+                  <Link
+                    href="/account/purchases"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Purchase History
+                  </Link>
+                  <div className="my-1 border-t" style={{ borderColor: "var(--border-subtle)" }} />
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    disabled={signingOut}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[var(--bg-elevated)] disabled:opacity-50"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {signingOut ? "Signing out…" : "Sign Out"}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg border border-[var(--border-default)] bg-transparent px-4 py-2 text-sm font-medium
+                  text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition
+                  hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
+              >
+                Get started
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <ThemeToggle />
+          {!loading && user && (
+            <Link href="/dashboard" title={user.email} className="block shrink-0 transition hover:opacity-80">
+              <Avatar profile={profile ?? undefined} email={user.email} size={32} />
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
@@ -94,20 +269,52 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-[var(--border-subtle)] pt-3">
-              <Link
-                href="/login"
-                onClick={() => setOpen(false)}
-                className="rounded-lg border border-[var(--border-default)] px-4 py-2.5 text-center text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/signup"
-                onClick={() => setOpen(false)}
-                className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
-              >
-                Get started
-              </Link>
+              {!loading && user ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg border border-[var(--border-default)] px-4 py-2.5 text-center text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/account"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg border border-[var(--border-default)] px-4 py-2.5 text-center text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+                  >
+                    Manage Account
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      handleSignOut();
+                    }}
+                    disabled={signingOut}
+                    className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] disabled:opacity-50"
+                  >
+                    {signingOut ? "Signing out…" : "Sign Out"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg border border-[var(--border-default)] px-4 py-2.5 text-center text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
+                  >
+                    Get started
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>
