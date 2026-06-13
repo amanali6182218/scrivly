@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
-import CtaBanner from "@/components/CtaBanner";
+import AuthCtaBanner from "@/components/AuthCtaBanner";
 
 export const metadata = {
   title: "Features — Scrivly",
@@ -250,9 +250,10 @@ export default function FeaturesPage() {
           </div>
         </div>
 
-        <CtaBanner
+        <AuthCtaBanner
           heading="Ready to try every feature?"
-          buttons={[{ label: "Get started", href: "/signup" }]}
+          buttonText="Get started"
+          buttonHref="/signup"
         />
       </main>
 

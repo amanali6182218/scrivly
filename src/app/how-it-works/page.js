@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
-import CtaBanner from "@/components/CtaBanner";
+import AuthCtaBanner from "@/components/AuthCtaBanner";
 
 export const metadata = {
   title: "How It Works — Scrivly",
@@ -141,10 +141,11 @@ export default function HowItWorksPage() {
           </div>
         </div>
 
-        <CtaBanner
+        <AuthCtaBanner
           heading="Ready to try it yourself?"
           subtext="Credits from $9 · Never expire"
-          buttons={[{ label: "Create free account", href: "/signup" }]}
+          buttonText="Create free account"
+          buttonHref="/signup"
         />
       </main>
 

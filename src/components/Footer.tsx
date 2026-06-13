@@ -40,9 +40,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1 — Brand */}
           <div>
-            <Link href="/">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Scrivly" style={{ height: "32px", width: "auto", cursor: "pointer" }} />
+            <Link href="/" className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+              Scrivly
             </Link>
             <p className="mt-4 text-sm" style={{ color: "var(--text-secondary)" }}>
               AI-powered listing agent for Etsy sellers

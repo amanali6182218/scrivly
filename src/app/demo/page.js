@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
+import AuthCtaBanner from "@/components/AuthCtaBanner";
 
 export const metadata = {
   title: "Demo — Scrivly",
@@ -91,17 +91,11 @@ export default function DemoPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center">
-          <p className="text-sm text-[var(--text-secondary)] sm:text-base">
-            No account needed to watch. Ready to try it yourself?
-          </p>
-          <Link
-            href="/signup"
-            className="rounded-lg bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
-          >
-            Get started
-          </Link>
-        </div>
+        <AuthCtaBanner
+          heading="Ready to try it yourself?"
+          buttonText="Get started"
+          buttonHref="/signup"
+        />
 
         {/* Step by step breakdown */}
         <div className="mt-20 text-left">
@@ -140,25 +134,13 @@ export default function DemoPage() {
         </div>
 
         {/* CTA */}
-        <div className="mx-auto mt-20 max-w-[1100px] rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] px-6 py-10 text-center sm:px-12 sm:py-14">
-          <h2 className="text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
-            Try it yourself — start generating today
-          </h2>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/signup"
-              className="w-full rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-white shadow-md transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
-            >
-              Get started
-            </Link>
-            <Link
-              href="/etsy-shop"
-              className="w-full rounded-lg border border-[var(--border-default)] bg-transparent px-8 py-3.5 text-base font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)] sm:w-auto"
-            >
-              Buy credits on Etsy
-            </Link>
-          </div>
-        </div>
+        <AuthCtaBanner
+          heading="Try it yourself — start generating today"
+          buttonText="Get started"
+          buttonHref="/signup"
+          secondaryButtonText="Buy credits on Etsy"
+          secondaryButtonHref="https://www.etsy.com/shop/AmanCraftio"
+        />
       </main>
 
       <Footer />

@@ -201,9 +201,12 @@ export default function AccountShell({ user, profile }) {
       {/* Header */}
       <header className="border-b" style={{ borderColor: 'var(--border-subtle)', background: 'var(--bg-secondary)' }}>
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link href="/dashboard">
+          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Scrivly" style={{ height: '36px', width: 'auto', cursor: 'pointer' }} />
+            <span style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
+              Scrivly
+            </span>
           </Link>
           <ThemeToggle />
         </div>

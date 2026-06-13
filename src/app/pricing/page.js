@@ -1,8 +1,8 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CreditPackCard from "@/components/CreditPackCard";
+import AuthCtaBanner from "@/components/AuthCtaBanner";
 
 export const metadata = {
   title: "Pricing — Scrivly",
@@ -129,23 +129,12 @@ export default function PricingPage() {
         />
 
         {/* New account banner */}
-        <div
-          className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl p-6 text-center sm:flex-row sm:justify-between sm:text-left"
-          style={{
-            background: "linear-gradient(135deg, rgba(255,184,0,0.12) 0%, rgba(255,61,139,0.12) 50%, rgba(123,47,255,0.12) 100%)",
-            border: "1px solid rgba(255,61,139,0.3)",
-          }}
-        >
-          <p className="text-sm font-medium text-[var(--text-primary)] sm:text-base">
-            New account? Get started with our Starter Pack for just $9.
-          </p>
-          <Link
-            href="/signup"
-            className="w-full shrink-0 rounded-lg bg-brand px-6 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] sm:w-auto"
-          >
-            Get started
-          </Link>
-        </div>
+        <AuthCtaBanner
+          heading="New to Scrivly?"
+          subtext="Get started with our Starter Pack for just $9."
+          buttonText="Get started"
+          buttonHref="/signup"
+        />
 
         {/* Pricing cards */}
         <div className="mt-16 grid gap-6 text-left sm:grid-cols-3">
