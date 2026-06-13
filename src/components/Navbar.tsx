@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 import Avatar from "@/components/Avatar";
@@ -28,11 +28,9 @@ type NavbarProfile = {
 };
 
 export default function Navbar() {
-  const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [signingOut, setSigningOut] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<NavbarUser | null>(null);
   const [profile, setProfile] = useState<NavbarProfile | null>(null);
@@ -101,14 +99,13 @@ export default function Navbar() {
   }, [menuOpen]);
 
   const handleSignOut = async () => {
-    setSigningOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setMenuOpen(false);
-    setSigningOut(false);
-    router.push("/");
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    } catch {
+      window.location.href = "/";
+    }
   };
 
   const displayName = profile?.full_name || user?.email || "";
@@ -119,7 +116,7 @@ export default function Navbar() {
       style={{ backdropFilter: "blur(12px)" }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 text-base font-bold text-[var(--text-primary)] sm:text-lg">
+        <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2 text-base font-bold text-[var(--text-primary)] sm:text-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Scrivly" style={{ height: "40px", width: "auto", cursor: "pointer" }} />
           Scrivly
@@ -250,15 +247,13 @@ export default function Navbar() {
                     Purchase History
                   </Link>
                   <div className="my-1 border-t" style={{ borderColor: "var(--border-subtle)" }} />
-                  <button
-                    type="button"
+                  <div
                     onClick={handleSignOut}
-                    disabled={signingOut}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[rgba(255,61,139,0.1)] disabled:opacity-50"
+                    className="block w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[rgba(255,61,139,0.1)]"
                     style={{ color: "#FF3D8B" }}
                   >
-                    {signingOut ? "Signing out…" : "Sign Out"}
-                  </button>
+                    Sign out
+                  </div>
                 </div>
               )}
             </div>
@@ -347,10 +342,9 @@ export default function Navbar() {
                       setOpen(false);
                       handleSignOut();
                     }}
-                    disabled={signingOut}
-                    className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)] disabled:opacity-50"
+                    className="rounded-lg bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
                   >
-                    {signingOut ? "Signing out…" : "Sign Out"}
+                    Sign out
                   </button>
                 </>
               ) : (
