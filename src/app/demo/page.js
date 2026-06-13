@@ -124,10 +124,10 @@ export default function DemoPage() {
         </div>
 
         {/* Highlights */}
-        <div className="mx-auto mt-20 grid max-w-xl grid-cols-3 gap-6 text-center">
+        <div className="mx-auto mt-20" style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "60px" }}>
           {HIGHLIGHTS.map((h) => (
-            <div key={h.label}>
-              <p className="gradient-text text-3xl font-extrabold sm:text-4xl">{h.value}</p>
+            <div key={h.label} style={{ textAlign: "center", minWidth: "120px" }}>
+              <p className="gradient-text text-3xl font-extrabold sm:text-4xl" style={{ whiteSpace: "nowrap" }}>{h.value}</p>
               <p className="mt-1 text-xs text-[var(--text-secondary)] sm:text-sm">{h.label}</p>
             </div>
           ))}
