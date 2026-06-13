@@ -17,25 +17,41 @@ const RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdo
 commentary, nothing before or after it) in exactly this shape:
 {"title": "...", "description": "...", "tags": ["...", "...", ...]}`;
 
-const PHOTO_SYSTEM_PROMPT = `You are an expert Etsy SEO copywriter and product photo analyst.
+const PHOTO_RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdown fences, no extra
+commentary, nothing before or after it) in exactly this shape:
+{"title": "...", "description": "...", "tags": ["...", "...", ...], "identifiedMaterials": {"primary": "...", "secondary": "...", "finish": "...", "construction": "..."}}`;
 
-When given a product photo, examine it carefully and identify:
-- The type of product
-- Materials and construction
-- Style, colors, and overall aesthetic
-- Likely use case
-- The kind of buyer who would want it
+const PHOTO_SYSTEM_PROMPT = `You are an expert Etsy listing writer with deep knowledge of product materials, craftsmanship, and e-commerce SEO. You specialize in identifying exactly what a product is made of by carefully analyzing product photos.
 
-Then write a complete Etsy listing based on what you observe in the photo (and any extra details
-the seller provides). Write three things:
-1. TITLE — an SEO-optimized Etsy listing title, maximum 140 characters, with the main keyword first.
-2. DESCRIPTION — a full listing description, 400-600 words, written in short paragraphs. Weave in
-   keywords naturally, and mention materials, style, and size/dimensions when they're visible in the
-   photo or provided by the seller.
-3. TAGS — exactly 13 Etsy search tags, each under 20 characters, mixing broad terms (e.g. "gift for her")
-   with specific long-tail terms grounded in what the photo shows.
+Your most important job is material identification. Before writing anything, study the photo carefully and identify:
 
-${RESPONSE_FORMAT_INSTRUCTIONS}`;
+MATERIAL ANALYSIS (examine these in every photo):
+- Primary material (e.g. sterling silver, 14k gold, stainless steel, brass, copper, wood type, ceramic, porcelain, stoneware, glass, leather type, cotton, linen, wool, silk, polyester, acrylic, resin, wax type, clay type)
+- Secondary materials if visible (e.g. gemstones, beads, fabric lining, metal hardware, glass elements)
+- Surface finish (e.g. matte, glossy, brushed, polished, hammered, textured, distressed, hand-painted, glazed)
+- Construction details (e.g. hand-stitched, machine-made, hand-thrown on wheel, cast, forged, woven, knitted, printed)
+- Weight/thickness indicators (e.g. thick gauge wire, lightweight fabric, heavy ceramic, thin delicate)
+
+MATERIAL IDENTIFICATION RULES:
+1. Metal — identify the type from color and finish: yellow/warm = brass or gold; white/silver = sterling silver or stainless steel; rose/pink = rose gold or copper; dark/aged = oxidized silver or antique brass.
+2. Wood — identify from grain: light grain = pine, maple, or birch; dark grain = walnut or mahogany; reddish = cherry or cedar; pale yellow = bamboo.
+3. Fabric — identify from texture: rough texture = linen or burlap; smooth sheen = silk or satin; knit pattern = wool or cotton knit; transparent = chiffon or organza.
+4. Ceramic — identify from surface: white smooth = porcelain; grey/brown grainy = stoneware; terracotta color = earthenware.
+5. If a material is genuinely unclear, use the most likely material for that product type and describe it as "appears to be" rather than inventing specifics.
+
+DESCRIPTION STRUCTURE (400-600 words total, follow this exact order):
+1. PRODUCT HOOK (2-3 sentences) — lead with what makes the product special, naming the primary material prominently in the first sentence.
+2. MATERIAL DETAIL (3-4 sentences) — an entire paragraph dedicated to the primary material: its properties, why it was chosen, how it looks and feels, and surface finish/texture.
+3. PRODUCT FEATURES (3-4 sentences) — dimensions/size if inferrable, key functional features, style and aesthetic, who it's perfect for.
+4. CRAFTSMANSHIP (2-3 sentences) — how it's made (handmade, wheel-thrown, hand-stamped, hand-painted, etc.), special techniques visible in the photo, quality indicators.
+5. USE AND OCCASION (2-3 sentences) — how the buyer will use it, gifting angles, pairing suggestions.
+6. CARE INSTRUCTIONS (1-2 sentences) — based on the identified material: metal jewelry (avoid water, store dry), glazed ceramic (dishwasher safe), wood (hand wash only, oil occasionally), fabric (machine wash or dry clean), candles (trim wick, first burn tips), etc.
+
+TITLE: SEO-optimized, maximum 140 characters, with the main keyword first. Include the primary material in the title if it fits naturally (e.g. "Handmade Sterling Silver Ring — Hammered Band" rather than "Handmade Ring — Minimalist Design").
+
+TAGS: exactly 13 Etsy search tags, each under 20 characters, mixing broad terms (e.g. "gift for her") with specific long-tail terms grounded in what the photo shows. At least 2 tags must reference the primary material specifically (e.g. "sterling silver ring", "silver jewelry").
+
+${PHOTO_RESPONSE_FORMAT_INSTRUCTIONS}`;
 
 interface ManualRequestBody {
   mode?: "manual";
@@ -57,10 +73,18 @@ interface PhotoRequestBody {
 
 type GenerateRequestBody = ManualRequestBody | PhotoRequestBody;
 
+interface IdentifiedMaterials {
+  primary?: string;
+  secondary?: string;
+  finish?: string;
+  construction?: string;
+}
+
 interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
+  identifiedMaterials?: IdentifiedMaterials;
 }
 
 interface AnthropicMessageParams {
@@ -100,13 +124,21 @@ ${RESPONSE_FORMAT_INSTRUCTIONS}${weakAreasSuffix(weakAreas)}`;
 }
 
 function buildPhotoUserText(details: string, weakAreas?: string[], selectedCategory?: string): string {
-  const base = details
-    ? `Here is a photo of the product. The seller also shared these extra details: "${details}".\n\nAnalyze the photo (using the details only to fill in what the photo can't show) and write the listing as instructed.`
-    : `Here is a photo of the product. The seller didn't provide any extra details — rely entirely on what you can see in the photo.\n\nAnalyze the photo and write the listing as instructed.`;
+  const detailsSuffix = details ? `\n\nAdditional seller notes: "${details}"` : "";
   const categorySuffix = selectedCategory
     ? `\n\nThe seller has indicated this product belongs in the Etsy category: ${selectedCategory}. Use this to inform your tag selection and description focus.`
     : "";
-  return base + categorySuffix + weakAreasSuffix(weakAreas);
+  return `Analyze this product photo carefully.
+
+STEP 1 — MATERIAL IDENTIFICATION:
+Before writing anything, identify:
+- What is the PRIMARY material? (be specific — not just "metal", say "sterling silver" or "brass")
+- What are any SECONDARY materials?
+- What is the SURFACE FINISH?
+- How was it CONSTRUCTED or made?
+
+STEP 2 — WRITE THE LISTING:
+Using your material analysis from Step 1, write a complete Etsy listing. The description must mention the identified materials in the first sentence of paragraph 1, throughout paragraph 2 (which is dedicated to materials), and in the care instructions in paragraph 6.${detailsSuffix}${categorySuffix}${weakAreasSuffix(weakAreas)}`;
 }
 
 function extractJson(text: string): unknown {
@@ -316,5 +348,6 @@ export async function POST(request: Request) {
     title: parsed.title,
     description: parsed.description,
     tags: parsed.tags,
+    ...(parsed.identifiedMaterials ? { identifiedMaterials: parsed.identifiedMaterials } : {}),
   });
 }

@@ -19,10 +19,18 @@ export interface ListingFormValues {
   price: string;
 }
 
+export interface IdentifiedMaterials {
+  primary?: string;
+  secondary?: string;
+  finish?: string;
+  construction?: string;
+}
+
 export interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
+  identifiedMaterials?: IdentifiedMaterials;
 }
 
 export type MarketDemand = "low" | "medium" | "high";

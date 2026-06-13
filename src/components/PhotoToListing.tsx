@@ -217,7 +217,12 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         throw new Error(data?.error || "Failed to generate listing.");
       }
 
-      const newListing = { title: data.title, description: data.description, tags: data.tags };
+      const newListing = {
+        title: data.title,
+        description: data.description,
+        tags: data.tags,
+        ...(data.identifiedMaterials ? { identifiedMaterials: data.identifiedMaterials } : {}),
+      };
       onResultChange?.({ listing: newListing, priceResult: null });
       onCreditsUsed?.(3);
       if (includePriceResearch) fetchPrice(newListing);
@@ -381,7 +386,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           <textarea
             id="details"
             rows={3}
-            placeholder={'e.g. "it\'s handmade", "size is A4", "scented with vanilla"'}
+            placeholder={'e.g. "925 sterling silver, handmade, size 7 ring", "100% soy wax, vanilla scent, 8oz jar", "A4 size, 300gsm watercolor paper"'}
             className={textareaClasses}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
@@ -456,9 +461,9 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
         <p className="mt-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-3 text-xs
           text-[var(--text-secondary)] sm:text-sm">
-          <span className="font-semibold text-[var(--text-primary)]">Tip:</span> Use a clear, well-lit photo that shows the
-          whole product — Claude writes the listing purely from what it can see (plus any details
-          you add).
+          <span className="font-semibold text-[var(--text-primary)]">Tip:</span> Claude identifies materials from
+          your photo automatically. For best results add material details in the box below — e.g.
+          &quot;925 sterling silver&quot; or &quot;100% soy wax&quot;. This ensures accurate descriptions.
         </p>
       </div>
 

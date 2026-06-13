@@ -332,6 +332,58 @@ function ErrorState({ message }: { message: string }) {
   );
 }
 
+function MaterialAnalysisCard({ materials }: { materials: GeneratedListing["identifiedMaterials"] }) {
+  if (!materials) return null;
+  const { primary, secondary, finish, construction } = materials;
+  if (!primary && !secondary && !finish && !construction) return null;
+
+  return (
+    <div
+      className="rounded-[10px] px-4 py-3"
+      style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-default)" }}
+    >
+      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">AI Detected</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {primary && (
+          <span
+            className="rounded-full px-3 py-1 text-xs font-medium"
+            style={{ background: "rgba(255,138,0,0.15)", border: "1px solid rgba(255,138,0,0.3)", color: "#FFB870" }}
+          >
+            ✦ {primary}
+          </span>
+        )}
+        {secondary && (
+          <span
+            className="rounded-full px-3 py-1 text-xs font-medium"
+            style={{ background: "rgba(123,47,255,0.15)", border: "1px solid rgba(123,47,255,0.3)", color: "#CC99FF" }}
+          >
+            + {secondary}
+          </span>
+        )}
+        {finish && (
+          <span
+            className="rounded-full px-3 py-1 text-xs font-medium"
+            style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
+          >
+            ◈ {finish}
+          </span>
+        )}
+        {construction && (
+          <span
+            className="rounded-full px-3 py-1 text-xs font-medium"
+            style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
+          >
+            ⚒ {construction}
+          </span>
+        )}
+      </div>
+      <p className="mt-2 text-xs text-[var(--text-muted)]">
+        Not accurate? Add details in the input field and regenerate.
+      </p>
+    </div>
+  );
+}
+
 function titleCounterInfo(length: number): { className: string; label: string } {
   if (length < 100) return { className: "text-[#FF3D8B]", label: "Too short" };
   if (length < 120) return { className: "text-[#FFB800]", label: "Good" };
@@ -416,6 +468,8 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
         </svg>
         Copy complete listing
       </button>
+
+      <MaterialAnalysisCard materials={listing.identifiedMaterials} />
 
       <Section title="Listing Title" copyText={listing.title} copyLabel="title">
         <p className="text-sm leading-relaxed text-[var(--text-primary)]">{listing.title}</p>
