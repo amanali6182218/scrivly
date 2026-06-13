@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import ResultsPanel from "@/components/ResultsPanel";
 import { GeneratedListing, PriceResearchResult } from "@/lib/types";
 
@@ -68,9 +68,10 @@ interface PhotoToListingProps {
   creditsAvailable?: number;
   result?: PhotoListingResult | null;
   onResultChange?: (result: PhotoListingResult | null | ((prev: PhotoListingResult | null) => PhotoListingResult | null)) => void;
+  priceResearchCost?: number;
 }
 
-export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange }: PhotoToListingProps = {}) {
+export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange, priceResearchCost = 12 }: PhotoToListingProps = {}) {
   const [image, setImage] = useState<UploadedImage | null>(null);
   const [details, setDetails] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -85,6 +86,14 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [includePriceResearch, setIncludePriceResearch] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const prefill = sessionStorage.getItem("scrivly_regenerate_photo_details");
+    if (prefill) {
+      setDetails(prefill);
+      sessionStorage.removeItem("scrivly_regenerate_photo_details");
+    }
+  }, []);
 
   const fetchCategorySuggestions = async (base64: string, mediaType: string) => {
     setIsCategoryLoading(true);
@@ -120,7 +129,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
       const data = await res.json();
       if (res.ok) {
         onResultChange?.((prev) => ({ listing: prev?.listing ?? forListing, priceResult: data as PriceResearchResult }));
-        onCreditsUsed?.(2);
+        onCreditsUsed?.(priceResearchCost);
       }
     } catch {
       // silently suppress — price section just won't render
@@ -390,7 +399,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
             className="mt-0.5 h-4 w-4 rounded border-[var(--border-default)] text-brand-pink focus:ring-[rgba(255,61,139,0.15)]"
           />
           <span>
-            Include price research (+2 credits)
+            Include price research (+{priceResearchCost} credits)
             <span className="block text-xs text-[var(--text-muted)]">
               Research live Etsy prices for your product type
             </span>
@@ -438,7 +447,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-[var(--text-secondary)]">
             {includePriceResearch ? (
-              <>Uses <span className="font-semibold text-brand-orange">5 credits</span> · includes price research</>
+              <>Uses <span className="font-semibold text-brand-orange">{3 + priceResearchCost} credits</span> · includes price research</>
             ) : (
               <>Uses <span className="font-semibold text-brand-orange">3 credits</span></>
             )}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SpyResult } from "@/lib/types";
 import ListingHealthScore from "@/components/ListingHealthScore";
+import { CREDIT_COSTS } from "@/lib/plans";
 
 const inputClasses =
   "w-full rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-primary)] " +
@@ -250,7 +251,16 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canAnalyze = url.trim().length > 0 && !isLoading && creditsAvailable >= 4;
+  const spyCost = CREDIT_COSTS.spy_improve;
+  const canAnalyze = url.trim().length > 0 && !isLoading && creditsAvailable >= spyCost;
+
+  useEffect(() => {
+    const prefill = sessionStorage.getItem("scrivly_regenerate_spy_url");
+    if (prefill) {
+      setUrl(prefill);
+      sessionStorage.removeItem("scrivly_regenerate_spy_url");
+    }
+  }, []);
 
   const handleAnalyze = async () => {
     if (!canAnalyze) return;
@@ -273,7 +283,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
       }
 
       onResultChange?.(data as SpyResult);
-      onCreditsUsed?.(4);
+      onCreditsUsed?.(spyCost);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -308,7 +318,7 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
           <button
             type="button"
             onClick={handleAnalyze}
-            disabled={!canAnalyze || creditsAvailable < 4}
+            disabled={!canAnalyze || creditsAvailable < spyCost}
             title={creditsAvailable === 0 ? "No credits remaining. Buy more on Etsy." : undefined}
             className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand
               px-5 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-md transition-all duration-200 ease-in-out
@@ -337,12 +347,12 @@ export default function SpyImprove({ onCreditsUsed, creditsAvailable = Infinity,
 
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-[var(--text-secondary)]">
-            Uses <span className="font-semibold text-brand-orange">4 credits</span> — competitor analysis + improved listing
+            Uses <span className="font-semibold text-brand-orange">{spyCost} credits</span> — competitor analysis + improved listing
           </p>
         </div>
-        {creditsAvailable < 4 && creditsAvailable !== Infinity && (
+        {creditsAvailable < spyCost && creditsAvailable !== Infinity && (
           <p className="mt-2 text-sm text-[#FF3D8B]">
-            You need at least 4 credits to run a competitor analysis.
+            You need at least {spyCost} credits to run a competitor analysis.
           </p>
         )}
       </div>

@@ -4,6 +4,8 @@ import { SpyResult } from "@/lib/types";
 const { createClient: createServerSupabaseClient } = require("@/lib/supabase/server");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { createAdminClient } = require("@/lib/supabase/admin");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { getHistoryLimit, CREDIT_COSTS } = require("@/lib/plans");
 
 export const runtime = "nodejs";
 
@@ -94,7 +96,7 @@ function isEtsyListingUrl(url: string): boolean {
   }
 }
 
-async function checkAuthAndDeductCredit(description: string, amount: number): Promise<{ userId: string } | NextResponse> {
+async function checkAuthAndDeductCredit(description: string, amount: number): Promise<{ userId: string; packTier: string } | NextResponse> {
   const supabase = createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -102,7 +104,7 @@ async function checkAuthAndDeductCredit(description: string, amount: number): Pr
   }
 
   const admin = createAdminClient();
-  const { data: profile } = await admin.from("profiles").select("credits").eq("id", user.id).single();
+  const { data: profile } = await admin.from("profiles").select("credits, pack_tier").eq("id", user.id).single();
   if (!profile || profile.credits < amount) {
     return NextResponse.json({ error: "Insufficient credits" }, { status: 402 });
   }
@@ -111,7 +113,42 @@ async function checkAuthAndDeductCredit(description: string, amount: number): Pr
   await admin.from("profiles").update({ credits: newBalance, updated_at: new Date().toISOString() }).eq("id", user.id);
   await admin.from("credit_transactions").insert({ user_id: user.id, type: "usage", amount: -amount, description });
 
-  return { userId: user.id };
+  return { userId: user.id, packTier: profile.pack_tier ?? "none" };
+}
+
+async function recordGenerationHistory(
+  userId: string,
+  packTier: string,
+  record: {
+    generation_type: string;
+    generated_title?: string;
+    generated_description?: string;
+    generated_tags?: string[];
+    credits_used: number;
+    included_price_research?: boolean;
+    input_details?: string | null;
+  }
+): Promise<void> {
+  const admin = createAdminClient();
+
+  await admin.from("generation_history").insert({
+    user_id: userId,
+    ...record,
+  });
+
+  const historyLimit = getHistoryLimit(packTier);
+  if (historyLimit === null) return;
+
+  const { data: rows } = await admin
+    .from("generation_history")
+    .select("id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (!rows || rows.length <= historyLimit) return;
+
+  const idsToDelete = rows.slice(historyLimit).map((row: { id: string }) => row.id);
+  await admin.from("generation_history").delete().in("id", idsToDelete);
 }
 
 export async function POST(request: Request) {
@@ -123,8 +160,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const authResult = await checkAuthAndDeductCredit("Competitor spy analysis", 4);
+  const authResult = await checkAuthAndDeductCredit("Competitor spy analysis", CREDIT_COSTS.spy_improve);
   if (authResult instanceof NextResponse) return authResult;
+  const { userId, packTier } = authResult;
 
   let body: { url?: unknown };
   try {
@@ -192,6 +230,16 @@ export async function POST(request: Request) {
   if (!isSpyResult(parsed)) {
     return NextResponse.json({ error: "Model response JSON was missing expected fields." }, { status: 502 });
   }
+
+  await recordGenerationHistory(userId, packTier, {
+    generation_type: "spy_improve",
+    generated_title: parsed.improvedTitle,
+    generated_description: parsed.improvedDescription,
+    generated_tags: parsed.improvedTags,
+    credits_used: CREDIT_COSTS.spy_improve,
+    included_price_research: false,
+    input_details: url,
+  });
 
   return NextResponse.json(parsed);
 }

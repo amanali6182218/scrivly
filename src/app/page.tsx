@@ -41,7 +41,7 @@ const PRICING_PLANS = [
     name: "Starter",
     price: "$9",
     credits: "100 credits",
-    listings: "~33 full listings",
+    listings: "33 listings · or 6 with price research",
     blurb: "Perfect to start",
     featured: false,
   },
@@ -49,16 +49,16 @@ const PRICING_PLANS = [
     name: "Pro Pack",
     price: "$19",
     credits: "250 credits",
-    listings: "~83 full listings",
-    blurb: "Best value",
+    listings: "83 listings · or 16 with price research",
+    blurb: "Best value · bulk CSV export",
     featured: true,
   },
   {
     name: "Power Seller",
     price: "$35",
-    credits: "500 credits",
-    listings: "~166 full listings",
-    blurb: "For active shops",
+    credits: "500 + 50 bonus credits",
+    listings: "183 listings · or 36 with price research",
+    blurb: "Priority support · unlimited history",
     featured: false,
   },
 ];
@@ -312,8 +312,8 @@ export default function LandingPage() {
           </div>
 
           <p className="mx-auto mt-6 max-w-xl text-sm text-[var(--text-secondary)]">
-            Each generation (listing + health score) uses 3 credits, or 5 credits with price
-            research included. Already have a code? Sign up free and redeem it.
+            Each generation (listing + health score) uses 3 credits. Price research adds 12 credits
+            (10 for Power Sellers). Already have a code? Sign up free and redeem it.
           </p>
         </div>
 

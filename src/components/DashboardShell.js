@@ -11,6 +11,7 @@ import RedeemBanner from '@/components/RedeemBanner'
 import WelcomeModal from '@/components/WelcomeModal'
 import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
+import { getPriceResearchCost } from '@/lib/plans'
 
 const CREDIT_PACKS = [
   { name: 'Starter Pack',  credits: 100, price: '$9',  url: 'https://www.etsy.com/shop/AmanCraftio' },
@@ -177,10 +178,23 @@ export default function DashboardShell({ user, profile }) {
   const [signingOut, setSigningOut] = useState(false)
   const [modalDismissed, setModalDismissed] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [historyCount, setHistoryCount] = useState(null)
   const menuRef = useRef(null)
 
   const emailPrefix = user.email.split('@')[0]
   const displayName = profile.full_name || emailPrefix
+  const packTier = profile.pack_tier || 'none'
+  const isPowerSeller = packTier === 'power' || profile.highest_pack_tier === 'power'
+  const priceResearchCost = getPriceResearchCost(packTier)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('generation_history')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .then(({ count }) => setHistoryCount(count ?? 0))
+  }, [user.id])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -288,7 +302,27 @@ export default function DashboardShell({ user, profile }) {
                     {profile.full_name && (
                       <p className="truncate text-xs" style={{ color: 'var(--text-muted)' }}>{user.email}</p>
                     )}
+                    {isPowerSeller && (
+                      <span
+                        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                        style={{ background: 'linear-gradient(90deg, #FF8A00, #7B2FFF)' }}
+                      >
+                        Power Seller
+                      </span>
+                    )}
                   </div>
+                  <div className="my-1 border-t" style={{ borderColor: 'var(--border-subtle)' }} />
+                  <Link
+                    href="/account/history"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span>Generation History</span>
+                    {historyCount !== null && (
+                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>({historyCount})</span>
+                    )}
+                  </Link>
                   <Link
                     href="/account"
                     onClick={() => setMenuOpen(false)}
@@ -297,6 +331,15 @@ export default function DashboardShell({ user, profile }) {
                   >
                     Manage Account
                   </Link>
+                  <Link
+                    href="/account/purchases"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Purchase History
+                  </Link>
+                  <div className="my-1 border-t" style={{ borderColor: 'var(--border-subtle)' }} />
                   <button
                     type="button"
                     onClick={handleSignOut}
@@ -336,7 +379,9 @@ export default function DashboardShell({ user, profile }) {
               </svg>
               {credits} credits remaining
             </span>
-            <p className="text-xs text-[var(--text-secondary)]">Each generation uses 3 credits, or 5 with price research</p>
+            <p className="text-xs text-[var(--text-secondary)]">
+              Each generation uses 3 credits, or {3 + priceResearchCost} with price research
+            </p>
             <a
               href="https://www.etsy.com/shop/AmanCraftio"
               target="_blank"
@@ -348,7 +393,7 @@ export default function DashboardShell({ user, profile }) {
           </div>
         </div>
 
-        <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} />
+        <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} packTier={packTier} />
 
         <ContactSection />
       </main>

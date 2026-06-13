@@ -241,6 +241,36 @@ export default function AccountShell({ user, profile }) {
               </div>
             </div>
 
+            {profile.pack_tier === 'power' && (
+              <div
+                className="mb-6 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold text-white"
+                style={{ background: 'linear-gradient(90deg, #FF8A00, #7B2FFF)' }}
+              >
+                ⚡ Power Seller
+              </div>
+            )}
+            {profile.pack_tier === 'pro' && (
+              <div
+                className="mb-6 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold text-white"
+                style={{ background: '#7B2FFF' }}
+              >
+                Pro
+              </div>
+            )}
+            {(profile.pack_tier === 'starter' || profile.pack_tier === 'none' || !profile.pack_tier) && (
+              <div className="mb-6 flex flex-wrap items-center gap-3">
+                <div
+                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold"
+                  style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}
+                >
+                  Starter
+                </div>
+                <Link href="/pricing" className="text-sm font-medium text-brand-pink hover:text-brand-orange">
+                  Upgrade to Pro or Power for more features →
+                </Link>
+              </div>
+            )}
+
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div>
                 <label htmlFor="full-name" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>

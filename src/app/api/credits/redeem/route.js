@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getHigherTier } from '@/lib/plans'
 
 export async function POST(request) {
   let body
@@ -53,13 +54,15 @@ export async function POST(request) {
   // Fetch current balance before making any writes
   const { data: profile } = await admin
     .from('profiles')
-    .select('credits')
+    .select('credits, pack_tier, highest_pack_tier')
     .eq('id', userId)
     .single()
 
   const currentCredits = profile?.credits ?? 0
   const newBalance = currentCredits + redeemCode.credits
   const now = new Date().toISOString()
+  const codeTier = redeemCode.pack_tier || 'starter'
+  const highestTier = getHigherTier(profile?.highest_pack_tier || 'none', codeTier)
 
   // Mark code as used and add credits in immediate sequence
   await admin
@@ -69,7 +72,7 @@ export async function POST(request) {
 
   await admin
     .from('profiles')
-    .update({ credits: newBalance, updated_at: now })
+    .update({ credits: newBalance, pack_tier: codeTier, highest_pack_tier: highestTier, updated_at: now })
     .eq('id', userId)
 
   // Log the transaction

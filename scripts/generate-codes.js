@@ -7,27 +7,56 @@ const path = require('path')
 // Alphanumeric chars excluding confusing lookalikes: O, 0, I, 1, L
 const CHARSET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
 
+const TIER_CONFIG = {
+  starter: { prefix: 'ETY', credits: 100 },
+  pro: { prefix: 'PRO', credits: 250 },
+  power: { prefix: 'PWR', credits: 550 },
+}
+
 function randomChar() {
   return CHARSET[Math.floor(Math.random() * CHARSET.length)]
 }
 
-function generateCode() {
-  // Format: ETY-XXXX-XXXX-XX
+function generateCode(prefix) {
+  // Format: PREFIX-XXXX-XXXX-XX
   const a = Array.from({ length: 4 }, randomChar).join('')
   const b = Array.from({ length: 4 }, randomChar).join('')
   const c = Array.from({ length: 2 }, randomChar).join('')
-  return `ETY-${a}-${b}-${c}`
+  return `${prefix}-${a}-${b}-${c}`
 }
 
-function generateUniqueCodes(count) {
+function generateUniqueCodes(prefix, count) {
   const set = new Set()
   while (set.size < count) {
-    set.add(generateCode())
+    set.add(generateCode(prefix))
   }
   return Array.from(set)
 }
 
+function parseArgs() {
+  const args = { tier: 'starter', count: 50 }
+  for (const arg of process.argv.slice(2)) {
+    const [key, value] = arg.replace(/^--/, '').split('=')
+    if (key === 'tier') args.tier = value
+    if (key === 'count') args.count = Number(value)
+  }
+  return args
+}
+
 async function main() {
+  const { tier, count } = parseArgs()
+  const config = TIER_CONFIG[tier]
+
+  if (!config) {
+    console.error(`Unknown tier "${tier}". Valid tiers: ${Object.keys(TIER_CONFIG).join(', ')}`)
+    process.exit(1)
+  }
+
+  if (!count || count <= 0) {
+    console.error('Invalid --count. Must be a positive number.')
+    process.exit(1)
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -40,13 +69,14 @@ async function main() {
     auth: { autoRefreshToken: false, persistSession: false },
   })
 
-  console.log('Generating 500 unique codes…')
-  const codes = generateUniqueCodes(500)
+  console.log(`Generating ${count} unique ${tier} codes (${config.credits} credits each)…`)
+  const codes = generateUniqueCodes(config.prefix, count)
   const now = new Date().toISOString()
 
   const rows = codes.map((code) => ({
     code,
-    credits: 100,
+    credits: config.credits,
+    pack_tier: tier,
     is_used: false,
     created_at: now,
   }))
@@ -66,12 +96,12 @@ async function main() {
     }
   }
 
-  console.log(`\nInserted ${inserted} / 500 codes successfully.`)
+  console.log(`\nInserted ${inserted} / ${count} codes successfully.`)
 
   // Export to CSV
-  const csvPath = path.resolve(__dirname, 'codes-export.csv')
-  const header = 'code,credits,is_used,created_at'
-  const csvLines = rows.map((r) => `${r.code},${r.credits},${r.is_used},${r.created_at}`)
+  const csvPath = path.resolve(__dirname, `codes-export-${tier}.csv`)
+  const header = 'code,credits,pack_tier,is_used,created_at'
+  const csvLines = rows.map((r) => `${r.code},${r.credits},${r.pack_tier},${r.is_used},${r.created_at}`)
   fs.writeFileSync(csvPath, [header, ...csvLines].join('\n'), 'utf8')
   console.log(`CSV exported to: ${csvPath}`)
 }

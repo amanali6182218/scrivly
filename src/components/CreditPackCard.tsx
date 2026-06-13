@@ -1,16 +1,22 @@
+export type CreditPackChecklistItem = {
+  label: string;
+  included: boolean;
+};
+
 export type CreditPack = {
   name: string;
   price: string;
   credits: string;
   listings: string;
-  perListing: string;
+  perListing?: string;
+  bonusBadge?: string;
+  checklist: CreditPackChecklistItem[];
+  note?: string;
   popular?: boolean;
   buttonLabel: string;
   buttonId: string;
   href?: string;
 };
-
-const FEATURES = ["SEO-optimized title", "Full description", "All 13 tags", "Price research", "Health score /100"];
 
 export default function CreditPackCard({ pack }: { pack: CreditPack }) {
   return (
@@ -35,15 +41,22 @@ export default function CreditPackCard({ pack }: { pack: CreditPack }) {
 
       <h3 className="text-lg font-semibold text-[var(--text-primary)]">{pack.name}</h3>
       <p className="mt-3 text-4xl font-extrabold text-[var(--text-primary)]">{pack.price}</p>
-      <p className="mt-3 text-sm font-medium text-[var(--text-primary)]">{pack.credits} credits</p>
+      <div className="mt-3 flex items-center gap-2">
+        <p className="text-sm font-medium text-[var(--text-primary)]">{pack.credits} credits</p>
+        {pack.bonusBadge && (
+          <span className="rounded-full bg-brand-orange px-2 py-0.5 text-xs font-bold text-white">
+            {pack.bonusBadge}
+          </span>
+        )}
+      </div>
       <p className="text-sm text-[var(--text-secondary)]">{pack.listings}</p>
-      <p className="mt-1 text-xs text-[var(--text-muted)]">{pack.perListing}</p>
+      {pack.perListing && <p className="mt-1 text-xs text-[var(--text-muted)]">{pack.perListing}</p>}
 
       <ul className="mt-6 space-y-2.5">
-        {FEATURES.map((f) => (
-          <li key={f} className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-            <span style={{ color: "#22C55E" }}>✓</span>
-            {f}
+        {pack.checklist.map((item) => (
+          <li key={item.label} className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+            <span style={{ color: item.included ? "#22C55E" : "#FF3D8B" }}>{item.included ? "✓" : "✗"}</span>
+            {item.label}
           </li>
         ))}
       </ul>
@@ -61,6 +74,10 @@ export default function CreditPackCard({ pack }: { pack: CreditPack }) {
       >
         {pack.buttonLabel}
       </a>
+
+      {pack.note && (
+        <p className="mt-4 text-xs text-[var(--text-muted)]">{pack.note}</p>
+      )}
     </div>
   );
 }

@@ -14,41 +14,66 @@ const PACKS = [
     name: "Starter Pack",
     price: "$9",
     credits: "100",
-    listings: "~33 complete listings",
-    perListing: "~$0.27 per listing",
+    listings: "33 listings · or 6 with price research",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-starter-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "SEO title + description + 13 tags", included: true },
+      { label: "Health score /100", included: true },
+      { label: "Spy & Improve", included: true },
+      { label: "Last 10 generations saved", included: true },
+      { label: "Category auto-detection", included: true },
+      { label: "Bulk CSV export (Pro+)", included: false },
+      { label: "Priority support (Power only)", included: false },
+    ],
   },
   {
     name: "Pro Pack",
     price: "$19",
     credits: "250",
-    listings: "~83 complete listings",
-    perListing: "~$0.23 per listing",
+    listings: "83 listings · or 16 with price research",
     popular: true,
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-pro-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "Everything in Starter", included: true },
+      { label: "Last 50 generations saved", included: true },
+      { label: "Bulk CSV export", included: true },
+      { label: "Priority support (Power only)", included: false },
+    ],
   },
   {
     name: "Power Seller Pack",
     price: "$35",
     credits: "500",
-    listings: "~166 complete listings",
-    perListing: "~$0.21 per listing",
+    bonusBadge: "+50 bonus",
+    listings: "183 listings · or 36 with price research",
     buttonLabel: "Buy on Etsy →",
     buttonId: "pricing-power-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "Everything in Pro", included: true },
+      { label: "Unlimited generation history", included: true },
+      { label: "Bulk CSV export", included: true },
+      { label: "Price research: 10 credits (save 2 vs other plans)", included: true },
+      { label: "Priority support (4hr response)", included: true },
+      { label: "Power Seller badge", included: true },
+    ],
+    note: "Power Sellers get price research at 10 credits instead of 12 — our thanks for going big.",
   },
 ];
 
+const CREDIT_USAGE_HEADERS = ["Action", "Starter/Pro", "Power Seller"];
+
 const CREDIT_USAGE = [
-  ["Full generation (title + description + tags + score)", "3 credits"],
-  ["Add price research (optional)", "+2 credits"],
-  ["Spy and Improve", "4 credits"],
-  ["Fix weak areas", "1 credit"],
-  ["Category suggestion", "Free"],
+  ["Basic generation", "3 credits", "3 credits"],
+  ["Price research addon", "12 credits", "10 credits"],
+  ["Full gen + research", "15 credits", "13 credits"],
+  ["Spy & Improve", "6 credits", "6 credits"],
+  ["Fix weak areas", "2 credits", "2 credits"],
+  ["Category suggestion", "Free", "Free"],
 ];
 
 const SELLER_PROFILES = [
@@ -139,15 +164,17 @@ export default function PricingPage() {
             <table className="w-full border-collapse text-left text-sm">
               <thead>
                 <tr style={{ background: "var(--bg-card)" }}>
-                  <th className="px-4 py-3 font-semibold text-[var(--text-primary)]">Action</th>
-                  <th className="px-4 py-3 font-semibold text-[var(--text-primary)]">Credits used</th>
+                  {CREDIT_USAGE_HEADERS.map((header) => (
+                    <th key={header} className="px-4 py-3 font-semibold text-[var(--text-primary)]">{header}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {CREDIT_USAGE.map(([action, cost], i) => (
+                {CREDIT_USAGE.map(([action, standardCost, powerCost], i) => (
                   <tr key={action} style={{ borderTop: "1px solid var(--border-subtle)", background: i % 2 === 0 ? "transparent" : "var(--bg-card)" }}>
                     <td className="px-4 py-3 text-[var(--text-secondary)]">{action}</td>
-                    <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{cost}</td>
+                    <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{standardCost}</td>
+                    <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{powerCost}</td>
                   </tr>
                 ))}
               </tbody>

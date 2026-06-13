@@ -28,32 +28,54 @@ const PACKS = [
     name: "Starter Pack",
     price: "$9",
     credits: "100",
-    listings: "~33 complete listings",
-    perListing: "~$0.27 per listing",
+    listings: "33 listings · or 6 with price research",
     buttonLabel: "Buy Starter on Etsy →",
     buttonId: "etsy-starter-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "SEO title + description + 13 tags", included: true },
+      { label: "Health score /100", included: true },
+      { label: "Spy & Improve", included: true },
+      { label: "Last 10 generations saved", included: true },
+      { label: "Category auto-detection", included: true },
+      { label: "Bulk CSV export (Pro+)", included: false },
+      { label: "Priority support (Power only)", included: false },
+    ],
   },
   {
     name: "Pro Pack",
     price: "$19",
     credits: "250",
-    listings: "~83 complete listings",
-    perListing: "~$0.23 per listing",
+    listings: "83 listings · or 16 with price research",
     popular: true,
     buttonLabel: "Buy Pro Pack on Etsy →",
     buttonId: "etsy-pro-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "Everything in Starter", included: true },
+      { label: "Last 50 generations saved", included: true },
+      { label: "Bulk CSV export", included: true },
+      { label: "Priority support (Power only)", included: false },
+    ],
   },
   {
     name: "Power Seller Pack",
     price: "$35",
     credits: "500",
-    listings: "~166 complete listings",
-    perListing: "~$0.21 per listing",
+    bonusBadge: "+50 bonus",
+    listings: "183 listings · or 36 with price research",
     buttonLabel: "Buy Power Pack on Etsy →",
     buttonId: "etsy-power-link",
     href: "https://www.etsy.com/shop/AmanCraftio",
+    checklist: [
+      { label: "Everything in Pro", included: true },
+      { label: "Unlimited generation history", included: true },
+      { label: "Bulk CSV export", included: true },
+      { label: "Price research: 10 credits (save 2 vs other plans)", included: true },
+      { label: "Priority support (4hr response)", included: true },
+      { label: "Power Seller badge", included: true },
+    ],
+    note: "Power Sellers get price research at 10 credits instead of 12 — our thanks for going big.",
   },
 ];
 
@@ -125,7 +147,8 @@ export default function EtsyShopPage() {
           <p className="font-semibold text-[var(--text-primary)]">Important:</p>
           <p className="mt-2 leading-relaxed">
             Each generation uses 3 credits and includes: title, description, 13 tags, and health
-            score. Add price research for 2 more credits (5 total).
+            score. Add price research for 12 more credits (15 total), or just 10 credits (13 total)
+            on the Power Seller Pack.
           </p>
         </div>
 

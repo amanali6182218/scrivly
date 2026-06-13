@@ -4,6 +4,8 @@ import { MarketDemand, PriceResearchResult } from "@/lib/types";
 const { createClient: createServerSupabaseClient } = require("@/lib/supabase/server");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { createAdminClient } = require("@/lib/supabase/admin");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { getPriceResearchCost } = require("@/lib/plans");
 
 export const runtime = "nodejs";
 
@@ -84,6 +86,12 @@ async function deductCredits(userId: string, amount: number, description: string
   return null;
 }
 
+async function getPackTier(userId: string): Promise<string> {
+  const admin = createAdminClient();
+  const { data: profile } = await admin.from("profiles").select("pack_tier").eq("id", userId).single();
+  return profile?.pack_tier ?? "none";
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -105,9 +113,10 @@ export async function POST(request: Request) {
   const { userId } = authResult as { userId: string };
 
   // When called as part of a full generation (credits already deducted there), skip deduction.
-  // When called standalone, charge 2 credits.
+  // When called standalone, charge the tier-based price research cost.
   if (!body.partOfGeneration) {
-    const deductErr = await deductCredits(userId, 2, "Price research");
+    const packTier = await getPackTier(userId);
+    const deductErr = await deductCredits(userId, getPriceResearchCost(packTier), "Price research");
     if (deductErr) return deductErr;
   }
 

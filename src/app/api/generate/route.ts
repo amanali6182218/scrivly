@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 const { createClient: createServerSupabaseClient } = require("@/lib/supabase/server");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { createAdminClient } = require("@/lib/supabase/admin");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { getHistoryLimit } = require("@/lib/plans");
 
 export const runtime = "nodejs";
 
@@ -169,7 +171,7 @@ function buildRequestParams(body: GenerateRequestBody): AnthropicMessageParams |
   };
 }
 
-async function checkAuthAndDeductCredit(description: string, amount: number): Promise<{ userId: string } | NextResponse> {
+async function checkAuthAndDeductCredit(description: string, amount: number): Promise<{ userId: string; packTier: string } | NextResponse> {
   const supabase = createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -177,7 +179,7 @@ async function checkAuthAndDeductCredit(description: string, amount: number): Pr
   }
 
   const admin = createAdminClient();
-  const { data: profile } = await admin.from("profiles").select("credits").eq("id", user.id).single();
+  const { data: profile } = await admin.from("profiles").select("credits, pack_tier").eq("id", user.id).single();
   if (!profile || profile.credits < amount) {
     return NextResponse.json({ error: "Insufficient credits" }, { status: 402 });
   }
@@ -186,7 +188,45 @@ async function checkAuthAndDeductCredit(description: string, amount: number): Pr
   await admin.from("profiles").update({ credits: newBalance, updated_at: new Date().toISOString() }).eq("id", user.id);
   await admin.from("credit_transactions").insert({ user_id: user.id, type: "usage", amount: -amount, description });
 
-  return { userId: user.id };
+  return { userId: user.id, packTier: profile.pack_tier ?? "none" };
+}
+
+async function recordGenerationHistory(
+  userId: string,
+  packTier: string,
+  record: {
+    generation_type: string;
+    generated_title?: string;
+    generated_description?: string;
+    generated_tags?: string[];
+    suggested_price_min?: number | null;
+    suggested_price_max?: number | null;
+    health_score?: number | null;
+    credits_used: number;
+    included_price_research?: boolean;
+    input_details?: string | null;
+  }
+): Promise<void> {
+  const admin = createAdminClient();
+
+  await admin.from("generation_history").insert({
+    user_id: userId,
+    ...record,
+  });
+
+  const historyLimit = getHistoryLimit(packTier);
+  if (historyLimit === null) return;
+
+  const { data: rows } = await admin
+    .from("generation_history")
+    .select("id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (!rows || rows.length <= historyLimit) return;
+
+  const idsToDelete = rows.slice(historyLimit).map((row: { id: string }) => row.id);
+  await admin.from("generation_history").delete().in("id", idsToDelete);
 }
 
 export async function POST(request: Request) {
@@ -207,6 +247,7 @@ export async function POST(request: Request) {
 
   const authResult = await checkAuthAndDeductCredit("Listing generation", 3);
   if (authResult instanceof NextResponse) return authResult;
+  const { userId, packTier } = authResult;
 
   const params = buildRequestParams(body);
   if ("error" in params) {
@@ -258,6 +299,18 @@ export async function POST(request: Request) {
   if (!isGeneratedListing(parsed)) {
     return NextResponse.json({ error: "Model response JSON was missing expected fields." }, { status: 502 });
   }
+
+  const details = body.mode === "photo" ? body.details ?? null : null;
+
+  await recordGenerationHistory(userId, packTier, {
+    generation_type: "photo_to_listing",
+    generated_title: parsed.title,
+    generated_description: parsed.description,
+    generated_tags: parsed.tags,
+    credits_used: 3,
+    included_price_research: false,
+    input_details: details,
+  });
 
   return NextResponse.json({
     title: parsed.title,

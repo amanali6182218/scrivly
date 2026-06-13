@@ -7,9 +7,9 @@ const DISMISS_HOURS = 24
 const ETSY_SHOP_URL = 'https://www.etsy.com/shop/AmanCraftio'
 
 const PACKS = [
-  { name: 'Starter Pack', credits: 100, price: '$9', popular: false },
-  { name: 'Pro Pack', credits: 250, price: '$19', popular: true },
-  { name: 'Power Pack', credits: 500, price: '$35', popular: false },
+  { name: 'Starter Pack', credits: 100, price: '$9', popular: false, subLabel: '33 listings · history: 10' },
+  { name: 'Pro Pack', credits: 250, price: '$19', popular: true, subLabel: '83 listings · CSV export' },
+  { name: 'Power Pack', credits: 550, price: '$35', popular: false, subLabel: '183 listings · priority support' },
 ]
 
 function wasRecentlyDismissed() {
@@ -216,7 +216,12 @@ export default function WelcomeModal({ userId, credits, totalPurchased, onRedeem
                 }
               >
                 <span>
-                  {pack.name} · {pack.credits} credits{pack.popular ? ' ⭐ Popular' : ''}
+                  <span className="block">
+                    {pack.name} · {pack.credits} credits{pack.popular ? ' ⭐ Popular' : ''}
+                  </span>
+                  <span className="block font-normal" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    {pack.subLabel}
+                  </span>
                 </span>
                 <span>{pack.price} →</span>
               </a>
@@ -226,7 +231,7 @@ export default function WelcomeModal({ userId, credits, totalPurchased, onRedeem
 
         {/* Bottom */}
         <p className="mt-6" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-          Each generation uses 3 credits, or 5 with price research. Credits never expire.
+          Each generation uses 3 credits, or 15 with price research (13 for Power Sellers). Credits never expire.
         </p>
         <button
           type="button"

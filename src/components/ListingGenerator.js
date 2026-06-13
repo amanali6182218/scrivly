@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import PhotoToListing from '@/components/PhotoToListing'
 import SpyImprove from '@/components/SpyImprove'
+import { getPriceResearchCost, CREDIT_COSTS } from '@/lib/plans'
 
 const TABS = [
   { id: 'photo', label: 'Photo to Listing' },
@@ -22,10 +24,19 @@ const TAB_COPY = {
   },
 }
 
-export default function ListingGenerator({ credits, onCreditsUsed }) {
+export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'none' }) {
   const [activeTab, setActiveTab] = useState('photo')
   const [listingResult, setListingResult] = useState(null)
   const [spyResult, setSpyResult] = useState(null)
+  const priceResearchCost = getPriceResearchCost(packTier)
+  const spyCost = CREDIT_COSTS.spy_improve
+
+  useEffect(() => {
+    const tab = new URLSearchParams(window.location.search).get('tab')
+    if (tab === 'photo' || tab === 'spy') {
+      setActiveTab(tab)
+    }
+  }, [])
 
   return (
     <div>
@@ -38,21 +49,31 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
         </p>
       </div>
 
-      <div className="mb-8 inline-flex rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] p-1 shadow-sm">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition sm:px-5 ${
-              activeTab === tab.id
-                ? 'bg-brand text-[var(--text-primary)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="mb-8 flex flex-wrap items-center gap-3">
+        <div className="inline-flex rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] p-1 shadow-sm">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition sm:px-5 ${
+                activeTab === tab.id
+                  ? 'bg-brand text-[var(--text-primary)] shadow-sm'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <Link
+          href="/account/history"
+          className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] px-4 py-2 text-sm font-medium
+            text-[var(--text-secondary)] shadow-sm transition hover:text-[var(--text-primary)]"
+        >
+          History
+        </Link>
       </div>
 
       {credits < 3 && (
@@ -62,7 +83,7 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
         >
           {credits === 0
             ? "You have no credits left. Redeem a code above to generate more listings."
-            : "You need at least 3 credits to generate a listing, or 4 credits for Spy & Improve."}
+            : `You need at least 3 credits to generate a listing, or ${spyCost} credits for Spy & Improve.`}
         </div>
       )}
 
@@ -72,6 +93,7 @@ export default function ListingGenerator({ credits, onCreditsUsed }) {
           creditsAvailable={credits}
           result={listingResult}
           onResultChange={setListingResult}
+          priceResearchCost={priceResearchCost}
         />
       )}
       {activeTab === 'spy' && (

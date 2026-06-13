@@ -3,6 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import { TwitterIcon, InstagramIcon, FacebookIcon, YouTubeIcon, TikTokIcon } from "@/components/SocialIcons";
+import { createClient } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Contact Us — Scrivly",
@@ -77,7 +80,43 @@ const QUICK_LINKS = [
 
 const cardStyle = { background: "var(--bg-card)", border: "1px solid var(--border-default)" };
 
-export default function ContactPage() {
+function PowerSellerSupportCard() {
+  return (
+    <a
+      href="mailto:scrivly@gmail.com?subject=Power Seller Support Request"
+      className="flex items-center gap-4 rounded-[14px] px-6 py-5 transition hover:border-[rgba(34,197,94,0.5)]"
+      style={{ background: "var(--bg-card)", border: "1px solid rgba(34,197,94,0.4)" }}
+    >
+      <span
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg"
+        style={{ background: "rgba(34,197,94,0.15)", color: "#22C55E" }}
+      >
+        ⚡
+      </span>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+          POWER SELLER SUPPORT
+        </p>
+        <p className="mt-0.5 font-semibold text-[var(--text-primary)]">Priority email support</p>
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          As a Power Seller you get priority responses within 4 hours.
+        </p>
+        <p className="mt-1 text-sm font-medium" style={{ color: "#22C55E" }}>Email us directly →</p>
+      </div>
+    </a>
+  );
+}
+
+export default async function ContactPage() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let isPowerSeller = false;
+  if (user) {
+    const { data: profile } = await supabase.from("profiles").select("pack_tier").eq("id", user.id).single();
+    isPowerSeller = profile?.pack_tier === "power";
+  }
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       <Navbar />
@@ -95,6 +134,7 @@ export default function ContactPage() {
             <h2 className="text-xl font-bold text-[var(--text-primary)] sm:text-2xl">Contact directly</h2>
 
             <div className="mt-6 space-y-4">
+              {isPowerSeller && <PowerSellerSupportCard />}
               {DIRECT_CONTACT.map(({ Icon, label, value, href, external, note }) => {
                 const content = (
                   <>
