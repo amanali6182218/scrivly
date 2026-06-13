@@ -50,24 +50,32 @@ export default function Navbar() {
     };
 
     const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser({ id: session.user.id, email: session.user.email });
-        await loadProfile(session.user.id);
+      // getUser() validates the token with Supabase rather than reading
+      // the (possibly stale) local session, so it's reliable right after
+      // navigating to a fresh public page.
+      const { data: { user: authUser }, error } = await supabase.auth.getUser();
+      if (authUser && !error) {
+        setUser({ id: authUser.id, email: authUser.email });
+        await loadProfile(authUser.id);
       }
       setLoading(false);
     };
 
     init();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
       if (session?.user) {
         setUser({ id: session.user.id, email: session.user.email });
         await loadProfile(session.user.id);
-      } else {
-        setUser(null);
-        setProfile(null);
       }
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -80,8 +88,15 @@ export default function Navbar() {
         setMenuOpen(false);
       }
     };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [menuOpen]);
 
   const handleSignOut = async () => {
@@ -127,11 +142,22 @@ export default function Navbar() {
           <ThemeToggle />
 
           {loading ? (
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-20 animate-pulse rounded-lg" style={{ background: "var(--bg-elevated)" }} />
-              <div className="h-9 w-9 animate-pulse rounded-full" style={{ background: "var(--bg-elevated)" }} />
-            </div>
+            // Reserve space for the auth area so nothing shifts once it
+            // resolves, but show nothing while we wait — avoids a flash
+            // of placeholder boxes on every page load.
+            <div style={{ width: "140px", height: "36px" }} />
           ) : user ? (
+            <div className="flex items-center gap-3">
+              <span
+                className="rounded-full px-3 py-1.5 text-xs font-bold"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,184,0,0.18) 0%, rgba(255,61,139,0.18) 100%)",
+                  border: "1px solid rgba(255,138,0,0.35)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                ⚡ {profile?.credits ?? 0} credits
+              </span>
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
@@ -179,6 +205,14 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                   <Link
+                    href="/account/history"
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Generation History
+                  </Link>
+                  <Link
                     href="/account"
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-[var(--bg-elevated)]"
@@ -206,6 +240,7 @@ export default function Navbar() {
                   </button>
                 </div>
               )}
+            </div>
             </div>
           ) : (
             <>
