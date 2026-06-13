@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 import Avatar from "@/components/Avatar";
@@ -29,6 +29,7 @@ type NavbarProfile = {
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -110,7 +111,6 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const isPowerSeller = profile?.pack_tier === "power";
   const displayName = profile?.full_name || user?.email || "";
 
   return (
@@ -126,12 +126,16 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              className="text-sm transition hover:text-[var(--text-primary)]"
+              style={{
+                color: pathname === link.href ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: pathname === link.href ? 600 : 500,
+              }}
             >
               {link.label}
             </Link>
@@ -149,11 +153,12 @@ export default function Navbar() {
           ) : user ? (
             <div className="flex items-center gap-3">
               <span
-                className="rounded-full px-3 py-1.5 text-xs font-bold"
+                className="whitespace-nowrap rounded-[20px] px-[14px] py-[6px] text-[13px] font-medium"
                 style={{
-                  background: "linear-gradient(135deg, rgba(255,184,0,0.18) 0%, rgba(255,61,139,0.18) 100%)",
-                  border: "1px solid rgba(255,138,0,0.35)",
-                  color: "var(--text-primary)",
+                  background: "rgba(255,184,0,0.15)",
+                  border: "1px solid rgba(255,184,0,0.3)",
+                  color: "#FFB800",
+                  cursor: "default",
                 }}
               >
                 ⚡ {profile?.credits ?? 0} credits
@@ -186,12 +191,28 @@ export default function Navbar() {
                     {profile?.full_name && (
                       <p className="truncate text-xs" style={{ color: "var(--text-muted)" }}>{user.email}</p>
                     )}
-                    {isPowerSeller && (
+                    {profile?.pack_tier === "power" && (
                       <span
                         className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                        style={{ background: "linear-gradient(90deg, #FF8A00, #7B2FFF)" }}
+                        style={{ background: "linear-gradient(135deg, #FFB800, #FF3D8B, #7B2FFF)" }}
                       >
-                        Power Seller
+                        ⚡ Power Seller
+                      </span>
+                    )}
+                    {profile?.pack_tier === "pro" && (
+                      <span
+                        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold"
+                        style={{ background: "rgba(123,47,255,0.2)", color: "#CC99FF" }}
+                      >
+                        Pro
+                      </span>
+                    )}
+                    {profile?.pack_tier === "starter" && (
+                      <span
+                        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold"
+                        style={{ background: "rgba(100,100,100,0.2)", color: "var(--text-muted)" }}
+                      >
+                        Starter
                       </span>
                     )}
                   </div>
@@ -233,8 +254,8 @@ export default function Navbar() {
                     type="button"
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[var(--bg-elevated)] disabled:opacity-50"
-                    style={{ color: "var(--text-secondary)" }}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition hover:bg-[rgba(255,61,139,0.1)] disabled:opacity-50"
+                    style={{ color: "#FF3D8B" }}
                   >
                     {signingOut ? "Signing out…" : "Sign Out"}
                   </button>
