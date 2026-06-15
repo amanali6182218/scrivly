@@ -2,6 +2,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import AuthCtaBanner from "@/components/AuthCtaBanner";
+import Step1Etsy from "@/components/illustrations/Step1Etsy";
+import Step2Redeem from "@/components/illustrations/Step2Redeem";
+import Step3Upload from "@/components/illustrations/Step3Upload";
+import Step4Publish from "@/components/illustrations/Step4Publish";
 
 export const metadata = {
   title: "How It Works — Scrivly",
@@ -11,17 +15,20 @@ export const metadata = {
 const STEPS = [
   {
     number: "01",
+    illustration: Step1Etsy,
     title: "Get your credit pack on Etsy",
     body: "Visit our Etsy shop and choose the credit pack that fits your needs. Starter (100 credits / $9), Pro (250 credits / $19), or Power (500 credits / $35). Purchase securely through Etsy's checkout. Your unique redeem code arrives in your Etsy messages within 1–2 minutes of purchase.",
   },
   {
     number: "02",
+    illustration: Step2Redeem,
     title: "Sign up and redeem your code",
     body: "Go to scrivly.vercel.app and create your free account with just your email address. Confirm your email, then go to your dashboard. You will see the redeem code banner at the top — enter your unique code and click Activate Credits. Your credits are added to your account instantly.",
     note: "New accounts start with 0 credits — purchase a credit pack on Etsy to get started.",
   },
   {
     number: "03",
+    illustration: Step3Upload,
     title: "Upload your product photo",
     body: "Click the Photo to Listing tab in your dashboard. Upload any clear product photo — from your phone, camera, or computer. Scrivly reads the image with AI vision technology and identifies the product automatically. Add any extra details the photo cannot show (materials, size, scent). Click Generate Listing from Photo.",
     items: [
@@ -34,12 +41,14 @@ const STEPS = [
   },
   {
     number: "04",
+    illustration: Step4Publish,
     title: "Paste into Etsy and publish",
     body: "Your complete listing appears in the results panel. Review the title, description, and tags. Check your price suggestion and health score. Click Copy Complete Listing to copy everything to your clipboard in one click. Open your Etsy listing form and paste. Or connect your Etsy shop and use Post to Etsy to fill everything automatically.",
   },
 ];
 
 function StepRow({ step, reverse }) {
+  const Illustration = step.illustration;
   return (
     <div className={`grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2 ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}>
       <div className="text-left">
@@ -67,10 +76,15 @@ function StepRow({ step, reverse }) {
       </div>
 
       <div
-        className="flex min-h-[200px] items-center justify-center rounded-2xl border"
-        style={{ borderColor: "var(--border-default)", background: "var(--bg-card)" }}
+        style={{
+          background: "var(--bg-card)",
+          borderRadius: "16px",
+          padding: "24px",
+          border: "1px solid var(--border-default)",
+          overflow: "hidden",
+        }}
       >
-        <span className="gradient-text text-7xl font-extrabold opacity-30 sm:text-8xl">{step.number}</span>
+        <Illustration />
       </div>
     </div>
   );
