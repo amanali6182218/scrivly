@@ -2,6 +2,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import AuthCtaBanner from "@/components/AuthCtaBanner";
+import Feature1Photo from "@/components/illustrations/Feature1Photo";
+import Feature2Price from "@/components/illustrations/Feature2Price";
+import Feature3Health from "@/components/illustrations/Feature3Health";
+import Feature4Spy from "@/components/illustrations/Feature4Spy";
+import Feature5Category from "@/components/illustrations/Feature5Category";
+import Feature6Post from "@/components/illustrations/Feature6Post";
 
 export const metadata = {
   title: "Features — Scrivly",
@@ -134,33 +140,7 @@ export default function FeaturesPage() {
             subheading="Upload once. Get everything."
             body="Take any product photo — straight from your phone or camera. Scrivly's AI reads the image with vision technology, identifying materials, colors, style, and the likely buyer. In under 30 seconds you have a complete, ready-to-paste Etsy listing."
             items={["SEO title up to 140 characters", "Full description 400–600 words", "All 13 Etsy tags"]}
-            visual={
-              <div className="rounded-2xl border p-6 text-left" style={{ borderColor: "var(--border-default)", background: "var(--bg-card)" }}>
-                <p className="gradient-text text-xs font-semibold uppercase tracking-wide">Listing title</p>
-                <p className="mt-1.5 text-sm font-medium text-[var(--text-primary)]">
-                  Handmade Ceramic Coffee Mug — Speckled Stoneware, Minimalist Gift for Coffee Lovers
-                </p>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent-pink)" }}>
-                  Listing description
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
-                  This handmade ceramic coffee mug is crafted from speckled stoneware clay, fired to a smooth
-                  matte finish...
-                </p>
-                <p className="gradient-text mt-4 text-xs font-semibold uppercase tracking-wide">Tags</p>
-                <div className="mt-1.5 flex flex-wrap gap-2">
-                  {["ceramic mug", "handmade pottery", "+ 11 more"].map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full px-3 py-1 text-xs font-medium"
-                      style={{ background: "rgba(123,47,255,0.15)", border: "1px solid rgba(123,47,255,0.3)", color: "#CC99FF" }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            }
+            visual={<Feature1Photo />}
           />
 
           <FeatureRow
@@ -175,6 +155,7 @@ export default function FeaturesPage() {
               "Analysis based on real Etsy listings",
             ]}
             reverse
+            visual={<Feature2Price />}
           />
 
           <FeatureRow
@@ -189,6 +170,7 @@ export default function FeaturesPage() {
               "All 13 tags filled — 20 pts",
               "Tag variety (1, 2 and 3-word mix) — 20 pts",
             ]}
+            visual={<Feature3Health />}
           />
 
           <FeatureRow
@@ -198,6 +180,7 @@ export default function FeaturesPage() {
             body="Paste any competitor's Etsy listing URL. Scrivly analyzes their title, description, and tags, identifies exactly what is weak, and generates you a stronger version that ranks better in Etsy search. The most powerful research tool for active Etsy sellers."
             items={["Their title keyword structure", "Gaps in their description", "Missing or weak tags", "Price positioning"]}
             reverse
+            visual={<Feature4Spy />}
           />
 
           <FeatureRow
@@ -205,6 +188,7 @@ export default function FeaturesPage() {
             heading="Auto Category Detection"
             subheading="Right category. Every time."
             body="Upload your product photo and Scrivly automatically suggests the most appropriate Etsy category from the full official category list. Three suggestions ranked by confidence, with the reasoning shown. Auto-selects the best match so your listing is in the right place from the start."
+            visual={<Feature5Category />}
           />
 
           <FeatureRow
@@ -214,6 +198,7 @@ export default function FeaturesPage() {
             body="Connect your Etsy shop and post your generated listing as a draft directly from Scrivly. No copy-pasting. No switching tabs. The title, description, tags, and price are all filled in automatically. You review the draft on Etsy, add your photos, and publish."
             note="Requires Etsy shop connection. Available to all Scrivly users."
             reverse
+            visual={<Feature6Post />}
           />
         </div>
 
