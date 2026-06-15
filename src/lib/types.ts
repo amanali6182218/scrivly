@@ -30,6 +30,7 @@ export interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
+  primarySearchPhrase?: string;
   identifiedMaterials?: IdentifiedMaterials;
 }
 

@@ -384,6 +384,77 @@ function MaterialAnalysisCard({ materials }: { materials: GeneratedListing["iden
   );
 }
 
+function PrimarySearchPhraseBox({ phrase }: { phrase?: string }) {
+  if (!phrase) return null;
+
+  return (
+    <div
+      className="flex items-center justify-between gap-3 rounded-lg px-4 py-2.5"
+      style={{ background: "rgba(255,184,0,0.1)", border: "1px solid rgba(255,184,0,0.3)" }}
+    >
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-orange">Primary Keyword</p>
+        <p className="text-base font-bold text-[var(--text-primary)]">{phrase}</p>
+      </div>
+      <p className="shrink-0 text-xs text-[var(--text-muted)]">Appears 3× in description</p>
+    </div>
+  );
+}
+
+const SEO_TIPS = [
+  {
+    title: "Title",
+    text: "Put your most important keyword FIRST in your title. Etsy weighs the beginning of titles more heavily in search ranking.",
+  },
+  {
+    title: "Tags",
+    text: "Use all 13 tags. Each tag is a separate search opportunity. Never leave tags empty.",
+  },
+  {
+    title: "Description",
+    text: "Your first 160 characters appear in Google search results. Make them count.",
+  },
+];
+
+function SeoTipsSection() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-5 shadow-sm">
+      <button
+        type="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        className="flex w-full items-center justify-between gap-3 text-left"
+      >
+        <h3 className="gradient-text text-sm font-semibold uppercase tracking-wide">Quick SEO Tips</h3>
+        <svg
+          className={`h-4 w-4 shrink-0 text-[var(--text-secondary)] transition-transform ${expanded ? "rotate-180" : ""}`}
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {expanded && (
+        <div className="mt-4 space-y-2">
+          {SEO_TIPS.map((tip) => (
+            <div
+              key={tip.title}
+              className="flex items-start gap-3 rounded-lg p-3"
+              style={{ background: "var(--bg-elevated)" }}
+            >
+              <span className="text-lg">💡</span>
+              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
+                <span className="font-semibold text-[var(--text-primary)]">{tip.title}:</span> {tip.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function titleCounterInfo(length: number): { className: string; label: string } {
   if (length < 100) return { className: "text-[#FF3D8B]", label: "Too short" };
   if (length < 120) return { className: "text-[#FFB800]", label: "Good" };
@@ -471,6 +542,8 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
 
       <MaterialAnalysisCard materials={listing.identifiedMaterials} />
 
+      <PrimarySearchPhraseBox phrase={listing.primarySearchPhrase} />
+
       <Section title="Listing Title" copyText={listing.title} copyLabel="title">
         <p className="text-sm leading-relaxed text-[var(--text-primary)]">{listing.title}</p>
         <p className={`mt-2 text-xs font-semibold ${titleInfo.className}`}>
@@ -500,6 +573,8 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
       )}
 
       <ListingHealthScore listing={listing} onFix={onFix} isGenerating={isGenerating} />
+
+      <SeoTipsSection />
 
       {showToast && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-lg

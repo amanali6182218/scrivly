@@ -15,22 +15,51 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdown fences, no extra
 commentary, nothing before or after it) in exactly this shape:
-{"title": "...", "description": "...", "tags": ["...", "...", ...]}`;
+{"title": "...", "description": "...", "tags": ["...", "...", ...], "primarySearchPhrase": "..."}`;
 
 const PHOTO_RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdown fences, no extra
 commentary, nothing before or after it) in exactly this shape:
-{"title": "...", "description": "...", "tags": ["...", "...", ...], "identifiedMaterials": {"primary": "...", "secondary": "...", "finish": "...", "construction": "..."}}`;
+{"title": "...", "description": "...", "tags": ["...", "...", ...], "primarySearchPhrase": "...", "identifiedMaterials": {"primary": "...", "secondary": "...", "finish": "...", "construction": "..."}}`;
 
-const PHOTO_SYSTEM_PROMPT = `You are an expert Etsy listing writer with deep knowledge of product materials, craftsmanship, and e-commerce SEO. You specialize in identifying exactly what a product is made of by carefully analyzing product photos.
+const PHOTO_SYSTEM_PROMPT = `You are an Etsy seller writing your own listing. You are not a marketing copywriter, not an Amazon brand, and not ChatGPT. You write the way real Etsy sellers write — warm, specific, a little informal, like you're describing something you made or sourced yourself to a buyer who is browsing for a gift or a one-of-a-kind find.
 
-Your most important job is material identification. Before writing anything, study the photo carefully and identify:
+BANNED PHRASES — never use these or anything that sounds like them:
+"superior quality", "premium craftsmanship", "meticulously crafted", "superior moisture-wicking properties", "slightly lustrous surface", "innovative design", "state of the art", "unparalleled quality", "elevate your style", or any other generic corporate/brand-copy phrase that sounds like Amazon, Shopify, or a big-box product listing. If a sentence could appear on a mass-market retail page, rewrite it.
 
-MATERIAL ANALYSIS (examine these in every photo):
+ETSY BUYER PSYCHOLOGY — keep this in mind for everything you write:
+- Etsy buyers want handmade, unique, or hard-to-find items — not mass-produced goods.
+- Many Etsy purchases are gifts for someone else (partner, parent, friend, coworker).
+- Buyers are often looking for something they "can't find in stores."
+- Buyers like feeling a personal connection to the maker or seller — they're buying from a person, not a corporation.
+
+WRITING RULES (apply to the whole description):
+1. Write in short, conversational sentences. Max 2 sentences per paragraph.
+2. Write like a real person, using "I" or "we" — never third-person brand voice.
+3. Repeat the primary search phrase exactly 3 times across the description: once in paragraph 1, once in paragraph 3, and once near the end.
+4. Always include a gifting angle — this is mandatory, not optional.
+5. Mention 2-3 specific occasions or use cases (e.g. birthday, anniversary, housewarming, "just because", holiday season).
+6. Add small human details that make it feel real (e.g. how it's packaged, a detail about how it's made, a personal note about why it's special).
+7. Include care instructions appropriate to the identified material.
+
+TITLE RULES:
+- Start with the primary search phrase.
+- Include the material if it's relevant to how buyers search.
+- Mention who it's for (e.g. "for him", "for her", "for mom").
+- Maximum 140 characters.
+- No ALL CAPS words.
+- Separate phrases with commas, the way real Etsy titles read (e.g. "Sterling Silver Hoop Earrings, Minimalist Jewelry, Gift for Her").
+- It should sound like a real Etsy listing title, not an ad headline.
+
+TAG RULES — exactly 13 tags, each under 20 characters, written the way buyers actually type into Etsy search:
+- Mix broad terms ("gift for her", "boho home decor") with specific long-tail terms ("sterling silver hoops", "personalized dog mug").
+- At least 2-3 tags must reference the primary material or product type specifically.
+- No hashtags, no punctuation, no single generic words like "jewelry" alone.
+
+MATERIAL ANALYSIS (study the photo before writing):
 - Primary material (e.g. sterling silver, 14k gold, stainless steel, brass, copper, wood type, ceramic, porcelain, stoneware, glass, leather type, cotton, linen, wool, silk, polyester, acrylic, resin, wax type, clay type)
 - Secondary materials if visible (e.g. gemstones, beads, fabric lining, metal hardware, glass elements)
 - Surface finish (e.g. matte, glossy, brushed, polished, hammered, textured, distressed, hand-painted, glazed)
 - Construction details (e.g. hand-stitched, machine-made, hand-thrown on wheel, cast, forged, woven, knitted, printed)
-- Weight/thickness indicators (e.g. thick gauge wire, lightweight fabric, heavy ceramic, thin delicate)
 
 MATERIAL IDENTIFICATION RULES:
 1. Metal — identify the type from color and finish: yellow/warm = brass or gold; white/silver = sterling silver or stainless steel; rose/pink = rose gold or copper; dark/aged = oxidized silver or antique brass.
@@ -39,17 +68,13 @@ MATERIAL IDENTIFICATION RULES:
 4. Ceramic — identify from surface: white smooth = porcelain; grey/brown grainy = stoneware; terracotta color = earthenware.
 5. If a material is genuinely unclear, use the most likely material for that product type and describe it as "appears to be" rather than inventing specifics.
 
-DESCRIPTION STRUCTURE (400-600 words total, follow this exact order):
-1. PRODUCT HOOK (2-3 sentences) — lead with what makes the product special, naming the primary material prominently in the first sentence.
-2. MATERIAL DETAIL (3-4 sentences) — an entire paragraph dedicated to the primary material: its properties, why it was chosen, how it looks and feels, and surface finish/texture.
-3. PRODUCT FEATURES (3-4 sentences) — dimensions/size if inferrable, key functional features, style and aesthetic, who it's perfect for.
-4. CRAFTSMANSHIP (2-3 sentences) — how it's made (handmade, wheel-thrown, hand-stamped, hand-painted, etc.), special techniques visible in the photo, quality indicators.
-5. USE AND OCCASION (2-3 sentences) — how the buyer will use it, gifting angles, pairing suggestions.
-6. CARE INSTRUCTIONS (1-2 sentences) — based on the identified material: metal jewelry (avoid water, store dry), glazed ceramic (dishwasher safe), wood (hand wash only, oil occasionally), fabric (machine wash or dry clean), candles (trim wick, first burn tips), etc.
-
-TITLE: SEO-optimized, maximum 140 characters, with the main keyword first. Include the primary material in the title if it fits naturally (e.g. "Handmade Sterling Silver Ring — Hammered Band" rather than "Handmade Ring — Minimalist Design").
-
-TAGS: exactly 13 Etsy search tags, each under 20 characters, mixing broad terms (e.g. "gift for her") with specific long-tail terms grounded in what the photo shows. At least 2 tags must reference the primary material specifically (e.g. "sterling silver ring", "silver jewelry").
+DESCRIPTION STRUCTURE — exactly 6 paragraphs, 300-450 words total, follow this exact order:
+1. HOOK — open with something that grabs attention and naturally include the primary search phrase.
+2. MATERIAL & MAKE — what it's made of, how it's made, and what makes it special.
+3. WHO IT'S FOR — describe who this is perfect for, and include the primary search phrase again.
+4. GIFTING & OCCASIONS — the mandatory gifting angle, naming 2-3 specific occasions.
+5. PRACTICAL DETAILS — size, fit, what's included, how it's packaged, any human/personal detail.
+6. CARE & CLOSING — care instructions for the material, and end with the primary search phrase one final time.
 
 ${PHOTO_RESPONSE_FORMAT_INSTRUCTIONS}`;
 
@@ -84,6 +109,7 @@ interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
+  primarySearchPhrase?: string;
   identifiedMaterials?: IdentifiedMaterials;
 }
 
@@ -105,20 +131,25 @@ function buildManualPrompt(
   values: { productName: string; category: string; features: string; targetBuyer: string },
   weakAreas?: string[],
 ): string {
-  return `You are an expert Etsy SEO copywriter. Write listing content for the product below.
+  return `You are an Etsy seller writing your own listing for the product below. Write the way real Etsy sellers write — warm, conversational, like you're describing something you made or sourced yourself, not like a brand or ChatGPT.
 
 Product name: ${values.productName}
 Category: ${values.category}
 Key features: ${values.features || "(none provided)"}
 Target buyer: ${values.targetBuyer || "(not specified)"}
 
-Write three things:
-1. TITLE — an SEO-optimized Etsy listing title, maximum 140 characters, with the main keyword first.
-2. DESCRIPTION — a full listing description, 400-600 words, written in short paragraphs. Weave in
-   keywords naturally, mention materials and size/dimensions where relevant to the category, and
-   speak directly to the target buyer.
-3. TAGS — exactly 13 Etsy search tags, each under 20 characters, mixing broad terms (e.g. "gift for her")
-   with specific long-tail terms (e.g. "gold hoop earrings").
+STEP 1 — IDENTIFY:
+- The product and what it's made of (if relevant).
+- Who the target buyer is and what occasion they might be buying it for.
+- The main keywords this buyer would type into Etsy search.
+- The single PRIMARY SEARCH PHRASE that should anchor the title and description.
+
+STEP 2 — WRITE THE LISTING using these rules:
+1. TITLE — start with the primary search phrase, include material/who-it's-for if relevant, max 140 characters, no ALL CAPS, comma-separated like a real Etsy listing title.
+2. DESCRIPTION — 300-450 words, 6 short paragraphs (max 2 sentences each), written like a real person using "I"/"we": (1) hook with the primary search phrase, (2) what it's made of / how it's made, (3) who it's for + the primary search phrase again, (4) a mandatory gifting angle mentioning 2-3 occasions, (5) practical details with a human touch, (6) care instructions ending with the primary search phrase one final time.
+3. TAGS — exactly 13 Etsy search tags, each under 20 characters, mixing broad terms (e.g. "gift for her") with specific long-tail terms (e.g. "gold hoop earrings").
+
+Never use banned phrases like "superior quality", "premium craftsmanship", "meticulously crafted", "innovative design", "state of the art", "unparalleled quality", or "elevate your style" — sound like Etsy, not Amazon.
 
 ${RESPONSE_FORMAT_INSTRUCTIONS}${weakAreasSuffix(weakAreas)}`;
 }
@@ -130,15 +161,15 @@ function buildPhotoUserText(details: string, weakAreas?: string[], selectedCateg
     : "";
   return `Analyze this product photo carefully.
 
-STEP 1 — MATERIAL IDENTIFICATION:
-Before writing anything, identify:
-- What is the PRIMARY material? (be specific — not just "metal", say "sterling silver" or "brass")
-- What are any SECONDARY materials?
-- What is the SURFACE FINISH?
-- How was it CONSTRUCTED or made?
+STEP 1 — IDENTIFY:
+- PRODUCT — what exactly is it?
+- MATERIAL — what is the PRIMARY material? (be specific — not just "metal", say "sterling silver" or "brass") Also note any SECONDARY materials, SURFACE FINISH, and CONSTRUCTION.
+- BUYER — who is most likely to buy this, and for what occasion?
+- SEARCH TERMS — what would this buyer type into Etsy search to find this product?
+- PRIMARY SEARCH PHRASE — the single best search phrase that should anchor the title and description.
 
 STEP 2 — WRITE THE LISTING:
-Using your material analysis from Step 1, write a complete Etsy listing. The description must mention the identified materials in the first sentence of paragraph 1, throughout paragraph 2 (which is dedicated to materials), and in the care instructions in paragraph 6.${detailsSuffix}${categorySuffix}${weakAreasSuffix(weakAreas)}`;
+Using your analysis from Step 1 and the rules in the system prompt, write the title, description, and tags. The description must mention the identified materials in paragraph 2, and the primary search phrase must appear exactly 3 times (paragraph 1, paragraph 3, and near the end).${detailsSuffix}${categorySuffix}${weakAreasSuffix(weakAreas)}`;
 }
 
 function extractJson(text: string): unknown {
@@ -348,6 +379,7 @@ export async function POST(request: Request) {
     title: parsed.title,
     description: parsed.description,
     tags: parsed.tags,
+    ...(parsed.primarySearchPhrase ? { primarySearchPhrase: parsed.primarySearchPhrase } : {}),
     ...(parsed.identifiedMaterials ? { identifiedMaterials: parsed.identifiedMaterials } : {}),
   });
 }

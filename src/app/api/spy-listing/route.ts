@@ -37,10 +37,10 @@ Find exactly 3 specific weaknesses in their listing. Look for things like:
 - Generic language that applies to any product (not specific to theirs)
 
 STEP 2 — GENERATE A BETTER LISTING
-Write a superior version of their listing:
+Write a superior version of their listing. Write it the way a real Etsy seller would — conversational, using "I"/"we", like you're talking to a buyer, not like a brand or an ad. Sound like Etsy, not Amazon or Shopify. Avoid corporate marketing phrases (e.g. "superior quality", "premium craftsmanship", "meticulously crafted", "elevate your style") — if a sentence could appear on a mass-market retail page, rewrite it.
 - TITLE: Use the same core product keywords but improve structure. Put the strongest search term first. Maximum 140 characters. Do not just rephrase — make it genuinely more searchable.
-- DESCRIPTION: Write 400-600 words. Fix the weaknesses you identified. Address buyer emotions and needs. Be specific about materials, dimensions, and use cases. Use short paragraphs and natural keyword placement.
-- TAGS: Write exactly 13 tags, each under 20 characters. Include tags the competitor missed. Mix broad terms (e.g. "gift for her") with specific long-tail terms (e.g. "gold leaf earrings"). Think about what buyers type when they don't know the seller's brand name.
+- DESCRIPTION: Write 300-450 words in short, conversational paragraphs (max 2 sentences each). Fix the weaknesses you identified. Repeat the primary search phrase naturally 3 times across the description. Include a gifting angle. Address buyer emotions and needs. Be specific about materials, dimensions, and use cases.
+- TAGS: Write exactly 13 tags, each under 20 characters, in Etsy search format. Include tags the competitor missed. Mix broad terms (e.g. "gift for her") with specific long-tail terms (e.g. "gold leaf earrings"). Think about what buyers type when they don't know the seller's brand name.
 
 STEP 3 — ESTIMATE SEARCH VOLUME
 Give a rough estimate of monthly Etsy searches for the main keyword (e.g. "~2,000–5,000/mo" or "~10,000+/mo"). This is an educated estimate based on the category and keyword competitiveness — make it useful, not just "unknown".

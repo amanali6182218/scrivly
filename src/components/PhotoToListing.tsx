@@ -221,6 +221,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         title: data.title,
         description: data.description,
         tags: data.tags,
+        ...(data.primarySearchPhrase ? { primarySearchPhrase: data.primarySearchPhrase } : {}),
         ...(data.identifiedMaterials ? { identifiedMaterials: data.identifiedMaterials } : {}),
       };
       onResultChange?.({ listing: newListing, priceResult: null });
@@ -386,7 +387,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           <textarea
             id="details"
             rows={3}
-            placeholder={'e.g. "925 sterling silver, handmade, size 7 ring", "100% soy wax, vanilla scent, 8oz jar", "A4 size, 300gsm watercolor paper"'}
+            placeholder={"Help the AI write better — add: material (e.g. '925 sterling silver'), size, who it's for, or your main keyword. Example: 'handmade, sterling silver, size 7 ring, gift for girlfriend'"}
             className={textareaClasses}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
@@ -461,9 +462,9 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
 
         <p className="mt-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-input)] px-4 py-3 text-xs
           text-[var(--text-secondary)] sm:text-sm">
-          <span className="font-semibold text-[var(--text-primary)]">Tip:</span> Claude identifies materials from
-          your photo automatically. For best results add material details in the box below — e.g.
-          &quot;925 sterling silver&quot; or &quot;100% soy wax&quot;. This ensures accurate descriptions.
+          <span className="font-semibold text-[var(--text-primary)]">Tip:</span> Add your main keyword in the
+          details box for best results. e.g. &quot;sterling silver ring&quot; or &quot;men beige tracksuit&quot;.
+          Scrivly writes your listing around that keyword.
         </p>
       </div>
 

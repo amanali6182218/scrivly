@@ -40,24 +40,24 @@ const PRICING_PLANS = [
   {
     name: "Starter",
     price: "$9",
-    credits: "100 credits",
-    listings: "33 listings · or 6 with price research",
+    listings: "~33 complete listings",
+    perListing: "($0.27 per listing)",
     blurb: "Perfect to start",
     featured: false,
   },
   {
     name: "Pro Pack",
     price: "$19",
-    credits: "250 credits",
-    listings: "83 listings · or 16 with price research",
+    listings: "~83 complete listings",
+    perListing: "($0.23 per listing)",
     blurb: "Best value · bulk CSV export",
     featured: true,
   },
   {
     name: "Power Seller",
     price: "$35",
-    credits: "500 + 50 bonus credits",
-    listings: "183 listings · or 36 with price research",
+    listings: "~166 complete listings",
+    perListing: "($0.21 per listing)",
     blurb: "Priority support · unlimited history",
     featured: false,
   },
@@ -82,8 +82,9 @@ export default function LandingPage() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-base text-[var(--text-secondary)] sm:text-lg">
-          Upload a product photo and get a complete, SEO-optimized title, description, and tag set in
-          seconds. Or paste a competitor&apos;s listing URL and we&apos;ll write you a better version.
+          Upload your product photo and get a complete Etsy listing in 30 seconds. Title, description,
+          and 13 tags — written the way Etsy buyers actually search. Not generic AI copy. Etsy-specific,
+          every time.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -103,9 +104,13 @@ export default function LandingPage() {
           </Link>
         </div>
 
+        <p className="mt-3 text-center text-[13px] text-[var(--text-muted)]">
+          No account needed to start · Credits from $9 · Never expire
+        </p>
+
         {/* Social proof bar */}
         <div className="mt-10 border-y border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-4 py-2.5 text-xs font-medium text-[var(--text-secondary)] sm:text-sm">
-          ⭐ Trusted by 500+ Etsy sellers · 10,000+ listings generated · Average listing score: 84/100
+          ⚡ AI-powered by Claude · Built for Etsy sellers · 30 second generation
         </div>
 
         {/* Demo video */}
@@ -154,6 +159,163 @@ export default function LandingPage() {
               <p className="text-sm text-[var(--text-secondary)]">{feature.description}</p>
             </div>
           ))}
+        </div>
+
+        {/* Why Scrivly instead of ChatGPT */}
+        <div className="mt-20">
+          <p className="gradient-text text-center text-xs font-semibold uppercase tracking-wide">THE DIFFERENCE</p>
+          <h2 className="mt-2 text-center text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
+            Why Scrivly instead of ChatGPT?
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-sm text-[var(--text-secondary)] sm:text-base">
+            Every Etsy seller has tried asking ChatGPT to write their listings. Here is why it does not
+            work — and why Scrivly does.
+          </p>
+
+          <div
+            className="mx-auto mt-10 overflow-hidden text-left"
+            style={{ background: "var(--bg-card)", borderRadius: "16px", maxWidth: "900px", padding: "48px" }}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <th className="p-3 text-left font-semibold text-[var(--text-primary)]">Feature</th>
+                    <th className="p-3 text-left font-semibold" style={{ color: "var(--text-muted)" }}>ChatGPT</th>
+                    <th className="gradient-text p-3 text-left font-semibold">Scrivly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Reads your product photo", "❌ Can't see your actual product", "✅ Analyzes the photo and writes from what it sees"],
+                    ["140-character title limit", "❌ Doesn't know Etsy's limits", "✅ Built to fit Etsy's exact title rules"],
+                    ["Generates 13 tags", "❌ Gives you a handful of generic tags", "✅ Always 13 tags, in Etsy search format"],
+                    ["Listing health score", "❌ No way to know if it's good", "✅ Every listing gets a 0-100 health score"],
+                    ["Live price research", "❌ No idea what to charge", "✅ Suggests a price range based on real data"],
+                    ["Competitor analysis", "❌ Can't analyze other listings", "✅ Paste a competitor's URL and get a stronger version"],
+                    ["Etsy-specific writing style", "❌ Sounds like generic AI / Amazon copy", "✅ Written the way real Etsy sellers write"],
+                    ["Time per listing", "❌ 20-30 minutes of prompting and editing", "✅ 30 seconds"],
+                  ].map((row, i) => (
+                    <tr key={row[0]} style={{ background: i % 2 === 0 ? "transparent" : "var(--bg-elevated)" }}>
+                      <td className="p-3 font-medium text-[var(--text-primary)]">{row[0]}</td>
+                      <td className="p-3" style={{ color: "#EF4444" }}>{row[1]}</td>
+                      <td className="p-3" style={{ color: "#22C55E" }}>{row[2]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="mt-10 text-center">
+            <h3 className="text-xl font-bold text-[var(--text-primary)] sm:text-2xl">Ready to see the difference?</h3>
+            <Link
+              href="/signup"
+              className="mt-5 inline-flex rounded-lg bg-brand px-8 py-3.5 text-base font-semibold text-white shadow-md
+                transition hover:shadow-[0_0_30px_rgba(255,61,139,0.4)]"
+            >
+              Try it free
+            </Link>
+          </div>
+        </div>
+
+        {/* Before / After example */}
+        <div className="mt-20">
+          <h2 className="text-center text-2xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-3xl">
+            See the difference in 10 seconds
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-sm text-[var(--text-secondary)] sm:text-base">
+            Real example. Same product. Before and after Scrivly.
+          </p>
+
+          <div className="mt-10 grid gap-6 text-left sm:grid-cols-2">
+            {/* Without Scrivly */}
+            <div
+              className="rounded-2xl p-6 sm:p-8"
+              style={{ background: "var(--bg-secondary)", border: "1px solid rgba(239,68,68,0.2)" }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+                WITHOUT SCRIVLY
+              </p>
+
+              <div className="mt-3 flex items-start justify-between gap-3">
+                <h3 className="font-semibold text-[var(--text-primary)]">Beige Tracksuit Set</h3>
+                <span
+                  className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold"
+                  style={{ background: "rgba(239,68,68,0.15)", color: "#EF4444" }}
+                >
+                  38/100
+                </span>
+              </div>
+
+              <div className="mt-3 space-y-1.5 text-sm italic text-[var(--text-muted)]">
+                <p>This tracksuit features superior quality fabric with superior moisture-wicking</p>
+                <p>properties. Meticulously crafted with an innovative design and a slightly</p>
+                <p>lustrous surface, it offers unparalleled quality and will elevate your style.</p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {["premium athletic wear", "quality tracksuit", "athletic clothing"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full px-3 py-1 text-xs font-medium"
+                    style={{ background: "var(--bg-elevated)", color: "var(--text-muted)" }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-4 text-xs font-medium" style={{ color: "#EF4444" }}>
+                ❌ Too short · Wrong tag format · No keywords · Sounds like Amazon
+              </p>
+            </div>
+
+            {/* With Scrivly */}
+            <div
+              className="rounded-2xl p-6 sm:p-8"
+              style={{
+                background: "linear-gradient(135deg, rgba(255,184,0,0.05), rgba(255,61,139,0.05), rgba(123,47,255,0.05))",
+                border: "1px solid rgba(34,197,94,0.2)",
+              }}
+            >
+              <p className="gradient-text text-xs font-semibold uppercase tracking-wide">WITH SCRIVLY ⚡</p>
+
+              <div className="mt-3 flex items-start justify-between gap-3">
+                <h3 className="font-semibold text-[var(--text-primary)]">
+                  Men Beige Tracksuit Set, Zip Hoodie and Joggers, Matching Lounge Set, Gift for Him
+                </h3>
+                <span
+                  className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold"
+                  style={{ background: "rgba(34,197,94,0.15)", color: "#22C55E" }}
+                >
+                  91/100
+                </span>
+              </div>
+
+              <div className="mt-3 space-y-1.5 text-sm text-[var(--text-secondary)]">
+                <p>I love this beige tracksuit set for anyone who wants comfort that still looks</p>
+                <p>put together. The zip-up hoodie and matching joggers are soft, easy to layer,</p>
+                <p>and perfect for lounging at home or running errands.</p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {["beige tracksuit men", "matching jogger set", "athletic tracksuit", "gift for him", "zip hoodie set"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full px-3 py-1 text-xs font-medium"
+                    style={{ background: "rgba(123,47,255,0.15)", border: "1px solid rgba(123,47,255,0.3)", color: "#CC99FF" }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-4 text-xs font-medium" style={{ color: "#22C55E" }}>
+                ✅ 91/100 score · 13 tags generated · Etsy search language · 30 seconds
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* See it in action */}
@@ -292,8 +454,8 @@ export default function LandingPage() {
                 <p className="mt-2 text-3xl font-extrabold text-[var(--text-primary)]">
                   {plan.price} <span className="text-sm font-medium text-[var(--text-muted)]">one-time</span>
                 </p>
-                <p className="mt-3 text-sm text-[var(--text-secondary)]">{plan.credits}</p>
-                <p className="text-sm text-[var(--text-secondary)]">{plan.listings}</p>
+                <p className="mt-3 text-sm text-[var(--text-secondary)]">{plan.listings}</p>
+                <p className="text-sm text-[var(--text-secondary)]">{plan.perListing}</p>
                 <p className="mt-2 gradient-text text-sm font-medium">{plan.blurb}</p>
                 <a
                   href="https://www.etsy.com/shop/AmanCraftio"
