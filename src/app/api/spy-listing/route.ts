@@ -37,10 +37,27 @@ Find exactly 3 specific weaknesses in their listing. Look for things like:
 - Generic language that applies to any product (not specific to theirs)
 
 STEP 2 — GENERATE A BETTER LISTING
-Write a superior version of their listing. Write it the way a real Etsy seller would — conversational, using "I"/"we", like you're talking to a buyer, not like a brand or an ad. Sound like Etsy, not Amazon or Shopify. Avoid corporate marketing phrases (e.g. "superior quality", "premium craftsmanship", "meticulously crafted", "elevate your style") — if a sentence could appear on a mass-market retail page, rewrite it.
-- TITLE: Use the same core product keywords but improve structure. Put the strongest search term first. Maximum 140 characters. Do not just rephrase — make it genuinely more searchable.
-- DESCRIPTION: Write 300-450 words in short, conversational paragraphs (max 2 sentences each). Fix the weaknesses you identified. Repeat the primary search phrase naturally 3 times across the description. Include a gifting angle. Address buyer emotions and needs. Be specific about materials, dimensions, and use cases.
-- TAGS: Write exactly 13 tags, each under 20 characters, in Etsy search format. Include tags the competitor missed. Mix broad terms (e.g. "gift for her") with specific long-tail terms (e.g. "gold leaf earrings"). Think about what buyers type when they don't know the seller's brand name.
+Write a superior version of their listing. Write it the way a real Etsy seller would — conversational, like you're talking to a buyer, not like a brand or an ad. Sound like Etsy, not Amazon or Shopify. Never use banned phrases like "superior quality", "premium craftsmanship", "meticulously crafted", "elevate your style", "high quality materials", "innovative design", "unparalleled quality", "you will love this", "perfect for anyone" — if a sentence could appear on a mass-market retail page, rewrite it.
+
+- TITLE: Use the same core product keywords but improve structure. Put the strongest search term first. Maximum 140 characters. No ALL CAPS, no exclamation marks. Comma-separated like a real Etsy title.
+
+- DESCRIPTION: Write 350-500 words following this exact 7-section format. Use • for all bullet points. Use ALL CAPS for section headers. Never use markdown like ** or ##.
+
+  Section 1 — Opening hook (2-3 sentences): Place the buyer emotionally in the product. Include the primary search keyword naturally in the first sentence. Be specific to THIS product — never generic.
+
+  Section 2 — Design or story paragraph (2-3 sentences): What makes this product unique. The aesthetic, the technique, the design decision. Fix the competitor's vagueness here.
+
+  Section 3 — DETAILS: header (exact ALL CAPS), then 4-7 bullet points with specific, measurable details. Start each bullet with the feature name: "• Material:", "• Dimensions:", "• Hardware:", etc. Fill in specifics the competitor listing missed.
+
+  Section 4 — Craftsmanship paragraph (2-3 sentences): How it was made, by hand, in small batches, to order. One human detail that transforms product page into story.
+
+  Section 5 — PERFECT FOR: header (exact ALL CAPS), then 2-4 bullets describing the ideal buyer and occasions.
+
+  Section 6 — CARE: header (exact ALL CAPS), then one or two sentences appropriate to the material.
+
+  Section 7 — Closing CTA: One sentence driving action. E.g. "Favourite this listing to find it easily later — or message us with any questions."
+
+- TAGS: Write exactly 13 tags, each under 20 characters, in Etsy search format. Mix: 3 [material][product type] tags, 3 [adjective][product] tags, 3 [product] for [person] tags, 2 [style/aesthetic][product] tags, 2 [occasion][product] tags. Include tags the competitor missed.
 
 STEP 3 — ESTIMATE SEARCH VOLUME
 Give a rough estimate of monthly Etsy searches for the main keyword (e.g. "~2,000–5,000/mo" or "~10,000+/mo"). This is an educated estimate based on the category and keyword competitiveness — make it useful, not just "unknown".
