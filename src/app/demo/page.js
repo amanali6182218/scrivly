@@ -82,7 +82,7 @@ export default function DemoPage() {
         >
           <div style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}>
             <iframe
-              src="https://www.youtube.com/embed/GywNKUjlgj0?rel=0&modestbranding=1"
+              src="https://www.youtube.com/embed/7XgoNXom6Ks?rel=0&modestbranding=1"
               title="Scrivly Demo — Full Walkthrough"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
