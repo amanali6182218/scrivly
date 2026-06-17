@@ -31,7 +31,7 @@ const PACKS = [
     listings: "33 listings · or 6 with price research",
     buttonLabel: "Buy Starter on Etsy →",
     buttonId: "etsy-starter-link",
-    href: "https://www.etsy.com/shop/AmanCraftio",
+    href: "https://www.etsy.com/listing/4520392297/starter-pack-etsy-listing-credits-ai-seo",
     checklist: [
       { label: "SEO title + description + 13 tags", included: true },
       { label: "Health score /100", included: true },
@@ -50,7 +50,7 @@ const PACKS = [
     popular: true,
     buttonLabel: "Buy Pro Pack on Etsy →",
     buttonId: "etsy-pro-link",
-    href: "https://www.etsy.com/shop/AmanCraftio",
+    href: "https://www.etsy.com/listing/4523284299/pro-pack-etsy-listing-credits-create",
     checklist: [
       { label: "Everything in Starter", included: true },
       { label: "Last 50 generations saved", included: true },
@@ -66,7 +66,7 @@ const PACKS = [
     listings: "183 listings · or 36 with price research",
     buttonLabel: "Buy Power Pack on Etsy →",
     buttonId: "etsy-power-link",
-    href: "https://www.etsy.com/shop/AmanCraftio",
+    href: "https://www.etsy.com/listing/4523295888/power-seller-pack-etsy-listing-credits",
     checklist: [
       { label: "Everything in Pro", included: true },
       { label: "Unlimited generation history", included: true },
