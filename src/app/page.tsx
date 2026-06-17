@@ -458,7 +458,7 @@ export default function LandingPage() {
                 <p className="text-sm text-[var(--text-secondary)]">{plan.perListing}</p>
                 <p className="mt-2 gradient-text text-sm font-medium">{plan.blurb}</p>
                 <a
-                  href="https://www.etsy.com/shop/AmanCraftio"
+                  href="https://www.etsy.com/listing/4523284299/pro-pack-etsy-listing-credits-create"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`mt-auto block w-full rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition ${
