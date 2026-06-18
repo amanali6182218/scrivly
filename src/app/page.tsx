@@ -129,7 +129,7 @@ export default function LandingPage() {
           >
             <div style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}>
               <iframe
-                src="https://www.youtube.com/embed/7XgoNXom6Ks?rel=0&modestbranding=1&color=white"
+                src="https://www.youtube.com/embed/lvYqXTNIiww?rel=0&modestbranding=1&color=white"
                 title="Scrivly Demo — AI Listing Generator for Etsy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
