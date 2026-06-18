@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { REFERRAL_SIGNUP_BONUS, REFERRED_USER_BONUS, buildReferralSignupEmailHtml } from '@/lib/referral'
 
@@ -14,63 +15,60 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 })
   }
 
-  const { newUserId, refCode } = body
-  if (!newUserId || !refCode) {
-    return NextResponse.json({ noReferral: true })
+  const refCode = typeof body?.refCode === 'string' ? body.refCode.trim() : ''
+  if (!refCode) {
+    return NextResponse.json({ error: 'refCode is required.' }, { status: 400 })
+  }
+
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const admin = createAdminClient()
-  const normalizedCode = String(refCode).toUpperCase().trim()
+  const normalizedCode = refCode.toUpperCase()
+
+  const { data: currentProfile } = await admin
+    .from('profiles')
+    .select('id, referred_by, device_fingerprint, credits')
+    .eq('id', user.id)
+    .single()
+
+  if (!currentProfile) {
+    return NextResponse.json({ error: 'Profile not found.' }, { status: 404 })
+  }
+
+  if (currentProfile.referred_by) {
+    return NextResponse.json({ alreadyTracked: true })
+  }
 
   const { data: referrer } = await admin
     .from('profiles')
-    .select('id, referral_code, device_fingerprint, signup_ip, credits, total_referrals, referral_credits_earned')
+    .select('id, referral_code, credits, total_referrals, referral_credits_earned')
     .eq('referral_code', normalizedCode)
     .maybeSingle()
 
   if (!referrer) {
-    return NextResponse.json({ noReferral: true })
+    return NextResponse.json({ error: 'Invalid referral code' }, { status: 404 })
   }
 
-  if (referrer.id === newUserId) {
-    return NextResponse.json({ noReferral: true, reason: 'self-referral' })
+  if (referrer.id === user.id) {
+    return NextResponse.json({ error: 'Self-referral is not allowed.' }, { status: 400 })
   }
 
-  const { data: newUser } = await admin
-    .from('profiles')
-    .select('id, device_fingerprint, signup_ip, referred_by')
-    .eq('id', newUserId)
-    .maybeSingle()
-
-  if (!newUser) {
-    return NextResponse.json({ error: 'User not found.' }, { status: 404 })
-  }
-
-  if (newUser.referred_by) {
-    return NextResponse.json({ noReferral: true, reason: 'already-referred' })
-  }
-
-  // Anti-abuse: block if this device/IP was used by the referrer themselves
-  const sameDeviceAsReferrer =
-    (newUser.device_fingerprint && newUser.device_fingerprint === referrer.device_fingerprint) ||
-    (newUser.signup_ip && newUser.signup_ip === referrer.signup_ip)
-
-  if (sameDeviceAsReferrer) {
-    return NextResponse.json({ noReferral: true, reason: 'device-match-blocked' })
-  }
-
-  // Anti-abuse: block if another account from this IP already claimed a referral bonus
-  if (newUser.signup_ip) {
-    const { data: ipReuse } = await admin
+  // Anti-abuse: block if this device fingerprint already triggered a referral bonus before
+  if (currentProfile.device_fingerprint) {
+    const { data: deviceReuse } = await admin
       .from('profiles')
       .select('id')
-      .eq('signup_ip', newUser.signup_ip)
+      .eq('device_fingerprint', currentProfile.device_fingerprint)
       .not('referred_by', 'is', null)
-      .neq('id', newUserId)
+      .neq('id', user.id)
       .maybeSingle()
 
-    if (ipReuse) {
-      return NextResponse.json({ noReferral: true, reason: 'ip-already-used-for-referral' })
+    if (deviceReuse) {
+      return NextResponse.json({ error: 'This device has already used a referral link.' }, { status: 400 })
     }
   }
 
@@ -80,8 +78,12 @@ export async function POST(request) {
 
   await admin
     .from('profiles')
-    .update({ referred_by: referrer.id, credits: REFERRED_USER_BONUS, updated_at: now })
-    .eq('id', newUserId)
+    .update({
+      referred_by: referrer.id,
+      credits: (currentProfile.credits || 0) + REFERRED_USER_BONUS,
+      updated_at: now,
+    })
+    .eq('id', user.id)
 
   await admin
     .from('profiles')
@@ -95,13 +97,13 @@ export async function POST(request) {
 
   await admin.from('referral_events').insert({
     referrer_id: referrer.id,
-    referred_id: newUserId,
+    referred_id: user.id,
     event_type: 'signup',
     credits_awarded: REFERRAL_SIGNUP_BONUS,
   })
 
   await admin.from('credit_transactions').insert({
-    user_id: newUserId,
+    user_id: user.id,
     type: 'referral_bonus',
     amount: REFERRED_USER_BONUS,
     description: `Signed up via referral code ${normalizedCode}`,
@@ -133,5 +135,9 @@ export async function POST(request) {
     // email failures should never block the referral reward
   }
 
-  return NextResponse.json({ success: true, creditsAdded: REFERRED_USER_BONUS })
+  return NextResponse.json({
+    success: true,
+    creditsAdded: REFERRED_USER_BONUS,
+    message: '3 credits added to your account',
+  })
 }

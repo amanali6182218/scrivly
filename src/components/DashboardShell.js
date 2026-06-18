@@ -173,6 +173,8 @@ function LowCreditsModal({ credits, userId, onRedeem, onDismiss }) {
   )
 }
 
+const REF_STORAGE_KEY = 'scrivly_ref'
+
 export default function DashboardShell({ user, profile }) {
   const router = useRouter()
   const [credits, setCredits] = useState(profile.credits)
@@ -180,6 +182,7 @@ export default function DashboardShell({ user, profile }) {
   const [modalDismissed, setModalDismissed] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [historyCount, setHistoryCount] = useState(null)
+  const [referralToast, setReferralToast] = useState(false)
   const menuRef = useRef(null)
 
   const emailPrefix = user.email.split('@')[0]
@@ -213,6 +216,35 @@ export default function DashboardShell({ user, profile }) {
     if (credits >= 3) setModalDismissed(false)
   }, [credits])
 
+  // First dashboard load after signing up via a referral link — claim the bonus
+  useEffect(() => {
+    const refCode = sessionStorage.getItem(REF_STORAGE_KEY)
+    if (!refCode) return
+    if (profile.credits !== 0 || profile.referred_by) {
+      sessionStorage.removeItem(REF_STORAGE_KEY)
+      return
+    }
+
+    fetch('/api/referral/track-signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refCode }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) {
+          handleCreditsAdded(data.creditsAdded)
+          setReferralToast(true)
+          setTimeout(() => setReferralToast(false), 4000)
+        }
+      })
+      .catch(() => {
+        // referral tracking failures should never block the dashboard
+      })
+      .finally(() => sessionStorage.removeItem(REF_STORAGE_KEY))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const showLowCreditsModal = credits < 3 && !modalDismissed && profile.total_credits_purchased > 0
 
   const handleSignOut = async () => {
@@ -232,6 +264,15 @@ export default function DashboardShell({ user, profile }) {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
+      {referralToast && (
+        <div
+          className="fixed left-1/2 top-6 z-[9999] -translate-x-1/2 rounded-xl px-5 py-3 text-sm font-semibold shadow-lg"
+          style={{ background: 'rgba(255,184,0,0.15)', border: '1px solid rgba(255,184,0,0.4)', color: '#FFB800' }}
+        >
+          🎁 3 free credits added! Someone referred you to Scrivly.
+        </div>
+      )}
+
       {/* First-time welcome modal */}
       <WelcomeModal
         userId={user.id}

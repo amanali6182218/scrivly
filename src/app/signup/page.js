@@ -1,28 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { isDisposableEmail } from '@/lib/disposable-email-domains'
 import { getFingerprint } from '@/lib/fingerprint'
 
 const REF_STORAGE_KEY = 'scrivly_ref'
 
-export default function SignupPage() {
+function SignupForm() {
+  const searchParams = useSearchParams()
+  const refCode = searchParams.get('ref')
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [refCode, setRefCode] = useState(null)
 
   useEffect(() => {
-    const ref = new URLSearchParams(window.location.search).get('ref')
-    if (ref) {
-      sessionStorage.setItem(REF_STORAGE_KEY, ref)
-      setRefCode(ref)
+    if (refCode) {
+      sessionStorage.setItem(REF_STORAGE_KEY, refCode)
     }
-  }, [])
+  }, [refCode])
 
   const handleSignUp = async (e) => {
     e.preventDefault()
@@ -62,20 +63,6 @@ export default function SignupPage() {
       if (!res.ok) {
         setError(data.error || 'Something went wrong. Please try again.')
         return
-      }
-
-      const storedRef = sessionStorage.getItem(REF_STORAGE_KEY)
-      if (storedRef && data.userId) {
-        try {
-          await fetch('/api/referral/track-signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ newUserId: data.userId, refCode: storedRef }),
-          })
-        } catch {
-          // referral tracking failures should never block signup
-        }
-        sessionStorage.removeItem(REF_STORAGE_KEY)
       }
 
       setSuccess(true)
@@ -141,7 +128,7 @@ export default function SignupPage() {
 
         {refCode && (
           <div
-            className="mb-6 rounded-xl"
+            className="mb-5 rounded-xl"
             style={{
               background: 'rgba(255,184,0,0.1)',
               border: '1px solid rgba(255,184,0,0.3)',
@@ -153,7 +140,7 @@ export default function SignupPage() {
               Sign up now and get 3 free credits to generate your first Etsy listing — completely free.
             </p>
             <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>
-              Offer applied automatically when you sign up via this link.
+              Applied automatically when you sign up.
             </p>
           </div>
         )}
@@ -244,5 +231,13 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
   )
 }

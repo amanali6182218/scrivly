@@ -7,6 +7,13 @@
 -- BEFORE INSERT trigger on profiles — it fires regardless of how the row
 -- gets inserted, so it works whether or not handle_new_user already sets
 -- other columns.
+--
+-- Uses md5()/random() instead of gen_random_bytes() so it has no
+-- dependency on the pgcrypto extension (an earlier version of this
+-- migration used gen_random_bytes() in the backfill block below, which
+-- failed when pgcrypto wasn't enabled and rolled back the entire script —
+-- including the columns, table, and trigger created earlier in the same
+-- run).
 
 -- 1. Referral columns on profiles
 alter table profiles
@@ -45,7 +52,7 @@ begin
   end if;
 
   loop
-    code := upper(substring(replace(replace(encode(gen_random_bytes(6), 'base64'), '+', ''), '/', ''), 1, 8));
+    code := upper(substring(md5(random()::text || clock_timestamp()::text), 1, 8));
     select count(*) into exists_check from profiles where referral_code = code;
     exit when exists_check = 0;
   end loop;
@@ -70,7 +77,7 @@ declare
 begin
   for row_id in select id from profiles where referral_code is null loop
     loop
-      code := upper(substring(replace(replace(encode(gen_random_bytes(6), 'base64'), '+', ''), '/', ''), 1, 8));
+      code := upper(substring(md5(random()::text || clock_timestamp()::text), 1, 8));
       select count(*) into exists_check from profiles where referral_code = code;
       exit when exists_check = 0;
     end loop;
