@@ -69,9 +69,10 @@ interface PhotoToListingProps {
   result?: PhotoListingResult | null;
   onResultChange?: (result: PhotoListingResult | null | ((prev: PhotoListingResult | null) => PhotoListingResult | null)) => void;
   priceResearchCost?: number;
+  referralCode?: string | null;
 }
 
-export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange, priceResearchCost = 12 }: PhotoToListingProps = {}) {
+export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infinity, result = null, onResultChange, priceResearchCost = 12, referralCode }: PhotoToListingProps = {}) {
   const [image, setImage] = useState<UploadedImage | null>(null);
   const [details, setDetails] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -479,6 +480,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
           priceResult={priceResult}
           isPriceLoading={isPriceLoading}
           credits={creditsAvailable}
+          referralCode={referralCode}
         />
       </div>
     </div>

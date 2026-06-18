@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { isDisposableEmail } from '@/lib/disposable-email-domains'
 import { getFingerprint } from '@/lib/fingerprint'
+
+const REF_STORAGE_KEY = 'scrivly_ref'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -12,6 +14,15 @@ export default function SignupPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [refCode, setRefCode] = useState(null)
+
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref')
+    if (ref) {
+      sessionStorage.setItem(REF_STORAGE_KEY, ref)
+      setRefCode(ref)
+    }
+  }, [])
 
   const handleSignUp = async (e) => {
     e.preventDefault()
@@ -51,6 +62,20 @@ export default function SignupPage() {
       if (!res.ok) {
         setError(data.error || 'Something went wrong. Please try again.')
         return
+      }
+
+      const storedRef = sessionStorage.getItem(REF_STORAGE_KEY)
+      if (storedRef && data.userId) {
+        try {
+          await fetch('/api/referral/track-signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ newUserId: data.userId, refCode: storedRef }),
+          })
+        } catch {
+          // referral tracking failures should never block signup
+        }
+        sessionStorage.removeItem(REF_STORAGE_KEY)
       }
 
       setSuccess(true)
@@ -113,6 +138,25 @@ export default function SignupPage() {
             Create your account and start generating SEO-optimized Etsy listings in seconds.
           </p>
         </div>
+
+        {refCode && (
+          <div
+            className="mb-6 rounded-xl"
+            style={{
+              background: 'rgba(255,184,0,0.1)',
+              border: '1px solid rgba(255,184,0,0.3)',
+              padding: '16px 20px',
+            }}
+          >
+            <p className="text-sm font-bold text-[var(--text-primary)]">🎁 You have been invited!</p>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">
+              Sign up now and get 3 free credits to generate your first Etsy listing — completely free.
+            </p>
+            <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+              Offer applied automatically when you sign up via this link.
+            </p>
+          </div>
+        )}
 
         <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-card)] p-10 shadow-sm">
           <form onSubmit={handleSignUp} className="space-y-4">

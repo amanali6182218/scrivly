@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GeneratedListing, MarketDemand, PriceResearchResult } from "@/lib/types";
 import ListingHealthScore from "@/components/ListingHealthScore";
+import ShareModal from "@/components/ShareModal";
+import { referralUrl } from "@/lib/referral";
 
 interface ResultsPanelProps {
   listing: GeneratedListing | null;
@@ -14,6 +16,51 @@ interface ResultsPanelProps {
   priceResult?: PriceResearchResult | null;
   isPriceLoading?: boolean;
   credits?: number;
+  referralCode?: string | null;
+}
+
+const REFERRAL_PROMPT_SESSION_KEY = "scrivly_shown_referral_prompt";
+
+function ReferralPromptCard({ referralCode }: { referralCode?: string | null }) {
+  const [visible, setVisible] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+
+  useEffect(() => {
+    if (!referralCode) return;
+    if (sessionStorage.getItem(REFERRAL_PROMPT_SESSION_KEY)) return;
+    sessionStorage.setItem(REFERRAL_PROMPT_SESSION_KEY, "1");
+    setVisible(true);
+  }, [referralCode]);
+
+  if (!visible) return null;
+
+  const url = referralUrl(referralCode as string);
+
+  return (
+    <div
+      className="flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+      style={{ background: "rgba(123,47,255,0.08)", border: "1px solid rgba(123,47,255,0.3)" }}
+    >
+      <div>
+        <p className="text-sm font-bold text-[var(--text-primary)]">Loving Scrivly? 🎁</p>
+        <p className="text-xs text-[var(--text-secondary)]">Share with another Etsy seller and earn 5 free credits.</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => setShareOpen(true)}
+        className="shrink-0 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+        style={{ background: "linear-gradient(135deg, #FFB800, #FF3D8B, #7B2FFF)" }}
+      >
+        Share &amp; earn
+      </button>
+      {shareOpen && (
+        <ShareModal
+          referralUrl={url}
+          onClose={() => setShareOpen(false)}
+        />
+      )}
+    </div>
+  );
 }
 
 // ── Price section ─────────────────────────────────────────────────────────────
@@ -461,7 +508,7 @@ function titleCounterInfo(length: number): { className: string; label: string } 
   return { className: "text-[#22C55E]", label: "Optimal ✓" };
 }
 
-export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading, credits }: ResultsPanelProps) {
+export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading, credits, referralCode }: ResultsPanelProps) {
   const [showToast, setShowToast] = useState(false);
 
   if (isGenerating) return <LoadingState />;
@@ -575,6 +622,8 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
       <ListingHealthScore listing={listing} onFix={onFix} isGenerating={isGenerating} />
 
       <SeoTipsSection />
+
+      <ReferralPromptCard referralCode={referralCode} />
 
       {showToast && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-lg

@@ -9,6 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from '@/components/Avatar'
 import RedeemBanner from '@/components/RedeemBanner'
 import WelcomeModal from '@/components/WelcomeModal'
+import ReferralCard from '@/components/ReferralCard'
 import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 import { getPriceResearchCost } from '@/lib/plans'
@@ -393,7 +394,14 @@ export default function DashboardShell({ user, profile }) {
           </div>
         </div>
 
-        <ListingGenerator credits={credits} onCreditsUsed={handleCreditsUsed} packTier={packTier} />
+        <ReferralCard profile={profile} />
+
+        <ListingGenerator
+          credits={credits}
+          onCreditsUsed={handleCreditsUsed}
+          packTier={packTier}
+          referralCode={profile.referral_code}
+        />
 
         <ContactSection />
       </main>

@@ -1,6 +1,85 @@
 import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getHigherTier } from '@/lib/plans'
+import { REFERRAL_PURCHASE_BONUS, buildReferralPurchaseEmailHtml } from '@/lib/referral'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Scrivly <onboarding@resend.dev>'
+
+async function awardReferralPurchaseBonus(admin, userId, now) {
+  const { data: buyerProfile } = await admin
+    .from('profiles')
+    .select('referred_by')
+    .eq('id', userId)
+    .single()
+
+  if (!buyerProfile?.referred_by) return
+
+  const { data: existingPurchaseEvent } = await admin
+    .from('referral_events')
+    .select('id')
+    .eq('referred_id', userId)
+    .eq('event_type', 'purchase')
+    .maybeSingle()
+
+  if (existingPurchaseEvent) return
+
+  const referrerId = buyerProfile.referred_by
+  const { data: referrerProfile } = await admin
+    .from('profiles')
+    .select('credits, referral_credits_earned, referral_purchases, total_referrals')
+    .eq('id', referrerId)
+    .single()
+
+  if (!referrerProfile) return
+
+  const newCreditsEarned = (referrerProfile.referral_credits_earned || 0) + REFERRAL_PURCHASE_BONUS
+  const newReferralPurchases = (referrerProfile.referral_purchases || 0) + 1
+
+  await admin
+    .from('profiles')
+    .update({
+      credits: (referrerProfile.credits || 0) + REFERRAL_PURCHASE_BONUS,
+      referral_credits_earned: newCreditsEarned,
+      referral_purchases: newReferralPurchases,
+      updated_at: now,
+    })
+    .eq('id', referrerId)
+
+  await admin.from('referral_events').insert({
+    referrer_id: referrerId,
+    referred_id: userId,
+    event_type: 'purchase',
+    credits_awarded: REFERRAL_PURCHASE_BONUS,
+  })
+
+  await admin.from('credit_transactions').insert({
+    user_id: referrerId,
+    type: 'referral_bonus',
+    amount: REFERRAL_PURCHASE_BONUS,
+    description: 'Referral purchase bonus',
+  })
+
+  try {
+    const { data: referrerAuth } = await admin.auth.admin.getUserById(referrerId)
+    const referrerEmail = referrerAuth?.user?.email
+    if (referrerEmail) {
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: referrerEmail,
+        subject: 'Your referral just made a purchase! +10 credits 🎉',
+        html: buildReferralPurchaseEmailHtml({
+          totalReferrals: referrerProfile.total_referrals || 0,
+          referralPurchases: newReferralPurchases,
+          creditsEarned: newCreditsEarned,
+        }),
+      })
+    }
+  } catch {
+    // email failures should never block the referral reward
+  }
+}
 
 export async function POST(request) {
   let body
@@ -82,6 +161,8 @@ export async function POST(request) {
     amount: redeemCode.credits,
     description: `Redeemed code: ${normalizedCode}`,
   })
+
+  await awardReferralPurchaseBonus(admin, userId, now)
 
   return NextResponse.json({
     success: true,

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import Avatar from '@/components/Avatar'
 import ThemeToggle from '@/components/ThemeToggle'
+import ReferralCard from '@/components/ReferralCard'
 
 const AVATAR_COLORS = ['#FF3D8B', '#FFB800', '#7B2FFF', '#22C55E', '#3B82F6', '#F97316', '#EC4899', '#06B6D4']
 
@@ -224,6 +225,8 @@ export default function AccountShell({ user, profile }) {
         <h1 className="mb-6 text-2xl font-bold sm:text-3xl" style={{ color: 'var(--text-primary)' }}>
           Manage Account
         </h1>
+
+        <ReferralCard profile={profile} />
 
         <div className="space-y-6">
           {/* SECTION 1 — PROFILE */}

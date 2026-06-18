@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PhotoToListing from '@/components/PhotoToListing'
 import SpyImprove from '@/components/SpyImprove'
+import ShareModal from '@/components/ShareModal'
 import { getPriceResearchCost, CREDIT_COSTS } from '@/lib/plans'
+import { referralUrl } from '@/lib/referral'
 
 const TABS = [
   { id: 'photo', label: 'Photo to Listing' },
@@ -24,12 +26,14 @@ const TAB_COPY = {
   },
 }
 
-export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'none' }) {
+export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'none', referralCode }) {
   const [activeTab, setActiveTab] = useState('photo')
   const [listingResult, setListingResult] = useState(null)
   const [spyResult, setSpyResult] = useState(null)
+  const [shareOpen, setShareOpen] = useState(false)
   const priceResearchCost = getPriceResearchCost(packTier)
   const spyCost = CREDIT_COSTS.spy_improve
+  const url = referralCode ? referralUrl(referralCode) : null
 
   useEffect(() => {
     const tab = new URLSearchParams(window.location.search).get('tab')
@@ -76,14 +80,26 @@ export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'n
         </Link>
       </div>
 
-      {credits < 3 && (
+      {credits < 6 && (
         <div
-          className="mb-6 rounded-xl p-4 text-sm"
+          className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl p-4 text-sm"
           style={{ background: 'rgba(255,61,139,0.1)', border: '1px solid rgba(255,61,139,0.3)', color: '#FF8FB8' }}
         >
-          {credits === 0
-            ? "You have no credits left. Redeem a code above to generate more listings."
-            : `You need at least 3 credits to generate a listing, or ${spyCost} credits for Spy & Improve.`}
+          <span>
+            {credits === 0
+              ? 'You have no credits left. Redeem a code above to generate more listings.'
+              : `You need at least 3 credits to generate a listing, or ${spyCost} credits for Spy & Improve.`}
+          </span>
+          {url && (
+            <button
+              type="button"
+              onClick={() => setShareOpen(true)}
+              className="font-semibold underline"
+              style={{ color: '#FFB800' }}
+            >
+              Or refer a friend and earn 5 free credits →
+            </button>
+          )}
         </div>
       )}
 
@@ -94,6 +110,7 @@ export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'n
           result={listingResult}
           onResultChange={setListingResult}
           priceResearchCost={priceResearchCost}
+          referralCode={referralCode}
         />
       )}
       {activeTab === 'spy' && (
@@ -104,6 +121,8 @@ export default function ListingGenerator({ credits, onCreditsUsed, packTier = 'n
           onResultChange={setSpyResult}
         />
       )}
+
+      {shareOpen && url && <ShareModal referralUrl={url} onClose={() => setShareOpen(false)} />}
     </div>
   )
 }

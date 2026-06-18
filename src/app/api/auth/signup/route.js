@@ -64,5 +64,5 @@ export async function POST(request) {
       .eq('id', data.user.id)
   }
 
-  return NextResponse.json({ success: true })
+  return NextResponse.json({ success: true, userId: data.user?.id ?? null })
 }
