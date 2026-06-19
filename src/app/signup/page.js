@@ -21,7 +21,9 @@ function SignupForm() {
 
   useEffect(() => {
     if (refCode) {
-      sessionStorage.setItem(REF_STORAGE_KEY, refCode)
+      // localStorage (not sessionStorage) — the email confirmation link the
+      // user clicks next opens in a new tab/window with its own session storage.
+      localStorage.setItem(REF_STORAGE_KEY, refCode)
     }
   }, [refCode])
 

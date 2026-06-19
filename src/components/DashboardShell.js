@@ -216,12 +216,16 @@ export default function DashboardShell({ user, profile }) {
     if (credits >= 3) setModalDismissed(false)
   }, [credits])
 
-  // First dashboard load after signing up via a referral link — claim the bonus
+  // First dashboard load after signing up via a referral link — claim the bonus.
+  // Uses localStorage (not sessionStorage) because email confirmation links
+  // open in a new tab/window, which has its own empty sessionStorage.
   useEffect(() => {
-    const refCode = sessionStorage.getItem(REF_STORAGE_KEY)
+    const refCode = localStorage.getItem(REF_STORAGE_KEY)
+    console.log('Referral check running, user:', user?.id, 'refCode:', refCode)
     if (!refCode) return
     if (profile.credits !== 0 || profile.referred_by) {
-      sessionStorage.removeItem(REF_STORAGE_KEY)
+      console.log('Referral check skipped — credits:', profile.credits, 'referred_by:', profile.referred_by)
+      localStorage.removeItem(REF_STORAGE_KEY)
       return
     }
 
@@ -232,16 +236,17 @@ export default function DashboardShell({ user, profile }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log('Referral track-signup response:', data)
         if (data?.success) {
           handleCreditsAdded(data.creditsAdded)
           setReferralToast(true)
           setTimeout(() => setReferralToast(false), 4000)
         }
       })
-      .catch(() => {
-        // referral tracking failures should never block the dashboard
+      .catch((err) => {
+        console.log('Referral track-signup request failed:', err)
       })
-      .finally(() => sessionStorage.removeItem(REF_STORAGE_KEY))
+      .finally(() => localStorage.removeItem(REF_STORAGE_KEY))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

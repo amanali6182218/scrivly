@@ -16,12 +16,14 @@ export async function POST(request) {
   }
 
   const refCode = typeof body?.refCode === 'string' ? body.refCode.trim() : ''
+  console.log('[track-signup] received refCode:', refCode)
   if (!refCode) {
     return NextResponse.json({ error: 'refCode is required.' }, { status: 400 })
   }
 
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  console.log('[track-signup] authenticated user:', user?.id)
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -29,25 +31,30 @@ export async function POST(request) {
   const admin = createAdminClient()
   const normalizedCode = refCode.toUpperCase()
 
-  const { data: currentProfile } = await admin
+  const { data: currentProfile, error: currentProfileError } = await admin
     .from('profiles')
     .select('id, referred_by, device_fingerprint, credits')
     .eq('id', user.id)
     .single()
+
+  console.log('[track-signup] currentProfile:', currentProfile, 'error:', currentProfileError)
 
   if (!currentProfile) {
     return NextResponse.json({ error: 'Profile not found.' }, { status: 404 })
   }
 
   if (currentProfile.referred_by) {
+    console.log('[track-signup] already tracked, referred_by:', currentProfile.referred_by)
     return NextResponse.json({ alreadyTracked: true })
   }
 
-  const { data: referrer } = await admin
+  const { data: referrer, error: referrerError } = await admin
     .from('profiles')
     .select('id, referral_code, credits, total_referrals, referral_credits_earned')
     .eq('referral_code', normalizedCode)
     .maybeSingle()
+
+  console.log('[track-signup] looked up referrer for code', normalizedCode, '→', referrer, 'error:', referrerError)
 
   if (!referrer) {
     return NextResponse.json({ error: 'Invalid referral code' }, { status: 404 })
@@ -76,7 +83,7 @@ export async function POST(request) {
   const newTotalReferrals = (referrer.total_referrals || 0) + 1
   const newCreditsEarned = (referrer.referral_credits_earned || 0) + REFERRAL_SIGNUP_BONUS
 
-  await admin
+  const { error: updateNewUserError } = await admin
     .from('profiles')
     .update({
       referred_by: referrer.id,
@@ -85,7 +92,9 @@ export async function POST(request) {
     })
     .eq('id', user.id)
 
-  await admin
+  console.log('[track-signup] updated new user credits, error:', updateNewUserError)
+
+  const { error: updateReferrerError } = await admin
     .from('profiles')
     .update({
       credits: (referrer.credits || 0) + REFERRAL_SIGNUP_BONUS,
@@ -94,6 +103,8 @@ export async function POST(request) {
       updated_at: now,
     })
     .eq('id', referrer.id)
+
+  console.log('[track-signup] updated referrer credits, error:', updateReferrerError)
 
   await admin.from('referral_events').insert({
     referrer_id: referrer.id,
