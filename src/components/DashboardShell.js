@@ -440,14 +440,14 @@ export default function DashboardShell({ user, profile }) {
           </div>
         </div>
 
-        <ReferralCard profile={profile} />
-
         <ListingGenerator
           credits={credits}
           onCreditsUsed={handleCreditsUsed}
           packTier={packTier}
           referralCode={profile.referral_code}
         />
+
+        <ReferralCard profile={profile} />
 
         <ContactSection />
       </main>
