@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-function getClientIp(request) {
-  const forwarded = request.headers.get('x-forwarded-for')
-  if (forwarded) return forwarded.split(',')[0].trim()
-  return request.headers.get('x-real-ip') || null
-}
-
 export async function POST(request) {
-  const ip = getClientIp(request)
-  if (!ip) return NextResponse.json({ suspicious: false })
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    '127.0.0.1'
 
   const admin = createAdminClient()
   const { data } = await admin
@@ -17,7 +13,8 @@ export async function POST(request) {
     .select('id')
     .eq('signup_ip', ip)
     .eq('total_credits_purchased', 0)
+    .gt('credits', 0)
     .maybeSingle()
 
-  return NextResponse.json({ suspicious: !!data })
+  return NextResponse.json({ blocked: !!data }, { status: 200 })
 }

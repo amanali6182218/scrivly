@@ -50,7 +50,7 @@ export async function POST(request) {
 
   const { data: referrer, error: referrerError } = await admin
     .from('profiles')
-    .select('id, referral_code, credits, total_referrals, referral_credits_earned')
+    .select('id, referral_code, credits, total_referrals, referral_credits_earned, total_credits_purchased')
     .eq('referral_code', normalizedCode)
     .maybeSingle()
 
@@ -79,6 +79,31 @@ export async function POST(request) {
     }
   }
 
+  // Anti-abuse: block if this IP already received referral credits
+  const clientIp =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    '127.0.0.1'
+
+  if (clientIp !== '127.0.0.1') {
+    const { data: ipAbuse } = await admin
+      .from('profiles')
+      .select('id')
+      .eq('signup_ip', clientIp)
+      .not('referred_by', 'is', null)
+      .limit(1)
+
+    if (ipAbuse && ipAbuse.length > 0) {
+      // IP already used for referral — account exists, but no credits awarded
+      return NextResponse.json({
+        success: false,
+        blocked: true,
+        reason: 'ip_already_referred',
+        message: 'This network has already received referral credits',
+      })
+    }
+  }
+
   const now = new Date().toISOString()
   const newTotalReferrals = (referrer.total_referrals || 0) + 1
   const newCreditsEarned = (referrer.referral_credits_earned || 0) + REFERRAL_SIGNUP_BONUS
@@ -94,6 +119,18 @@ export async function POST(request) {
 
   console.log('[track-signup] updated new user credits, error:', updateNewUserError)
 
+  // Check referrer has purchased before awarding bonus credits
+  if (!referrer.total_credits_purchased || referrer.total_credits_purchased === 0) {
+    // New user still gets 3 credits but referrer gets no bonus
+    return NextResponse.json({
+      success: true,
+      creditsAdded: REFERRED_USER_BONUS,
+      referrerRewarded: false,
+      message: 'Credits added to new user. Referrer has not purchased yet — no bonus awarded.',
+    })
+  }
+
+  // Only reaches here if referrer has purchased — award bonus
   const { error: updateReferrerError } = await admin
     .from('profiles')
     .update({

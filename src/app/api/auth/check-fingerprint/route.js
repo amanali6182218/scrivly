@@ -6,11 +6,11 @@ export async function POST(request) {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ isAbuser: false })
+    return NextResponse.json({ blocked: false }, { status: 200 })
   }
 
   const { fingerprint } = body
-  if (!fingerprint) return NextResponse.json({ isAbuser: false })
+  if (!fingerprint) return NextResponse.json({ blocked: false }, { status: 200 })
 
   const admin = createAdminClient()
   const { data } = await admin
@@ -20,5 +20,5 @@ export async function POST(request) {
     .eq('total_credits_purchased', 0)
     .maybeSingle()
 
-  return NextResponse.json({ isAbuser: !!data })
+  return NextResponse.json({ blocked: !!data }, { status: 200 })
 }

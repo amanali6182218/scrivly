@@ -53,6 +53,19 @@ function SignupForm() {
       // Generate device fingerprint (non-blocking — null if it fails)
       const fingerprint = await getFingerprint()
 
+      // Check fingerprint for abuse
+      const fpResponse = await fetch('/api/auth/check-fingerprint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fingerprint }),
+      })
+      const fpData = await fpResponse.json()
+
+      if (fpData.blocked) {
+        setError('An account already exists from this device. Please sign in instead.')
+        return
+      }
+
       // Server-side signup handles all abuse checks, IP tracking, and credit assignment
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
