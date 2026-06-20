@@ -200,6 +200,11 @@ export default function DashboardShell({ user, profile }) {
       .then(({ count }) => setHistoryCount(count ?? 0))
   }, [user.id])
 
+  // Pass the logged-in user's info to the support chatbot widget (public/chatbot.js)
+  useEffect(() => {
+    window.ScrivlyUser = { id: user.id, email: user.email }
+  }, [user.id, user.email])
+
   useEffect(() => {
     if (!menuOpen) return
     const handleClickOutside = (e) => {

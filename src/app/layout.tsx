@@ -32,6 +32,8 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
         </ThemeProvider>
+        <link rel="stylesheet" href="/chatbot.css" />
+        <script src="/chatbot.js" />
       </body>
     </html>
   );
