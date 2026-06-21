@@ -80,6 +80,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
   const listing = result?.listing ?? null;
   const priceResult = result?.priceResult ?? null;
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStep, setGenerationStep] = useState<1 | 2 | 3>(1);
+  const generationTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
   const [categorySuggestions, setCategorySuggestions] = useState<CategorySuggestion[]>([]);
@@ -194,6 +196,12 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
     if (!image) return;
 
     setIsGenerating(true);
+    setGenerationStep(1);
+    generationTimers.current.forEach(clearTimeout);
+    generationTimers.current = [
+      setTimeout(() => setGenerationStep(2), 3500),
+      setTimeout(() => setGenerationStep(3), 7000),
+    ];
     onResultChange?.(null);
     setError(null);
     setIsPriceLoading(false);
@@ -224,6 +232,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         tags: data.tags,
         ...(data.primarySearchPhrase ? { primarySearchPhrase: data.primarySearchPhrase } : {}),
         ...(data.identifiedMaterials ? { identifiedMaterials: data.identifiedMaterials } : {}),
+        ...(data.materials ? { materials: data.materials } : {}),
+        ...(data.attributes ? { attributes: data.attributes } : {}),
       };
       onResultChange?.({ listing: newListing, priceResult: null });
       onCreditsUsed?.(3);
@@ -231,6 +241,8 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
+      generationTimers.current.forEach(clearTimeout);
+      generationTimers.current = [];
       setIsGenerating(false);
     }
   };
@@ -473,6 +485,7 @@ export default function PhotoToListing({ onCreditsUsed, creditsAvailable = Infin
         <ResultsPanel
           listing={listing}
           isGenerating={isGenerating}
+          generationStep={generationStep}
           error={error}
           onRegenerate={image ? () => generate() : undefined}
           onFix={image ? (wa) => generate(wa) : undefined}

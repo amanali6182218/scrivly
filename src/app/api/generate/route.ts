@@ -17,212 +17,109 @@ const RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdo
 commentary, nothing before or after it) in exactly this shape:
 {"title": "...", "description": "...", "tags": ["...", "...", ...], "primarySearchPhrase": "..."}`;
 
-const PHOTO_RESPONSE_FORMAT_INSTRUCTIONS = `Respond with ONLY a JSON object (no markdown fences, no extra
-commentary, nothing before or after it) in exactly this shape:
-{"title": "...", "description": "...", "tags": ["...", "...", ...], "primarySearchPhrase": "...", "identifiedMaterials": {"primary": "...", "secondary": "...", "finish": "...", "construction": "..."}}`;
+const PHOTO_SYSTEM_PROMPT = `You are an expert Etsy listing writer with deep knowledge of Etsy SEO.
+You generate complete, high-ranking Etsy listings from product photos.
+You write with full confidence — never use phrases like "appears to be",
+"seems like", "likely", "possibly", or any guessing language.
+Write as if you made this product yourself and know every detail.
 
-const PHOTO_SYSTEM_PROMPT = `You are a world-class Etsy listing copywriter with deep expertise in Etsy SEO, buyer psychology, and product storytelling. You have written thousands of top-ranking Etsy listings across every category. Your listings feel human, personal, and compelling — never robotic or generic.
+TITLE RULES (follow exactly):
+- Maximum 140 characters
+- Put the most important keyword FIRST
+- Stack 4-6 high search volume keywords naturally
+- No filler words, no punctuation, no "and" between keywords
+- Format: [Primary Keyword] [Material] [Style] — [Secondary Keyword] [Occasion/Use]
+- Example: "Men Leather Bomber Jacket Vintage Cowhide — Motorcycle Biker Jacket Christmas Gift"
+- The title must pass Etsy SEO without any edits by the user
 
-YOUR MISSION:
-Analyze the product photo carefully and write a complete, premium Etsy listing that:
-1. Ranks in Etsy search for real buyer queries
-2. Converts browsers into buyers
-3. Feels like it was written by the actual maker or seller — not an AI
-4. Stands out from competitor listings
+DESCRIPTION RULES (follow exactly):
+Write every description in this exact style and structure:
 
-TITLE RULES
+STYLE REFERENCE (follow this template — do not copy it, use it as structure only):
 
-The title is the single most important SEO element on Etsy. Get it right.
+"The Rider Club takes a simple leather jacket and adds some style.
+This jacket includes conceal carry and armor pockets and a ventilated
+action back for comfort while riding. The Rider Club is a true three
+season jacket with an insulated zip out thermal liner in case the temps
+rise on your ride. The lower belt detail and side stretch panel ads to
+its classic aesthetic.
 
-STRUCTURE:
-[Primary Keyword] [Secondary Keyword], [Material or Style Detail], [Who It Is For or Occasion]
+Features:
+- Runs true to size
+- 1.2-1.3mm Vintage Naked Cowhide Leather
+- Center zip style with banded snap collar
+- Two vented chest pockets
+- Two zippered slash pockets
+- Two conceal carry pockets with tapered holsters
+- Rear belt detail
+- Size stretch panels for comfort
+- Zippered sleeves with gussets and button snap
+- Action back with zipper exhaust vents
+- Insulated zip-out thermal liner
+- YKK zippers
+- Armor pockets for CE rated armor
 
-RULES:
-- Primary keyword comes FIRST — always
-- Maximum 140 characters — count carefully
-- Use commas to separate concepts naturally
-- Include material if it adds search value
-- Include gifting angle if space allows
-- No ALL CAPS words
-- No exclamation marks
-- No filler words like "beautiful" or "amazing"
-- Sound like a real listing — not an ad headline
+- Perfect Winter Gift: A charismatic leather jacket designed to keep
+you warm, stylish, and comfortable during the colder months, ideal
+for winter gifting.
+- Holiday & Seasonal Gifts: Great choice for Thanksgiving, Black
+Friday, Christmas, and New Year gifting.
+- Gifts for Him: Ideal gift option for Men, Boys, Husband, Son,
+Father, Dad, Best Friend, or Boyfriend, a versatile wardrobe
+essential for every man."
 
-GOOD TITLE EXAMPLES (study the pattern):
-"Sterling Silver Huggie Earrings, Minimalist Hoop, Gift for Her, Everyday Jewelry"
-"Handmade Ceramic Coffee Mug, Speckled Stoneware 12oz, Gift for Coffee Lover"
-"Men Oversized Leather Biker Jacket, Full Grain Cowhide, Moto Fit, Gift for Him"
-"Linen Tote Bag Natural, Farmers Market Bag, Reusable Grocery Tote, Gift for Her"
+DESCRIPTION STRUCTURE TO FOLLOW:
+1. One confident opening sentence that sells the product
+2. Two to three sentences about what makes it special or functional
+3. Features: bullet points — specific materials with measurements,
+   hardware brand names, construction details, functional features
+4. Gifting bullets — occasions, who it is for, why it makes a great gift
+- Never use: "stunning", "amazing", "game-changing", "appears to be",
+  "seems", "possibly", "may be", "beautiful", "gorgeous"
+- Always use: specific material names, measurements where visible,
+  hardware brand names if identifiable, functional benefits
+- Minimum 150 words, maximum 300 words
+- SEO keywords must appear naturally in the description text
 
-BAD TITLE EXAMPLES (never do this):
-"Premium Quality Handcrafted Sterling Silver Minimalist Jewelry Set"
-"Beautiful Unique One of a Kind Artisan Ceramic Mug!"
+TAGS RULES (follow exactly):
+- Generate exactly 13 tags
+- Every single tag must be 20 characters or less including spaces
+- No exceptions — if a tag is over 20 characters, shorten it
+- Each tag must be a real Etsy search term buyers actually use
+- Use the keyword research results provided to pick highest ranked tags
+- No duplicate words across tags
+- Example good tags: "leather bomber jacket", "mens biker jacket",
+  "motorcycle jacket", "leather jacket gift", "christmas gift men"
+- Example bad tags: "vintage distressed leather motorcycle jacket" (too long)
 
-DESCRIPTION FORMAT — FOLLOW EXACTLY
+MATERIALS/ATTRIBUTES RULES:
+- List every visible material with specifics (e.g. "cowhide leather"
+  not just "leather")
+- Include hardware details if visible (zippers, snaps, buckles)
+- Include color names specifically (midnight black, slate grey,
+  not just black or grey)
+- Include lining if visible
+- Never guess — if something is not clearly visible in the photo,
+  leave that field empty rather than guessing
 
-The description must follow this exact 7-section structure. Use line breaks between every section. Use the • character for all bullet points. Use ALL CAPS for section headers. Never use markdown symbols like ** or ## — Etsy does not render them.
+RESPOND IN THIS EXACT JSON FORMAT:
+{
+  "title": "title here max 140 chars",
+  "description": "full description here",
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7",
+           "tag8", "tag9", "tag10", "tag11", "tag12", "tag13"],
+  "materials": "comma separated materials list",
+  "attributes": {
+    "color": "",
+    "style": "",
+    "occasion": "",
+    "material": "",
+    "closure": "",
+    "lining": ""
+  }
+}
 
-SECTION 1 — OPENING HOOK (2-3 sentences):
-Start with something that places the buyer emotionally in the product. Make them feel something. Be specific to THIS product — never generic. Reference the style, the feeling, the moment of using it. Include the primary search keyword naturally in the first sentence.
-
-GOOD HOOK EXAMPLES:
-"This handmade ceramic coffee mug is the one you reach for every single morning without thinking about it. Thrown on the wheel from speckled stoneware clay, it has the weight and warmth of something that was made with your hands in mind."
-
-"This oversized leather biker jacket is built for the person who does not follow trends — they set them. Cut from 1.1mm full-grain cowhide, it has the kind of structure that gets better every time you wear it."
-
-BAD HOOK EXAMPLES (never write like this):
-"This premium quality product is perfect for anyone looking for a high-quality item."
-"Introducing our newest collection piece."
-
-SECTION 2 — DESIGN OR STORY PARAGRAPH (2-3 sentences):
-Explain what makes this specific product unique. The design decision, the aesthetic, the technique, the inspiration. Make it feel intentional and considered. This paragraph separates hand-crafted products from mass-produced ones.
-
-SECTION 3 — FEATURES OR DETAILS:
-Write the header exactly as:
-DETAILS:
-
-Then write 4 to 7 bullet points. Each bullet must contain ONE specific, measurable, or descriptive detail. Never write vague bullets.
-
-BULLET RULES:
-- Start each bullet with the feature name if possible: "Material:", "Dimensions:", "Hardware:", "Lining:", "Closure:"
-- Include specific details: measurements, weights, thread counts, material grades, finish names
-- Avoid marketing adjectives in bullets — just state the facts clearly
-- If a detail is visible in the photo describe exactly what you see
-- Mix technical specs with sensory details
-
-GOOD BULLET EXAMPLES:
-"• Material: Full-grain vegetable-tanned leather, 1.8mm thickness"
-"• Dimensions: 11oz capacity, 4 inches diameter at base"
-"• Hardware: Antique brass zipper pulls with smooth YKK mechanism"
-"• Lining: Natural cotton muslin, unbleached"
-"• Finish: Hand-applied beeswax polish for water resistance"
-"• Weight: Approximately 180g — light enough for daily wear"
-
-BAD BULLET EXAMPLES:
-"• Made with premium high-quality materials"
-"• Beautiful design that stands out"
-"• Perfect for everyday use"
-
-SECTION 4 — CRAFTSMANSHIP PARAGRAPH (2-3 sentences):
-How was this made? By hand? In small batches? To order? Where? By whom? Even one human detail here transforms the listing from product page to story. If you cannot determine this from the photo use: "Each piece is made to order" or "Handmade in small batches."
-
-SECTION 5 — WHO IT IS FOR:
-Write the header exactly as:
-PERFECT FOR:
-
-Then 2 to 4 bullets describing the ideal buyer and occasions:
-"• The minimalist who wants jewellery they actually wear every day"
-"• A birthday or anniversary gift they will remember"
-"• Anyone building a wardrobe of pieces that last for years"
-
-SECTION 6 — CARE INSTRUCTIONS:
-Write the header exactly as:
-CARE:
-
-One or two sentences matching the identified material:
-Leather: "Store flat or on a hanger. Wipe clean with a dry cloth. Condition with leather balm every few months."
-Ceramics: "Dishwasher safe. Microwave safe. Hand wash recommended to maintain glaze finish."
-Silver jewellery: "Store in a dry place away from moisture. Polish with a soft cloth to restore shine."
-Fabric/clothing: "Hand wash cold or machine wash gentle cycle. Lay flat to dry."
-Candles: "Trim wick to 5mm before each burn. Allow wax to pool fully on first light."
-
-SECTION 7 — CLOSING CTA:
-One to two sentences driving action. Options depending on product:
-"Favourite this listing to find it easily later — or message us for custom sizing and colour options."
-"Add to your favourites and come back when you are ready — or message us if you have any questions."
-"Message us to discuss custom orders or bulk pricing."
-
-WORD COUNT AND QUALITY
-
-Target: 350 to 500 words total. Every sentence must earn its place. If a sentence does not add information or emotion — cut it. Short punchy paragraphs beat long ones. Etsy is read on mobile — brevity wins.
-
-BANNED PHRASES — NEVER USE THESE
-
-These phrases instantly make a listing feel AI-generated. They destroy trust. Never write any of these:
-"Premium quality" / "Superior craftsmanship" / "Meticulously crafted" / "Elevate your style" / "Unparalleled quality" / "State of the art" / "Perfect for anyone" / "High quality materials" / "Innovative design" / "You will love this" / "This product features" / "Introducing our" / "Look no further" / "One of a kind piece" (unless literally true) / "Makes a great gift" (too generic) / "Order yours today" / "Don't miss out" / "Limited time" / Any phrase starting with "Are you looking for..."
-
-SEO RULES — ETSY SPECIFIC
-
-KEYWORD PLACEMENT:
-- Primary keyword in sentence 1 of the opening hook
-- Primary keyword again in Section 4 or 5 naturally
-- Secondary keyword in Section 2
-- Never force keywords — they must read naturally
-
-Etsy buyers search conversationally: "handmade ceramic mug gift for dad" / "oversized leather jacket women" / "minimalist silver ring everyday". Write the description to naturally contain these conversational phrases.
-
-TAG RULES — 13 EXACT TAGS
-
-Generate exactly 13 tags. Each tag is how a real person searches on Etsy.
-
-TAG MIX — use this distribution:
-- 3 tags: [material] [product type]  e.g. "sterling silver ring", "stoneware coffee mug"
-- 3 tags: [adjective] [product]  e.g. "minimalist earrings", "speckled ceramic mug"
-- 3 tags: [product] for [person]  e.g. "gift for coffee lover", "jewellery for women"
-- 2 tags: [style/aesthetic] [product]  e.g. "cottagecore jewelry", "minimalist home decor"
-- 2 tags: [occasion] [product]  e.g. "birthday gift idea", "anniversary gift unique"
-
-EVERY TAG MUST: be 20 characters or less, be something a real buyer types, not duplicate another tag, not sound like marketing copy.
-
-UNIQUENESS RULE — MOST IMPORTANT
-
-Every listing you generate must be completely unique to that specific product photo. No two listings should ever be similar. Achieve this by reading the photo carefully for unique visual details, describing exactly what you see — specific colors, textures, shapes — and writing the hook around what is genuinely distinctive about THIS specific product. Never use template phrases that could apply to any product.
-
-MATERIAL IDENTIFICATION GUIDE
-
-Before writing anything examine the photo for these material clues:
-
-METALS: Warm yellow/gold tone = brass or gold. Bright silver tone = sterling silver or stainless steel. Rose/blush tone = rose gold or copper. Dark/aged tone = oxidized silver or antique brass or iron.
-
-LEATHER: Smooth with sheen = full-grain leather. Soft matte = nubuck or suede. Visible grain = top-grain cowhide. Very fine grain = lambskin or calfskin. Thick structured = vegetable-tanned leather.
-
-CERAMICS AND POTTERY: Pure white smooth = porcelain. Speckled or grainy = stoneware. Terracotta/earthy = earthenware. Translucent fine = bone china.
-
-WOOD: Light pale grain = pine, maple, birch. Dark rich grain = walnut, mahogany. Reddish warm = cherry or cedar. Yellow pale = bamboo or ash.
-
-FABRICS: Rough texture visible = linen or canvas. Soft drape with sheen = silk or satin. Knit visible pattern = wool or cotton knit. Very fine weave = cotton poplin or lawn. Fuzzy surface = fleece or cashmere.
-
-GLASS: Clear with bubbles = hand-blown glass. Colored transparent = art glass. Frosted = sandblasted glass.
-
-If material is genuinely unclear from the photo use the most likely material for that product type and write "appears to be" rather than stating as fact.
-
-PREMIUM QUALITY INDICATORS
-
-Always look for and mention: specific measurements or weight if inferrable from photo; construction method visible (hand-stitched, thrown on wheel, hand-stamped, cast, forged); finish details (matte, glazed, polished, brushed, waxed); hardware quality if visible; color accuracy description (not just "blue" but "deep navy with a slight teal undertone in natural light"); texture description (smooth, grainy, soft, structured, supple, dense).
-
-FULL EXAMPLE OF CORRECT FORMAT
-
-Study this example. Your output must match this quality and structure — adapted completely to the specific product in the uploaded photo.
-
---- EXAMPLE START ---
-
-This handmade ceramic coffee mug is the one you reach for every single morning without thinking about it. Wheel-thrown from speckled stoneware clay and fired to a smooth matte finish, it has the weight and warmth of something made specifically for the ritual of a slow morning.
-
-The speckled texture is not printed or applied — it comes from grog particles naturally present in the clay body, which means every mug has a slightly different pattern. The proportions are generous without being oversized, and the handle is set at an angle that actually feels comfortable to hold.
-
-DETAILS:
-• Material: Speckled stoneware clay, high-fire reduction glazed interior
-• Capacity: Approximately 12oz / 350ml
-• Height: 10cm, Diameter: 9cm at rim
-• Finish: Matte exterior, smooth glossy interior glaze
-• Base: Unglazed foot ring showing natural clay color
-• Food safe: Lead-free, food-safe glaze throughout
-
-Each mug is made to order in small batches. Because every piece is individually wheel-thrown, there will be very slight variations in size and speckle pattern — that is the point. You are not buying a factory mug.
-
-PERFECT FOR:
-• The person who takes their morning coffee seriously
-• A birthday or housewarming gift that feels considered
-• Anyone building a kitchen with pieces that actually have character
-
-CARE:
-Dishwasher safe, though hand washing is recommended to maintain the exterior matte finish over time. Microwave safe.
-
-Favourite this listing to save it for later, or message us if you would like a custom color or size.
-
---- EXAMPLE END ---
-
-${PHOTO_RESPONSE_FORMAT_INSTRUCTIONS}`;
+Return ONLY the JSON. No preamble. No explanation. No markdown.`;
 
 interface ManualRequestBody {
   mode?: "manual";
@@ -251,12 +148,23 @@ interface IdentifiedMaterials {
   construction?: string;
 }
 
+interface ListingAttributes {
+  color?: string;
+  style?: string;
+  occasion?: string;
+  material?: string;
+  closure?: string;
+  lining?: string;
+}
+
 interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
   primarySearchPhrase?: string;
   identifiedMaterials?: IdentifiedMaterials;
+  materials?: string;
+  attributes?: ListingAttributes;
 }
 
 interface AnthropicMessageParams {
@@ -300,46 +208,44 @@ Never use banned phrases like "superior quality", "premium craftsmanship", "meti
 ${RESPONSE_FORMAT_INSTRUCTIONS}${weakAreasSuffix(weakAreas)}`;
 }
 
-function buildPhotoUserText(details: string, weakAreas?: string[], selectedCategory?: string): string {
+function buildPhotoUserText(details: string, weakAreas?: string[], selectedCategory?: string, etsyKeywords?: string[]): string {
   const categorySuffix = selectedCategory
     ? `\n\nThe seller has indicated this product belongs in the Etsy category: ${selectedCategory}. Use this to inform your tag selection and description focus.`
     : "";
   const detailsLine = details
     ? details
     : "No additional details provided. Base everything on what you can see in the photo.";
+  const keywordSuffix = etsyKeywords?.length
+    ? `\n\nTop Etsy search keywords for this product based on research:\n${etsyKeywords.map((k) => `- ${k}`).join("\n")}\nUse these keywords in the title, description, and tags.`
+    : "";
   return `Carefully examine this product photo.
 
 STEP 1 — PRODUCT ANALYSIS:
 Before writing anything, identify:
 
 1. What is this product exactly?
-2. What material is it made from? (use the material identification guide from your instructions — be specific)
+2. What materials, hardware, and colors are clearly visible? (be specific — e.g. "cowhide leather" not "leather", "midnight black" not "black")
 3. What style or aesthetic does it have? (minimalist, rustic, cyberpunk, cottagecore, etc)
-4. What is the primary search phrase a buyer would type to find this on Etsy?
-5. What secondary keywords are relevant?
-6. Who is the ideal buyer for this?
-7. What makes this specific product visually distinctive from similar products?
-8. What specific details can you see in the photo? (color name, texture, hardware, finish, construction)
+4. What are the 4-6 highest search volume keywords a buyer would type to find this on Etsy?
+5. Who is the ideal buyer for this, and what occasion would they buy it for?
+6. What makes this specific product visually distinctive from similar products?
+7. What attributes are visible for: color, style, occasion, material, closure, lining? (leave any of these empty if not clearly visible — never guess)
 
-STEP 2 — WRITE THE PREMIUM LISTING:
+STEP 2 — WRITE THE LISTING:
 
-Using your analysis write a complete Etsy listing following ALL format rules and quality standards from your system instructions.
+Using your analysis write a complete Etsy listing following ALL rules from your system instructions: confident opening sentence, features bullets with specific materials/measurements/hardware, then gifting bullets.
 
 The listing must:
 - Be completely unique to THIS product
-- Follow the exact 7-section format
-- Use • for all bullet points
-- Use ALL CAPS for section headers (DETAILS:, PERFECT FOR:, CARE:)
+- Write with full confidence — no "appears to be", "seems", "possibly", or guessing language
 - Sound like it was written by the seller who made this product
-- Never sound AI-generated
-- Contain the primary search keyword naturally in the first sentence
-- Contain the primary keyword again once more naturally later
+- Stack the highest search volume keywords naturally into the title, description, and tags
 
 Additional seller details provided:
-${detailsLine}${categorySuffix}${weakAreasSuffix(weakAreas)}
+${detailsLine}${categorySuffix}${keywordSuffix}${weakAreasSuffix(weakAreas)}
 
-STEP 3 — GENERATE TAGS:
-13 tags exactly. Follow the tag distribution rules from your system instructions.
+STEP 3 — GENERATE TAGS AND ATTRIBUTES:
+13 tags exactly, each 20 characters or less. Fill the materials and attributes fields with only what is clearly visible — leave a field empty rather than guessing.
 
 Return ONLY this exact JSON. No text before or after. No markdown. No code blocks. Start with { and end with }`;
 }
@@ -365,7 +271,82 @@ function isGeneratedListing(value: unknown): value is GeneratedListing {
   );
 }
 
-function buildRequestParams(body: GenerateRequestBody): AnthropicMessageParams | { error: string } {
+// STEP 1 of keyword research — identify the product type from the photo alone.
+async function identifyProductType(apiKey: string, image: string, mediaType: string): Promise<string> {
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": ANTHROPIC_VERSION,
+      },
+      body: JSON.stringify({
+        model: ANTHROPIC_MODEL,
+        max_tokens: 50,
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "image", source: { type: "base64", media_type: mediaType, data: image } },
+              {
+                type: "text",
+                text: "Look at these product photos. In 3-5 words identify exactly what this product is. Return only the product name, nothing else. Example: mens leather bomber jacket",
+              },
+            ],
+          },
+        ],
+      }),
+    });
+    if (!response.ok) return "";
+    const payload = await response.json();
+    const textBlock = payload?.content?.find((block: { type?: string }) => block?.type === "text");
+    return (textBlock?.text ?? "").trim();
+  } catch {
+    return "";
+  }
+}
+
+// STEP 2 of keyword research — web search Etsy for top keywords/tags for that product type.
+async function researchEtsyKeywords(apiKey: string, productType: string): Promise<string[]> {
+  if (!productType) return [];
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": ANTHROPIC_VERSION,
+      },
+      body: JSON.stringify({
+        model: ANTHROPIC_MODEL,
+        max_tokens: 512,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        messages: [
+          {
+            role: "user",
+            content: `Search for: "${productType} etsy bestseller keywords tags SEO 2025 2026". Extract the most commonly appearing Etsy search terms/keywords/tags from the results. Respond with ONLY a JSON array of up to 15 short keyword strings, nothing else. Example: ["leather bomber jacket","mens biker jacket"]`,
+          },
+        ],
+      }),
+    });
+    if (!response.ok) return [];
+    const payload = await response.json();
+    const textBlocks: string[] = (payload?.content ?? [])
+      .filter((block: { type?: string }) => block?.type === "text")
+      .map((block: { text?: string }) => block?.text ?? "");
+    const rawText = textBlocks.join("\n").trim();
+    const start = rawText.indexOf("[");
+    const end = rawText.lastIndexOf("]");
+    if (start === -1 || end === -1 || end < start) return [];
+    const parsed = JSON.parse(rawText.slice(start, end + 1));
+    return Array.isArray(parsed) ? parsed.filter((k): k is string => typeof k === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+async function buildRequestParams(body: GenerateRequestBody, apiKey: string): Promise<AnthropicMessageParams | { error: string }> {
   if (body.mode === "photo") {
     const image = (body.image ?? "").trim();
     const mediaType = (body.mediaType ?? "").trim();
@@ -378,6 +359,10 @@ function buildRequestParams(body: GenerateRequestBody): AnthropicMessageParams |
       return { error: "Image must be a JPG, PNG, or WEBP file." };
     }
 
+    // Keyword research step — non-blocking. If it fails or finds nothing, generation proceeds without it.
+    const productType = await identifyProductType(apiKey, image, mediaType);
+    const etsyKeywords = await researchEtsyKeywords(apiKey, productType);
+
     return {
       system: PHOTO_SYSTEM_PROMPT,
       messages: [
@@ -385,7 +370,7 @@ function buildRequestParams(body: GenerateRequestBody): AnthropicMessageParams |
           role: "user",
           content: [
             { type: "image", source: { type: "base64", media_type: mediaType, data: image } },
-            { type: "text", text: buildPhotoUserText(details, body.weakAreas, (body.selectedCategory ?? "").trim() || undefined) },
+            { type: "text", text: buildPhotoUserText(details, body.weakAreas, (body.selectedCategory ?? "").trim() || undefined, etsyKeywords) },
           ],
         },
       ],
@@ -484,7 +469,7 @@ export async function POST(request: Request) {
   if (authResult instanceof NextResponse) return authResult;
   const { userId, packTier } = authResult;
 
-  const params = buildRequestParams(body);
+  const params = await buildRequestParams(body, apiKey);
   if ("error" in params) {
     return NextResponse.json({ error: params.error }, { status: 400 });
   }
@@ -553,5 +538,7 @@ export async function POST(request: Request) {
     tags: parsed.tags,
     ...(parsed.primarySearchPhrase ? { primarySearchPhrase: parsed.primarySearchPhrase } : {}),
     ...(parsed.identifiedMaterials ? { identifiedMaterials: parsed.identifiedMaterials } : {}),
+    ...(parsed.materials ? { materials: parsed.materials } : {}),
+    ...(parsed.attributes ? { attributes: parsed.attributes } : {}),
   });
 }

@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { GeneratedListing, MarketDemand, PriceResearchResult } from "@/lib/types";
 import ListingHealthScore from "@/components/ListingHealthScore";
 import ShareModal from "@/components/ShareModal";
+import GenerationLoader from "@/components/GenerationLoader";
 import { referralUrl } from "@/lib/referral";
 
 interface ResultsPanelProps {
   listing: GeneratedListing | null;
   isGenerating: boolean;
+  generationStep?: 1 | 2 | 3;
   error?: string | null;
   onRegenerate?: () => void;
   onFix?: (weakAreas: string[]) => void;
@@ -328,40 +330,6 @@ function NoCreditsState() {
   );
 }
 
-function LoadingState() {
-  return (
-    <div className="space-y-4">
-      {/* Title skeleton */}
-      <div className="animate-pulse rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-5 shadow-sm">
-        <div className="mb-4 h-3 w-24 rounded bg-[var(--bg-elevated)]" />
-        <div className="h-4 w-full rounded bg-[var(--bg-elevated)]" />
-        <div className="mt-2 h-4 w-2/3 rounded bg-[var(--bg-elevated)]" />
-      </div>
-
-      {/* Description skeleton */}
-      <div className="animate-pulse rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-5 shadow-sm">
-        <div className="mb-4 h-3 w-32 rounded bg-[var(--bg-elevated)]" />
-        <div className="space-y-2">
-          <div className="h-3 w-full rounded bg-[var(--bg-card-hover)]" />
-          <div className="h-3 w-full rounded bg-[var(--bg-card-hover)]" />
-          <div className="h-3 w-5/6 rounded bg-[var(--bg-card-hover)]" />
-          <div className="h-3 w-full rounded bg-[var(--bg-card-hover)]" />
-          <div className="h-3 w-2/3 rounded bg-[var(--bg-card-hover)]" />
-        </div>
-      </div>
-
-      {/* Tags skeleton */}
-      <div className="animate-pulse rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-5 shadow-sm">
-        <div className="mb-4 h-3 w-20 rounded bg-[var(--bg-elevated)]" />
-        <div className="flex flex-wrap gap-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-6 w-16 rounded-full bg-[var(--bg-card-hover)]" />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ErrorState({ message }: { message: string }) {
   return (
@@ -375,58 +343,6 @@ function ErrorState({ message }: { message: string }) {
       </div>
       <h3 className="text-base font-semibold text-[var(--text-primary)]">Couldn&apos;t generate a listing</h3>
       <p className="mt-1.5 max-w-sm text-sm text-[var(--text-secondary)]">{message}</p>
-    </div>
-  );
-}
-
-function MaterialAnalysisCard({ materials }: { materials: GeneratedListing["identifiedMaterials"] }) {
-  if (!materials) return null;
-  const { primary, secondary, finish, construction } = materials;
-  if (!primary && !secondary && !finish && !construction) return null;
-
-  return (
-    <div
-      className="rounded-[10px] px-4 py-3"
-      style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-default)" }}
-    >
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">AI Detected</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {primary && (
-          <span
-            className="rounded-full px-3 py-1 text-xs font-medium"
-            style={{ background: "rgba(255,138,0,0.15)", border: "1px solid rgba(255,138,0,0.3)", color: "#FFB870" }}
-          >
-            ✦ {primary}
-          </span>
-        )}
-        {secondary && (
-          <span
-            className="rounded-full px-3 py-1 text-xs font-medium"
-            style={{ background: "rgba(123,47,255,0.15)", border: "1px solid rgba(123,47,255,0.3)", color: "#CC99FF" }}
-          >
-            + {secondary}
-          </span>
-        )}
-        {finish && (
-          <span
-            className="rounded-full px-3 py-1 text-xs font-medium"
-            style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
-          >
-            ◈ {finish}
-          </span>
-        )}
-        {construction && (
-          <span
-            className="rounded-full px-3 py-1 text-xs font-medium"
-            style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
-          >
-            ⚒ {construction}
-          </span>
-        )}
-      </div>
-      <p className="mt-2 text-xs text-[var(--text-muted)]">
-        Not accurate? Add details in the input field and regenerate.
-      </p>
     </div>
   );
 }
@@ -508,10 +424,10 @@ function titleCounterInfo(length: number): { className: string; label: string } 
   return { className: "text-[#22C55E]", label: "Optimal ✓" };
 }
 
-export default function ResultsPanel({ listing, isGenerating, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading, credits, referralCode }: ResultsPanelProps) {
+export default function ResultsPanel({ listing, isGenerating, generationStep, error, onRegenerate, onFix, onClear, priceResult, isPriceLoading, credits, referralCode }: ResultsPanelProps) {
   const [showToast, setShowToast] = useState(false);
 
-  if (isGenerating) return <LoadingState />;
+  if (isGenerating) return <GenerationLoader step={generationStep ?? 1} />;
   if (error) return <ErrorState message={error} />;
   if (!listing) return credits === 0 ? <NoCreditsState /> : <EmptyState />;
 
@@ -586,8 +502,6 @@ export default function ResultsPanel({ listing, isGenerating, error, onRegenerat
         </svg>
         Copy complete listing
       </button>
-
-      <MaterialAnalysisCard materials={listing.identifiedMaterials} />
 
       <PrimarySearchPhraseBox phrase={listing.primarySearchPhrase} />
 

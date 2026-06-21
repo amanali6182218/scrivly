@@ -26,12 +26,23 @@ export interface IdentifiedMaterials {
   construction?: string;
 }
 
+export interface ListingAttributes {
+  color?: string;
+  style?: string;
+  occasion?: string;
+  material?: string;
+  closure?: string;
+  lining?: string;
+}
+
 export interface GeneratedListing {
   title: string;
   description: string;
   tags: string[];
   primarySearchPhrase?: string;
   identifiedMaterials?: IdentifiedMaterials;
+  materials?: string;
+  attributes?: ListingAttributes;
 }
 
 export type MarketDemand = "low" | "medium" | "high";

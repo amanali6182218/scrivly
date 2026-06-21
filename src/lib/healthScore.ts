@@ -12,123 +12,95 @@ export interface HealthScore {
   categories: CategoryScore[];
 }
 
-const STOP_WORDS = new Set([
-  "a", "an", "the", "and", "for", "with", "in", "on", "of", "to", "your",
-  "our", "my", "is", "are", "be", "this", "by", "at", "or", "as", "from",
-]);
-
+// Real, deterministic point calculation — title 30 / description 25 / tags 25 /
+// materials 10 / attributes 10. Recomputes live from whatever is currently in
+// the listing, so editing any field immediately moves the score.
 export function scoreListingHealth(listing: GeneratedListing): HealthScore {
   const categories: CategoryScore[] = [];
 
-  // ── 1. Title length (20 pts) ───────────────────────────────────────────
-  const tLen = listing.title.length;
-  let titleScore: number;
+  // ── 1. Title length (30 pts) ───────────────────────────────────────────
+  const titleLength = (listing.title || "").length;
+  let titleScore = 0;
   let titleTip: string | null = null;
 
-  if (tLen > 140) {
-    titleScore = 12;
-    titleTip = `Title is ${tLen} chars — Etsy truncates at 140; trim it so nothing is cut off.`;
-  } else if (tLen >= 120) {
+  if (titleLength >= 100 && titleLength <= 140) {
+    titleScore = 30;
+  } else if (titleLength >= 80 && titleLength < 100) {
     titleScore = 20;
-  } else if (tLen >= 100) {
-    titleScore = 13;
-    titleTip = `Title is ${tLen} chars — aim for 120–140 to fill all of Etsy's keyword space.`;
-  } else if (tLen >= 70) {
-    titleScore = 7;
-    titleTip = `Title is ${tLen} chars — a longer, keyword-rich title ranks for many more searches.`;
+    titleTip = `Title is ${titleLength} chars — expand to 100–140 to stack more keywords.`;
+  } else if (titleLength >= 50 && titleLength < 80) {
+    titleScore = 10;
+    titleTip = `Title is ${titleLength} chars — aim for 100–140 characters for maximum SEO coverage.`;
+  } else if (titleLength > 140) {
+    titleTip = `Title is ${titleLength} chars — Etsy truncates at 140; shorten it so nothing is cut off.`;
   } else {
-    titleScore = 3;
-    titleTip = `Title is only ${tLen} chars — expand to 120–140 to capture far more searches.`;
+    titleTip = `Title is only ${titleLength} chars — expand to 100–140 characters.`;
   }
-  categories.push({ label: "Title length (120–140 chars)", score: titleScore, maxScore: 20, tip: titleTip });
+  categories.push({ label: "Title length (100–140 chars)", score: titleScore, maxScore: 30, tip: titleTip });
 
-  // ── 2. Keyword placement (20 pts) ─────────────────────────────────────
-  const titleWords = listing.title.split(/\s+/);
-  let charPos = 0;
-  let firstContentWordPos = Infinity;
-  for (const w of titleWords) {
-    const clean = w.toLowerCase().replace(/[^a-z]/g, "");
-    if (clean.length >= 3 && !STOP_WORDS.has(clean)) {
-      firstContentWordPos = charPos;
-      break;
-    }
-    charPos += w.length + 1;
-  }
-  let kwScore: number;
-  let kwTip: string | null = null;
-  if (firstContentWordPos < 20) {
-    kwScore = 20;
-  } else if (firstContentWordPos < 40) {
-    kwScore = 12;
-    kwTip = "Move the main product keyword even closer to the start — Etsy weights the first words most heavily.";
-  } else {
-    kwScore = 5;
-    kwTip = "Your title buries the main keyword — front-load it so Etsy (and buyers) see it first.";
-  }
-  categories.push({ label: "Keyword in first 40 characters", score: kwScore, maxScore: 20, tip: kwTip });
-
-  // ── 3. Description length (20 pts) ────────────────────────────────────
-  const descWords = listing.description.trim().split(/\s+/).filter(Boolean).length;
-  let descScore: number;
+  // ── 2. Description length (25 pts) ────────────────────────────────────
+  const wordCount = (listing.description || "").split(/\s+/).filter(Boolean).length;
+  let descScore = 0;
   let descTip: string | null = null;
-  if (descWords >= 400 && descWords <= 600) {
-    descScore = 20;
-  } else if (descWords >= 300) {
-    descScore = 14;
-    descTip = `Description is ${descWords} words — adding more detail (aim 400–600) improves SEO.`;
-  } else if (descWords > 600) {
-    descScore = 14;
-    descTip = `Description is ${descWords} words — Etsy buyers prefer concise copy; trim to 400–600.`;
-  } else if (descWords >= 150) {
+
+  if (wordCount >= 150) {
+    descScore = 25;
+  } else if (wordCount >= 100) {
+    descScore = 15;
+    descTip = `Description is ${wordCount} words — add more detail to reach 150+ words.`;
+  } else if (wordCount >= 50) {
     descScore = 8;
-    descTip = `Description is ${descWords} words — expand to 400–600 to rank for more long-tail searches.`;
+    descTip = `Description is ${wordCount} words — expand to at least 150 words.`;
   } else {
-    descScore = 3;
-    descTip = `Description is very short (${descWords} words) — aim for 400–600 to satisfy buyers and Etsy's algorithm.`;
+    descTip = `Description is very short (${wordCount} words) — aim for 150–300 words.`;
   }
-  categories.push({ label: "Description length (400–600 words)", score: descScore, maxScore: 20, tip: descTip });
+  categories.push({ label: "Description length (150+ words)", score: descScore, maxScore: 25, tip: descTip });
 
-  // ── 4. Tag count (20 pts) ─────────────────────────────────────────────
-  const tagCount = listing.tags.length;
-  let tagCountScore: number;
-  let tagCountTip: string | null = null;
-  if (tagCount === 13) {
-    tagCountScore = 20;
-  } else if (tagCount >= 10) {
-    tagCountScore = 13;
-    tagCountTip = `${tagCount}/13 tags used — fill all 13 to maximise search coverage.`;
-  } else if (tagCount >= 7) {
-    tagCountScore = 7;
-    tagCountTip = `Only ${tagCount}/13 tags — every unused slot is a missed ranking opportunity.`;
-  } else {
-    tagCountScore = 2;
-    tagCountTip = `Only ${tagCount}/13 tags — Etsy allows 13; use every slot to maximise discoverability.`;
-  }
-  categories.push({ label: "All 13 tags filled", score: tagCountScore, maxScore: 20, tip: tagCountTip });
+  // ── 3. Tags (25 pts) ───────────────────────────────────────────────────
+  const tags = listing.tags || [];
+  const validTags = tags.filter((t) => t.length <= 20 && t.length > 0);
+  let tagsScore = 0;
+  let tagsTip: string | null = null;
 
-  // ── 5. Tag variety (20 pts) ───────────────────────────────────────────
-  const tagLens = listing.tags.map((t) => t.trim().split(/\s+/).filter(Boolean).length);
-  const has1 = tagLens.some((l) => l === 1);
-  const has2 = tagLens.some((l) => l === 2);
-  const has3plus = tagLens.some((l) => l >= 3);
-  const varieties = [has1, has2, has3plus].filter(Boolean).length;
-  let varietyScore: number;
-  let varietyTip: string | null = null;
-  if (varieties === 3) {
-    varietyScore = 20;
-  } else if (varieties === 2) {
-    varietyScore = 12;
-    if (!has1) varietyTip = "Add a single-word tag (e.g. 'earrings') to capture broad-search traffic.";
-    else if (!has2) varietyTip = "Add 2-word phrase tags to balance broad and specific search intent.";
-    else varietyTip = "Add a long-tail 3-word tag (e.g. 'gold hoop earrings') for lower-competition traffic.";
+  if (validTags.length === 13) {
+    tagsScore = 25;
+  } else if (validTags.length >= 10) {
+    tagsScore = 15;
+    tagsTip = `${validTags.length}/13 valid tags — fill all 13 to maximize search coverage.`;
+  } else if (validTags.length >= 5) {
+    tagsScore = 8;
+    tagsTip = `Only ${validTags.length}/13 valid tags — every unused slot is a missed opportunity.`;
   } else {
-    varietyScore = 4;
-    varietyTip = "Use a mix of 1-word, 2-word, and 3-word tags to reach shoppers at every stage of their search.";
+    tagsTip = `Only ${validTags.length}/13 valid tags — use all 13 slots, each 20 characters or less.`;
   }
-  categories.push({ label: "Tag variety (1, 2 & 3-word mix)", score: varietyScore, maxScore: 20, tip: varietyTip });
+  categories.push({ label: "All 13 tags filled (≤20 chars)", score: tagsScore, maxScore: 25, tip: tagsTip });
+
+  // ── 4. Materials filled (10 pts) ───────────────────────────────────────
+  const materials = (listing.materials || "").trim();
+  const materialsScore = materials.length > 3 ? 10 : 0;
+  const materialsTip = materialsScore === 0
+    ? `No materials identified — list the specific materials used (e.g. "cowhide leather, brass hardware").`
+    : null;
+  categories.push({ label: "Materials identified", score: materialsScore, maxScore: 10, tip: materialsTip });
+
+  // ── 5. Attributes filled (10 pts — 2 each) ─────────────────────────────
+  const attrs = listing.attributes || {};
+  const ATTRIBUTE_FIELDS: Array<{ key: keyof typeof attrs; label: string }> = [
+    { key: "color", label: "color" },
+    { key: "style", label: "style" },
+    { key: "occasion", label: "occasion" },
+    { key: "material", label: "material" },
+    { key: "closure", label: "closure" },
+  ];
+  const missingAttrs = ATTRIBUTE_FIELDS.filter((f) => !(attrs[f.key] || "").trim());
+  const attrsScore = (ATTRIBUTE_FIELDS.length - missingAttrs.length) * 2;
+  const attrsTip = missingAttrs.length > 0
+    ? `${missingAttrs.length} attribute${missingAttrs.length !== 1 ? "s" : ""} missing (${missingAttrs.map((f) => f.label).join(", ")}) — fill in every visible detail.`
+    : null;
+  categories.push({ label: "Attributes filled (color, style, occasion, material, closure)", score: attrsScore, maxScore: 10, tip: attrsTip });
 
   return {
-    total: categories.reduce((s, c) => s + c.score, 0),
+    total: Math.min(categories.reduce((s, c) => s + c.score, 0), 100),
     categories,
   };
 }
