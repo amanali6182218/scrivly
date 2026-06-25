@@ -71,339 +71,79 @@ TITLE EXAMPLES (use as format reference only, not content):
 
 STEP 4 — WRITE THE DESCRIPTION
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DESCRIPTION WRITING PATTERN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESCRIPTION RULES — FOLLOW EXACTLY:
 
-Write the description following
-this exact pattern. Every description
-must feel like it was written by a
-professional product copywriter who
-deeply understands the product —
-not an AI generating generic text.
+Write every description using this exact structure and style.
+This is the style template — follow the structure, not the words:
 
-PARAGRAPH 1 — OPENING HOOK
-(2 sentences maximum)
+TEMPLATE:
+"The Rider Club takes a simple leather jacket and adds some style.
+This jacket includes conceal carry and armor pockets and a ventilated
+action back for comfort while riding. The Rider Club is a true three
+season jacket with an insulated zip out thermal liner in case the temps
+rise on your ride. The lower belt detail and side stretch panel ads to
+its classic aesthetic.
 
-First sentence: State what the product
-IS and establish its design identity.
-Be specific and confident. Name the
-style category it belongs to.
+Features:
+- Runs true to size
+- 1.2-1.3mm Vintage Naked Cowhide Leather
+- Center zip style with banded snap collar
+- Two vented chest pockets
+- Two zippered slash pockets
+- Two conceal carry pockets with tapered holsters
+- Rear belt detail
+- Size stretch panels for comfort
+- Zippered sleeves with gussets and button snap
+- Action back with zipper exhaust vents
+- Insulated zip-out thermal liner
+- YKK zippers
+- Armor pockets for CE rated armor
 
-Second sentence: Describe the design
-balance or tension — what two worlds
-does this product bridge? What makes
-it distinctive from similar products
-in its category?
+- Perfect Winter Gift: A charismatic leather jacket designed to keep
+  you warm, stylish, and comfortable during the colder months, ideal
+  for winter gifting.
+- Holiday & Seasonal Gifts: Great choice for Thanksgiving, Black
+  Friday, Christmas, and New Year gifting.
+- Gifts for Him: Ideal gift option for Men, Boys, Husband, Son,
+  Father, Dad, Best Friend, or Boyfriend, a versatile wardrobe
+  essential for every man."
 
-Examples of the right tone:
-"This handmade ceramic coffee mug
-sets a new standard for everyday
-stoneware. It bridges the gap between
-refined minimalist design and the
-warmth of something genuinely
-hand-thrown."
+DESCRIPTION STRUCTURE TO FOLLOW:
+1. Opening paragraph (2-3 sentences):
+   - First sentence must include the primary keyword naturally
+   - First sentence must be a confident product statement
+   - Second sentence highlights the most important functional feature
+   - Third sentence states what makes it special or who it is for
+   - No storytelling. No poetic language. No fluff.
 
-"This sterling silver cuff bracelet
-redefines what everyday jewellery
-can be. It sits at the intersection
-of architectural precision and the
-organic irregularity only hand-forging
-can produce."
+2. Features section (bullet points):
+   - Label: "Features:"
+   - First bullet: fit guidance (runs true to size, size up recommended)
+   - Remaining bullets: specific material with measurements where visible
+     (e.g. "1.2-1.3mm Vintage Naked Cowhide Leather" not just "leather")
+   - Hardware brand names where visible (YKK zippers, not just "zippers")
+   - Every functional feature as its own bullet (pockets, lining, collar,
+     cuffs, back details, vents, closures, panels)
+   - Specific color names for each panel or detail
+   - Lining material and color if visible
+   - Never guess — if a detail is not clearly visible, leave it out
 
-Never start with:
-"Introducing..." or
-"Are you looking for..." or
-"This beautiful product..." or
-Any generic opener
+3. Gifting section (bullet points, 3 bullets minimum):
+   - First bullet: seasonal occasion gift (winter, holiday, christmas)
+   - Second bullet: holiday list (Thanksgiving, Black Friday, Christmas,
+     New Year, Valentine's Day, Father's Day — pick what fits the product)
+   - Third bullet: recipient list (Men, Boys, Husband, Son, Father, Dad,
+     Best Friend, Boyfriend — or female equivalents if womens product)
 
-PARAGRAPH 2 — MATERIAL AND
-CONSTRUCTION
-(3-4 sentences)
-
-Sentence 1: Name the PRIMARY material
-with specific grade or quality indicator:
-- Leather: name the hide type and
-  thickness in mm if visible
-  (1.2mm calf leather, 1.1mm cowhide,
-   0.8mm lambskin)
-- Ceramic: name the clay body
-  (speckled stoneware, high-fire
-   porcelain, reduction-fired earthenware)
-- Metal: name the alloy and grade
-  (925 sterling silver, 14k gold-fill,
-   solid brass with antique patina)
-- Fabric: name fiber content and
-  construction method
-  (140gsm stonewashed linen,
-   double-faced wool crepe,
-   brushed 300gsm fleece)
-- Wood: name the species and cut
-  (quarter-sawn white oak,
-   reclaimed teak, black walnut slab)
-
-Sentence 2: Describe the finish and
-how it looks and feels. Use sensory
-language that is specific not vague:
-GOOD: "buttery-soft with a refined
-semi-matte finish"
-GOOD: "smooth to the touch with a
-slight grain texture visible in
-raking light"
-BAD: "high quality finish"
-BAD: "premium feel"
-
-Sentence 3: Describe the KEY design
-feature — the one thing that makes
-this specific product visually
-distinctive. Be technically precise:
-GOOD: "The diagonal color-split
-bifurcates the entire garment joined
-by a precise flat-felled seam"
-GOOD: "The speckled texture comes
-from natural grog particles in the
-clay body — no two pieces are
-identical"
-BAD: "Features a beautiful design"
-BAD: "Has a unique look"
-
-Sentence 4 (if applicable): Describe
-lining, backing, secondary material,
-or structural element that affects
-how the product performs or feels
-in use.
-
-SECTION 3 — FEATURE BULLETS
-Format header exactly as:
-(blank line before bullets)
-
-Write 5 to 7 bullets.
-Each bullet covers ONE specific
-technical detail.
-
-BULLET WRITING RULES:
-- Start each bullet with the feature
-  category followed by a colon OR
-  start directly with the technical
-  detail
-- Use precise terminology — name
-  specific hardware, construction
-  methods, measurements
-- Never use adjectives like
-  "beautiful" "stunning" "amazing"
-  in bullets
-- Each bullet must contain information
-  that could NOT apply to any other
-  product — it must be specific to
-  THIS item
-
-GOOD BULLET EXAMPLES:
-"• Asymmetric paneled construction
-   with dynamic diagonal chest seam"
-"• Dual-direction matte gunmetal
-   Riri zipper for versatile
-   athletic mobility"
-"• Two concealed vertical zip
-   pockets and secure leather-welted
-   internal pocket"
-"• Integrated paneled hood with
-   concealed cord-lock drawstring"
-"• Elasticated inner cuffs and hem
-   for a clean gathered silhouette"
-
-BAD BULLET EXAMPLES:
-"• Made with premium quality materials"
-"• Beautiful design that stands out"
-"• Perfect for everyday use"
-"• High quality construction"
-
-PARAGRAPH 4 — CRAFTSMANSHIP
-AND ORIGIN
-(2-3 sentences)
-
-Describe HOW and WHERE this was made.
-- If handmade: describe the specific
-  process visible in the photo
-- Small batch or made to order:
-  say so explicitly
-- Origin or workshop: mention if
-  relevant and known
-- Maker's commitment: one sentence
-  on quality standard or ethical
-  practice
-
-This paragraph humanises the product.
-It separates artisan work from
-mass production.
-Write it with quiet confidence —
-not corporate sustainability speak.
-
-GOOD EXAMPLE:
-"KraftHide is committed to eco-friendly
-artisan-level manufacturing. Partnered
-directly with ethical workshops in
-Sialkot every garment is produced in
-small batches with absolute dedication
-to craftsmanship and global export
-standards."
-
-"Each mug is thrown individually on
-the wheel in small batches. Because
-every piece goes through the hands
-of one maker start to finish there
-will be slight variations in weight
-and speckle pattern — that is
-exactly the point."
-
-If you cannot determine origin
-or maker from the photo use:
-"Made to order in small batches.
-Each piece is individually finished
-and inspected before shipping."
-
-PARAGRAPH 5 — CLOSING CTA
-(1-2 sentences)
-
-First option — for customisable
-or made-to-order products:
-"Favourite this listing to save it
-for later or message us directly
-for bespoke sizing custom colour
-options and bulk order enquiries."
-
-Second option — for standard
-ready-made products:
-"Favourite this listing to find
-it easily later or message us
-if you have any questions before
-purchasing."
-
-Third option — for gifts:
-"Favourite this listing to save
-it for an upcoming occasion or
-message us to discuss custom
-gift packaging and personalisation."
-
-Choose whichever fits the product
-type best based on what you see
-in the photo.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-WORD COUNT AND QUALITY STANDARD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Target: 280 to 420 words total.
-
-Every sentence must contain
-information specific to THIS product.
-If a sentence could appear in any
-other listing — rewrite it or
-remove it.
-
-The description must read like it
-was written by someone who has
-held this product in their hands.
-Technical precision builds trust.
-Vague superlatives destroy it.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-BANNED PHRASES — ABSOLUTE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Never use these in the description:
-"premium quality"
-"superior craftsmanship"
-"meticulously crafted"
-"elevate your style"
-"unparalleled quality"
-"perfect for anyone"
-"you will love this"
-"high quality materials"
-"innovative design"
-"state of the art"
-"look no further"
-"order yours today"
-"beautiful" (in bullets)
-"stunning" (in bullets)
-"amazing" (in bullets)
-"unique" unless technically true
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FULL REFERENCE EXAMPLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Study this complete example.
-Every description you write must
-match this quality and follow
-this structure exactly.
-Adapt the content completely to
-the uploaded product — never
-copy this example.
-
---- EXAMPLE START ---
-
-This mens leather windbreaker sets
-a new standard for architectural
-outerwear. It perfectly balances
-relaxed European streetwear with
-razor-sharp bespoke tailoring.
-
-Crafted from buttery-soft 1.2mm
-calf leather with a refined
-semi-matte finish, this piece
-features a striking diagonal
-color-split that bifurcates the
-entire garment. The Obsidian Black
-and Slate Grey panels are joined
-by a precise flat-felled seam and
-illuminated by an integrated
-high-gloss resin piping channel.
-Fully lined with a breathable
-silk-and-scuba blend the structural
-drape hangs flawlessly thanks to
-vertically cut leather grains.
-
-- Asymmetric paneled construction
-  with dynamic diagonal chest seam
-- Dual-direction matte gunmetal
-  zipper for versatile athletic
-  mobility
-- Two concealed vertical zip pockets
-  and secure leather-welted
-  internal pocket
-- Integrated paneled hood with
-  concealed cord-lock drawstring
-- Elasticated inner cuffs and hem
-  for a clean gathered silhouette
-- Minimalist laser-etched branding
-  and micro-embossed wrist details
-
-Produced in small batches at our
-ethical workshop every garment
-goes through individual inspection
-before shipping. Made to order —
-allow 2 to 5 business days for
-production.
-
-Favourite this listing to save it
-for later or message us directly
-for bespoke sizing custom colour
-options and bulk order enquiries.
-
---- EXAMPLE END ---
-
-This example shows:
-- Confident specific opening hook
-- Material paragraph with grade
-  thickness finish lining all named
-- 6 technical bullets with
-  zero marketing language
-- Brief honest craftsmanship note
-- Natural CTA
-
-EVERY description must match
-this quality level adapted
-completely to the uploaded product.
+DESCRIPTION RULES:
+- Minimum 150 words, maximum 280 words
+- Primary keyword must appear naturally in first sentence
+- Zero guessing language (no "appears to be", "seems", "possibly")
+- Zero buzzwords (no "stunning", "amazing", "game-changing", "premium",
+  "luxury", "high quality", "beautiful", "gorgeous", "perfect")
+- Zero storytelling or poetic language
+- Write as a real seller who made this product and knows every detail
+- Must pass AI detection — write naturally, vary sentence length
 
 STEP 5 — WRITE THE TAGS
 
